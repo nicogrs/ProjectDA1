@@ -22,7 +22,7 @@ public class UserCreateTest
     [TestMethod]
     public void ValidName()
     {
-       bool isValidName = u.isNameValid();
+       var isValidName = u.IsNameValid();
        Assert.IsTrue(isValidName);
     }
 }

@@ -13,4 +13,9 @@ public class UserService
     {
        return _userDatabase.GetUserByEmail(email) != null;
     }
+
+    public bool CreateUser(User user)
+    {
+        return false;
+    }
 }

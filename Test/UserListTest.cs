@@ -26,7 +26,7 @@ public class UserListTest
     }
     
     [TestMethod]
-    public void AddOneUser()
+    public void UserExists()
     {
         _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
         var isUserAdded = _service.UserExists(_user.Email);
@@ -40,5 +40,13 @@ public class UserListTest
         var isUserDeleted = _service.UserExists(_user.Email);
         Assert.IsFalse(isUserDeleted);
     }
-    
+
+    [TestMethod]
+
+    public void AddUser()
+    {
+        _mockUserDatabase.Setup(x => x.AddUser(_user)).Returns(true);
+        var isUserAdded = _service.CreateUser(_user);
+        Assert.IsTrue(isUserAdded);
+    }
 }

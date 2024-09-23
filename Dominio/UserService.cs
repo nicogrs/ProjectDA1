@@ -19,8 +19,8 @@ public class UserService
         if (user.ValidateUser() 
             && user.IsEmailValid() && user.IsNameValid() && user.IsSurnameValid())
         {
-            _userDatabase.AddUser(user);
-            return true;
+            return _userDatabase.AddUser(user);
+            
         }
 
         return false;

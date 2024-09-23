@@ -49,4 +49,14 @@ public class UserListTest
         var isUserAdded = _service.CreateUser(_user);
         Assert.IsTrue(isUserAdded);
     }
+    
+    [TestMethod]
+    public void AddInvalidUser()
+    {
+        _user.Name = "a";
+        var isInvalidUserAdded = _service.CreateUser(_user);
+        Assert.IsFalse(isInvalidUserAdded);
+    }
+    
+    
 }

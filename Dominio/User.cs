@@ -20,6 +20,6 @@ public class User
 
     public bool IsEmailValid()
     {
-        return false;
+        return Email != null && Email.Contains('@') && Email.Length > 2 && Email.Length < 100;
     }
 }

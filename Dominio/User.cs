@@ -30,6 +30,6 @@ public class User
 
     public bool ValidateUser()
     {
-        return false;
+        return IsNameValid() && IsSurnameValid() && IsEmailValid() && IsBirthDateValid();
     }
 }

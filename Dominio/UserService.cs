@@ -11,6 +11,6 @@ public class UserService
 
     public bool UserExists(string email)
     {
-        return false;
+       return _userDatabase.GetUserByEmail(email) != null;
     }
 }

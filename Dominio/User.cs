@@ -22,4 +22,10 @@ public class User
     {
         return Email != null && Email.Contains('@') && Email.Length > 2 && Email.Length < 100;
     }
+
+    public bool IsBirthDateValid()
+    {
+        return false;
+    }
+
 }

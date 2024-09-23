@@ -39,4 +39,11 @@ public class UserCreateTest
         var isValidEmail = u.IsEmailValid();
         Assert.IsTrue(isValidEmail);
     }
+
+    [TestMethod]
+    public void ValidBirthDate()
+    {
+        var isValidBirthDate = u.IsBirthDateValid();
+        Assert.IsTrue(isValidBirthDate);
+    }
 }

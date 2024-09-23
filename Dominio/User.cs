@@ -25,7 +25,7 @@ public class User
 
     public bool IsBirthDateValid()
     {
-        return false;
+        return BirthDate != null && BirthDate < DateTime.Today && BirthDate.Year < DateTime.Now.Year;
     }
 
 }

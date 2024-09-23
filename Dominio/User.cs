@@ -15,7 +15,7 @@ public class User
 
     public bool IsSurnameValid()
     {
-        return false;
+        return Surname != null && Surname.Length > 2 && Surname.Length < 100;
     }
     
 }

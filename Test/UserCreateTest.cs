@@ -46,4 +46,11 @@ public class UserCreateTest
         var isValidBirthDate = u.IsBirthDateValid();
         Assert.IsTrue(isValidBirthDate);
     }
+
+    [TestMethod]
+    public void ValidPassword()
+    {
+     //   var passwordIsValid = IsValidPassword();
+     //   Assert.IsTrue(passwordIsValid);
+    }
 }

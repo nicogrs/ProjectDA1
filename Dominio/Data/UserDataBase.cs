@@ -8,4 +8,15 @@ public class UserDataBase
     {
         Users = new List<User>();
     }
+
+    public void AddUser(User user)
+    {
+        
+    }
+
+    public bool userExists(string email)
+    {
+        return false;
+    }
+
 }

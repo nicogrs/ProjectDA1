@@ -17,5 +17,9 @@ public class User
     {
         return Surname != null && Surname.Length > 2 && Surname.Length < 100;
     }
-    
+
+    public bool IsEmailValid()
+    {
+        return false;
+    }
 }

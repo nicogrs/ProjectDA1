@@ -32,4 +32,11 @@ public class UserCreateTest
         var isValidSurname = u.IsSurnameValid();
         Assert.IsTrue(isValidSurname);
     }
+    
+    [TestMethod]
+    public void ValidEmail()
+    {
+        var isValidEmail = u.IsEmailValid();
+        Assert.IsTrue(isValidEmail);
+    }
 }

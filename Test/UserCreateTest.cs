@@ -48,6 +48,13 @@ public class UserCreateTest
     }
 
     [TestMethod]
+    public void ValidUser()
+    {
+        var isUserValid = u.ValidateUser();
+        Assert.IsTrue(isUserValid);
+    }
+    
+    [TestMethod]
     public void ValidPassword()
     {
      //   var passwordIsValid = IsValidPassword();

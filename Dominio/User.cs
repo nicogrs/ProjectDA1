@@ -28,4 +28,8 @@ public class User
         return BirthDate != null && BirthDate < DateTime.Today && BirthDate.Year < DateTime.Now.Year;
     }
 
+    public bool ValidateUser()
+    {
+        return false;
+    }
 }

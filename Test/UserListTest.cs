@@ -45,7 +45,6 @@ public class UserListTest
 
     public void AddUser()
     {
-        _mockUserDatabase.Setup(x => x.AddUser(_user)).Returns(true);
         var isUserAdded = _service.CreateUser(_user);
         Assert.IsTrue(isUserAdded);
     }

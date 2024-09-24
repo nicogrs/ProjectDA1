@@ -11,7 +11,7 @@ public class UserDataBase : IUserDatabase
     
     public User GetUserByEmail(string email)
     {
-        return (User)null;
+        return Users.Find(u => u.Email == email);
     }
 
     public List<User> GetAllUsers()
@@ -19,9 +19,9 @@ public class UserDataBase : IUserDatabase
         return null;
     }
 
-    public bool AddUser(User user)
+    public void AddUser(User user)
     {
-        return false;
+        this.Users.Add(user);
     }
 
     public bool UpdateUser(User user)

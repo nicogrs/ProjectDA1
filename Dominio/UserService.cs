@@ -16,11 +16,10 @@ public class UserService
 
     public bool CreateUser(User user)
     {
-        if (user.ValidateUser() 
-            && user.IsEmailValid() && user.IsNameValid() && user.IsSurnameValid())
+        if (user.ValidateUser())
         {
-            return _userDatabase.AddUser(user);
-            
+          _userDatabase.AddUser(user);
+          return true;
         }
 
         return false;

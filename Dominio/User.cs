@@ -32,4 +32,9 @@ public class User
     {
         return IsNameValid() && IsSurnameValid() && IsEmailValid() && IsBirthDateValid();
     }
+
+    public bool ValidatePassword()
+    {
+        return false;
+    }
 }

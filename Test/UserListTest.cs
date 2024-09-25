@@ -20,7 +20,7 @@ public class UserListTest
             Surname = "Lopez",
             Email = "carlos@gmail.com",
             BirthDate = new DateTime(1980, 1, 1),
-            Password = "Prueba$1"
+            Password = "TestPass$1"
         };
 
     }

@@ -15,7 +15,7 @@ public class UserCreateTest
             Surname = "Lopez",
             Email = "carlos@gmail.com",
             BirthDate = new DateTime(1980, 1, 1),
-            Password = "Prueba$1"
+            Password = "TestPass$1"
         };
     }
     
@@ -59,6 +59,14 @@ public class UserCreateTest
     {
         var isPasswordValid = u.ValidatePassword();
         Assert.IsTrue(isPasswordValid);
+    }
+
+    [TestMethod]
+    public void InvalidPassword()
+    {
+        u.Password = "ThisIsAInvalidPassword";
+        var isPasswordInvalid = u.ValidatePassword();
+        Assert.IsFalse(isPasswordInvalid);
     }
     
 

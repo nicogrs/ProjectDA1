@@ -23,6 +23,10 @@ public class UserService
         }
 
         return false;
+    }
 
+    public bool DeleteUser(string email)
+    {
+        return false;
     }
 }

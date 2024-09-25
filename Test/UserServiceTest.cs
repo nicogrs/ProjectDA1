@@ -58,9 +58,12 @@ public class UserServiceTest
     }
 
     [TestMethod]
-    public void RemoveUser()
+    public void DeleteUser()
     {
-        
+     _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+     _mockUserDatabase.Setup(x => x.DeleteUser(_user.Email)).Returns(true);
+     var isUserDeleted = _service.DeleteUser(_user.Email);
+     Assert.IsTrue(isUserDeleted);
     }
     
 }

@@ -15,7 +15,7 @@ public class UserCreateTest
             Surname = "Lopez",
             Email = "carlos@gmail.com",
             BirthDate = new DateTime(1980, 1, 1),
-            Password = "123456"
+            Password = "Prueba$1"
         };
     }
     

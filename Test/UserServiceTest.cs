@@ -3,7 +3,7 @@ using Dominio;
 using Moq;
 
 [TestClass]
-public class UserListTest
+public class UserServiceTest
 {
     private UserService _service;
     private User _user;
@@ -56,6 +56,11 @@ public class UserListTest
         var isInvalidUserAdded = _service.CreateUser(_user);
         Assert.IsFalse(isInvalidUserAdded);
     }
-    
+
+    [TestMethod]
+    public void RemoveUser()
+    {
+        
+    }
     
 }

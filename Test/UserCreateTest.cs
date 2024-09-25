@@ -51,14 +51,14 @@ public class UserCreateTest
     [TestMethod]
     public void ValidUser()
     {
-        var isUserValid = u.ValidateUser();
+        var isUserValid = u.IsUserValid();
         Assert.IsTrue(isUserValid);
     }
     
     [TestMethod]
     public void ValidPassword()
     {
-        var isPasswordValid = u.ValidatePassword();
+        var isPasswordValid = u.IsPasswordValid();
         Assert.IsTrue(isPasswordValid);
     }
 
@@ -66,7 +66,7 @@ public class UserCreateTest
     public void InvalidPassword()
     {
         u.Password = "ThisIsAInvalidPassword";
-        var isPasswordInvalid = u.ValidatePassword();
+        var isPasswordInvalid = u.IsPasswordValid();
         Assert.IsFalse(isPasswordInvalid);
     }
 
@@ -75,7 +75,7 @@ public class UserCreateTest
     public void UserAdmin()
     {
         u.Admin = true;
-        var isUserAdmin = u.UserIsAdmin();
+        var isUserAdmin = u.IsUserAdmin();
         Assert.IsTrue(isUserAdmin);
     }
         

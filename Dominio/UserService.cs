@@ -16,7 +16,7 @@ public class UserService
 
     public bool CreateUser(User user)
     {
-        if (user.ValidateUser())
+        if (user.IsUserValid())
         {
           _userDatabase.AddUser(user);
           return true;

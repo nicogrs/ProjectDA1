@@ -7,6 +7,7 @@ public class User
     public string Email { get; set; }
     public DateTime BirthDate { get; set; }
     public string Password { get; set; }
+    public bool Admin { get; set; }
 
     public bool IsNameValid()
     {
@@ -33,6 +34,11 @@ public class User
         return IsNameValid() && IsSurnameValid() && IsEmailValid() && IsBirthDateValid();
     }
 
+    public bool UserIsAdmin()
+    {
+        return false;
+    }
+    
     public bool ValidatePassword()
     {
         bool validLength = Password.Length >= 8;

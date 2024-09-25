@@ -15,7 +15,8 @@ public class UserCreateTest
             Surname = "Lopez",
             Email = "carlos@gmail.com",
             BirthDate = new DateTime(1980, 1, 1),
-            Password = "TestPass$1"
+            Password = "TestPass$1",
+            Admin = false
         };
     }
     
@@ -68,7 +69,14 @@ public class UserCreateTest
         var isPasswordInvalid = u.ValidatePassword();
         Assert.IsFalse(isPasswordInvalid);
     }
-    
 
-    
+    [TestMethod]
+
+    public void UserAdmin()
+    {
+        u.Admin = true;
+        var isUserAdmin = u.UserIsAdmin();
+        Assert.IsTrue(isUserAdmin);
+    }
+        
 }

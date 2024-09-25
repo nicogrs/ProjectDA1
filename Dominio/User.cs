@@ -33,10 +33,9 @@ public class User
     {
         return IsNameValid() && IsSurnameValid() && IsEmailValid() && IsBirthDateValid();
     }
-
     public bool UserIsAdmin()
     {
-        return false;
+        return Admin;
     }
     
     public bool ValidatePassword()

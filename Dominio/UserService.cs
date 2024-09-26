@@ -16,12 +16,15 @@ public class UserService
 
     public bool CreateUser(User user)
     {
+        if (UserExists(user.Email))
+        {
+            throw new InvalidOperationException("El usuario ya existe");
+        }
         if (user.IsUserValid())
         {
           _userDatabase.AddUser(user);
           return true;
         }
-
         return false;
     }
 

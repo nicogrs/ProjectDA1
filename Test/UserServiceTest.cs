@@ -42,11 +42,18 @@ public class UserServiceTest
     }
 
     [TestMethod]
-
     public void AddUser()
     {
         var isUserAdded = _service.CreateUser(_user);
         Assert.IsTrue(isUserAdded);
+    }
+    
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void AddExistingUser()
+    {
+        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+         _service.CreateUser(_user);
     }
     
     [TestMethod]

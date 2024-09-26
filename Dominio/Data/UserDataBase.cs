@@ -31,6 +31,7 @@ public class UserDataBase : IUserDatabase
 
     public bool DeleteUser(string email)
     {
-        return false;
+        var result = Users.RemoveAll(user => user.Email == email);
+         return (result != 0);
     }
 }

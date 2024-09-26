@@ -27,6 +27,11 @@ public class UserService
 
     public bool DeleteUser(string email)
     {
-        return false;
+        if (email.Length == 0) 
+        {
+            throw new ArgumentException("El Email no Puede ser vacio", nameof(email));
+        }
+
+        return _userDatabase.DeleteUser(email);
     }
 }

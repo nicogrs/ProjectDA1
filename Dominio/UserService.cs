@@ -1,4 +1,6 @@
-﻿namespace Dominio;
+﻿using System.Text;
+
+namespace Dominio;
 
 public class UserService
 {
@@ -11,7 +13,7 @@ public class UserService
 
     public bool UserExists(string email)
     {
-       return _userDatabase.GetUserByEmail(email) != null;
+       return !string.IsNullOrEmpty(_userDatabase.GetUserByEmail(email).Email);
     }
 
     public bool CreateUser(User user)
@@ -20,14 +22,15 @@ public class UserService
         {
             throw new InvalidOperationException("El usuario ya existe");
         }
-        if (user.IsUserValid())
+        if (!user.IsUserValid())
         {
           _userDatabase.AddUser(user);
           return true;
         }
         return false;
     }
-
+    
+    
     public bool DeleteUser(string email)
     {
         if (email.Length == 0) 

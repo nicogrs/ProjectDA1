@@ -72,7 +72,8 @@ public class UserServiceTest
      var isUserDeleted = _service.DeleteUser(_user.Email);
      Assert.IsTrue(isUserDeleted );
     }
-
+    
+    
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void DeleteInvalidUser()

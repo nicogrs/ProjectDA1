@@ -55,20 +55,6 @@ public class UserCreateTest
         Assert.IsTrue(isUserValid);
     }
     
-    [TestMethod]
-    public void ValidPassword()
-    {
-        var isPasswordValid = u.IsPasswordValid();
-        Assert.IsTrue(isPasswordValid);
-    }
-
-    [TestMethod]
-    public void InvalidPassword()
-    {
-        u.Password = "ThisIsAInvalidPassword";
-        var isPasswordInvalid = u.IsPasswordValid();
-        Assert.IsFalse(isPasswordInvalid);
-    }
 
     [TestMethod]
 

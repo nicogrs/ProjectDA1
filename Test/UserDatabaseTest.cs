@@ -28,6 +28,18 @@ public class UserDatabaseTest
     {
         db.AddUser(_user);
         var result = db.GetUserByEmail(_user.Email);
-        Assert.AreEqual(_user, result);
+        Assert.AreSame(_user, result);
     }
+
+    [TestMethod]
+
+    public void DeleteUserFromDataBase()
+    {
+        db.AddUser(_user);
+        var user = db.GetUserByEmail(_user.Email);
+        var userExists = user != null;
+        var result = db.DeleteUser(_user.Email);
+        Assert.IsTrue(userExists && result);
+    }
+    
 }

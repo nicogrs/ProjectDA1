@@ -35,7 +35,7 @@ public class UserService
     
     public bool DeleteUser(string email)
     {
-        if (email.Length == 0) 
+        if (string.IsNullOrEmpty(email)) 
         {
             throw new ArgumentException("El Email no Puede ser vacio", nameof(email));
         }

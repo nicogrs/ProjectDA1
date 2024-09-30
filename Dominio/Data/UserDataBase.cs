@@ -6,12 +6,30 @@ public class UserDataBase : IUserDatabase
     public UserDataBase()
     {
         Users = new List<User>();
-        
+        Users.Add(new User
+        {
+            Name = "Super",
+            Surname = "Admin",
+            Email = "admin@taskpanel.com",
+            BirthDate = new DateTime(2000, 8, 30),
+            Password = "Admin123$",
+            Admin = true,
+            Teams = new List<Team>()
+        });
     }
     
     public User GetUserByEmail(string email)
     {
-        return Users.Find(u => u.Email == email);
+       var user = Users.Find(u => u.Email == email);
+       return new User
+       {
+           Name = user.Name,
+           Surname = user.Surname,
+           BirthDate = user.BirthDate,
+           Admin = user.Admin,
+           Email = user.Email,
+           Teams = user.Teams
+       };
     }
 
     public List<User> GetAllUsers()

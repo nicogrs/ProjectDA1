@@ -32,7 +32,13 @@ public class UserDatabaseTest
     }
 
     [TestMethod]
-
+    [ExpectedException(typeof(NullReferenceException))]
+    public void UpdateInvalidUser()
+    {
+        var getUser = db.GetUserByEmail(_user.Email);
+        db.AddUser(_user);
+    } 
+    
     public void DeleteUserFromDataBase()
     {
         db.AddUser(_user);

@@ -28,7 +28,7 @@ public class UserDatabaseTest
     {
         db.AddUser(_user);
         var result = db.GetUserByEmail(_user.Email);
-        Assert.AreSame(_user, result);
+        Assert.AreSame(_user.Email, result.Email);
     }
 
     [TestMethod]

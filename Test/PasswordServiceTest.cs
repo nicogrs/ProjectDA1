@@ -30,6 +30,8 @@ public class PasswordServiceTest
     [TestMethod]
     public void PasswordGenerate()
     {
+        var generatedPassword = service.GenerateRandomPassword()
+        Assert.IsTrue(service.IsPasswordValid(generatedPassword));    
     }
     
 }

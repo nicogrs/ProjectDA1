@@ -11,4 +11,9 @@ public class PasswordService
         bool hasSymbol = password.Any(x => char.IsSymbol(x));
         return validLength && hasUpperCase && hasLowerCase && hasDigit && hasSymbol;
     }
+
+    public string GenerateRandomPassword()
+    {
+        return "";
+    }
 }

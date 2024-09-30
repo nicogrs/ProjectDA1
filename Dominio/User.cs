@@ -33,7 +33,7 @@ public class User
     
     public bool IsUserValid()
     {
-        return IsNameValid() && IsSurnameValid() && IsEmailValid() && IsBirthDateValid() && IsPasswordValid();
+        return IsNameValid() && IsSurnameValid() && IsEmailValid() && IsBirthDateValid();
     }
     public bool IsUserAdmin()
     {

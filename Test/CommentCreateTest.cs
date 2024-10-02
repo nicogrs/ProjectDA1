@@ -19,6 +19,6 @@ public class CommentCreateTest
     public void CommentCreateCreatedBy()
     {
         Comment c = new Comment(u1, "ComentarioPrueba");
-        Assert.Equals(c.CreatedBy, u1);
+        Assert.AreSame(c.CreatedBy, u1);
     }
 }

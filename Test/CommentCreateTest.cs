@@ -21,4 +21,11 @@ public class CommentCreateTest
         Comment c = new Comment(u1, "ComentarioPrueba");
         Assert.AreSame(c.CreatedBy, u1);
     }
+    
+    [TestMethod]
+    public void CommentCreateContent()
+    {
+        Comment c = new Comment(u1, "ComentarioPrueba");
+        Assert.AreSame(c.Content, "ComentarioPrueba");
+    }
 }

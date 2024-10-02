@@ -37,7 +37,27 @@ public class UserDatabaseTest
     {
         var getUser = db.GetUserByEmail(_user.Email);
         db.AddUser(_user);
-    } 
+    }
+
+    [TestMethod]
+    public void UpdateUser()
+    {
+        db.AddUser(_user);
+        var user = db.GetUserByEmail(_user.Email);
+        var newUser = new User
+        {
+            Email = _user.Email,
+            Surname = _user.Surname,
+            Name = "Nuevo Nombre",
+            BirthDate = _user.BirthDate,
+            Admin = _user.Admin,
+            Password = _user.Password,
+            Teams = new List<Team>()
+        };
+        db.UpdateUser(newUser);
+        var newUserFromDB = db.GetUserByEmail(_user.Email);
+        Assert.AreNotEqual(user.Name, newUserFromDB.Name);
+    }
     
     public void DeleteUserFromDataBase()
     {

@@ -3,7 +3,7 @@ namespace Test;
 
 
 [TestClass]
-public class CommentTest
+public class CommentCreateTest
 {
     private User u1;
     private User u2;
@@ -13,5 +13,12 @@ public class CommentTest
     {
         u1 = new User();
         u2 = new User();
+    }
+
+    [TestMethod]
+    public void CommentCreateCreatedBy()
+    {
+        Comment c = new Comment(u1, "ComentarioPrueba");
+        Assert.Equals(c.CreatedBy, u1);
     }
 }

@@ -9,9 +9,6 @@ public class Comment
 
     public Comment(User createdBy, string content)
     {
-        CreatedBy = createdBy;
-        Content = content;
-        Resolved = false;
-        ResolvedBy = null;
+
     }
 }

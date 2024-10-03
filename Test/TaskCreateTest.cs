@@ -53,4 +53,13 @@ public class TaskCreateTest
         Assert.IsTrue(succesfulChange);
         Assert.AreEqual(Task.Priority.Medium, t1.priority);
     }
+    
+    
+    [TestMethod]
+    public void ResolveCommentTest1()
+    {
+        t1.MarkCommentAsResolved(u2, c1);
+        
+        Assert.IsTrue(c1.Resolved);
+    }
 }

@@ -42,4 +42,15 @@ public class TaskCreateTest
         Assert.AreEqual(t1.expDate, new DateTime(2025, 10, 01));
         Assert.AreEqual(t1.comments, comments);
     }
+
+    [TestMethod]
+    public void ChangePriorityTest()
+    {
+        bool succesfulChange;
+        
+        succesfulChange = t1.ChangePriority(Task.Priority.Medium);
+        
+        Assert.IsTrue(succesfulChange);
+        Assert.AreEqual(Task.Priority.Medium, t1.priority);
+    }
 }

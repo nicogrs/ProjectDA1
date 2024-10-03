@@ -15,4 +15,9 @@ public class Task
         Medium,
         Urgent
     }
+
+    public bool ChangePriority(Priority priority)
+    {
+        return false;
+    }
 }

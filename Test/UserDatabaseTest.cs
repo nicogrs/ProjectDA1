@@ -55,10 +55,11 @@ public class UserDatabaseTest
             Teams = new List<Team>()
         };
         db.UpdateUser(newUser);
-        var newUserFromDB = db.GetUserByEmail(_user.Email);
-        Assert.AreNotEqual(user.Name, newUserFromDB.Name);
+        var userFromDb = db.GetUserByEmail(_user.Email);
+        Assert.AreEqual(newUser.Name, userFromDb.Name);
     }
     
+    [TestMethod]
     public void DeleteUserFromDataBase()
     {
         db.AddUser(_user);

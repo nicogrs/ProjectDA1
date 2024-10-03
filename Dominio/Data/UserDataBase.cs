@@ -21,19 +21,12 @@ public class UserDataBase : IUserDatabase
     public User GetUserByEmail(string email)
     {
        var user = Users.Find(u => u.Email == email);
-       if (user == null)
+       if (string.IsNullOrEmpty(user.Email))
        {
            throw new NullReferenceException("Usuario no encontrado");
        }
-       return new User
-       {
-           Name = user.Name,
-           Surname = user.Surname,
-           BirthDate = user.BirthDate,
-           Admin = user.Admin,
-           Email = user.Email,
-           Teams = user.Teams
-       };
+
+       return user;
     }
 
     public List<User> GetAllUsers()
@@ -46,9 +39,13 @@ public class UserDataBase : IUserDatabase
         this.Users.Add(user);
     }
 
-    public bool UpdateUser(User user)
+    public void UpdateUser(User user)
     {
-        return false;
+       var actualUser = GetUserByEmail(user.Email);
+       actualUser.Name = user.Name;
+       actualUser.Surname = user.Surname;
+       actualUser.BirthDate = user.BirthDate;
+       actualUser.Password = user.Password;
     }
 
     public bool DeleteUser(string email)

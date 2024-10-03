@@ -73,8 +73,6 @@ public class UserService : IUserService
         {
             throw new DataException("Error al resetear la contraseña en la base de datos", e);
         }
-
-       
     }
 
     public bool UpdateUser(User user)

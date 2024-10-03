@@ -92,7 +92,6 @@ public class UserServiceTest
     }
     
     
-    
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void DeleteInvalidUser()

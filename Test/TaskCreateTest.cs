@@ -58,8 +58,15 @@ public class TaskCreateTest
     [TestMethod]
     public void ResolveCommentTest1()
     {
+        DateTime timeOfChange;
+        TimeSpan timeDifference;
+        
         t1.MarkCommentAsResolved(u2, c1);
+        timeOfChange = DateTime.Now;
+        timeDifference = timeOfChange - c1.ResolvedTime;
         
         Assert.IsTrue(c1.Resolved);
+        Assert.AreEqual(c1.ResolvedBy,u2);
+        Assert.IsTrue(timeDifference.TotalSeconds <= 5);
     }
 }

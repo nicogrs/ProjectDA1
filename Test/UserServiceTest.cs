@@ -1,4 +1,6 @@
-﻿namespace Test;
+﻿using System.Data;
+
+namespace Test;
 using Dominio;
 using Moq;
 
@@ -47,7 +49,14 @@ public class UserServiceTest
         var isUserAdded = _service.CreateUser(_user);
         Assert.IsTrue(isUserAdded);
     }
-    
+
+    [TestMethod]
+    public void CreateUserWithInvalidPassword()
+    {
+        _user.Password = "123456";
+        _service.CreateUser(_user);
+    }
+
     [TestMethod]
     [ExpectedException(typeof(InvalidOperationException))]
     public void AddExistingUser()
@@ -91,6 +100,16 @@ public class UserServiceTest
         Assert.AreNotEqual(oldPassword, resetedPassword);
     }
     
+    [TestMethod]
+    [ExpectedException(typeof(DataException
+        ))]
+    public void InvalidUserResetPassword()
+    {
+        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns((User)null);
+        var oldPassword = _user.Password;
+        var resetedPassword = _service.ResetUserPassword(_user.Email);
+        Assert.AreNotEqual(oldPassword, resetedPassword);
+    }
     
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]

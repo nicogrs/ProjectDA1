@@ -16,8 +16,9 @@ public class Task
         Urgent
     }
 
-    public bool ChangePriority(Priority priority)
+    public bool ChangePriority(Priority _priority)
     {
-        return false;
+        priority = _priority;
+        return priority == _priority;
     }
 }

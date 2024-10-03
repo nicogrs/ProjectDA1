@@ -26,7 +26,7 @@ public class TaskCreateTest
         t1 = new Task()
         {
             Title = "Titulo 1",
-            priority = "baja",
+            priority = Task.Priority.Low,
             Description = "Descripcion tarea 1",
             expDate = new DateTime(2025, 10, 01),
             comments = comments
@@ -36,7 +36,7 @@ public class TaskCreateTest
     [TestMethod]
     public void TaskCreate()
     {
-        Assert.AreEqual(t1.priority, "baja");
+        Assert.AreEqual(t1.priority, Task.Priority.Low);
         Assert.AreEqual(t1.Title, "Titulo 1");
         Assert.AreEqual(t1.Description, "Descripcion tarea 1");
         Assert.AreEqual(t1.expDate, new DateTime(2025, 10, 01));

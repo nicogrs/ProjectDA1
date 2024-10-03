@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Data;
+using System.Text;
 
 namespace Dominio;
 
@@ -24,14 +25,46 @@ public class UserService
         {
             throw new InvalidOperationException("El usuario ya existe");
         }
-        if (user.IsUserValid() && _passwordService.IsPasswordValid(user.Password))
+
+        if (!_passwordService.IsPasswordValid(user.Password))
         {
-          _userDatabase.AddUser(user);
-          return true;
+            throw new InvalidOperationException("La contraseña es invalida");
         }
-        return false;
+
+        if (!user.IsUserValid())
+        {
+            throw new FormatException("Usuario no valido");
+        }
+        try
+        {
+            _userDatabase.AddUser(user);
+            return true;
+        }
+        catch (Exception e)
+        {
+            throw new DataException("Error al agregar un usuario en la base de datos", e);
+        }
+
     }
-    
+
+    public bool UpdateUser(User user)
+    {
+        try
+        {
+            if (user.IsUserValid() && _passwordService.IsPasswordValid(user.Password))
+            {
+                _userDatabase.UpdateUser(user);
+                return true;
+            }
+
+            return false;
+        }
+        catch (Exception e)
+        {
+            throw new InvalidDataException("No es posible actualizar el usuario en al base de datos", e);
+        }
+        
+    }
     
     public bool DeleteUser(string email)
     {

@@ -57,6 +57,7 @@ public class UserServiceTest
     }
     
     [TestMethod]
+    [ExpectedException(typeof(FormatException))]
     public void AddInvalidUser()
     {
         _user.Name = "a";
@@ -72,6 +73,24 @@ public class UserServiceTest
      var isUserDeleted = _service.DeleteUser(_user.Email);
      Assert.IsTrue(isUserDeleted );
     }
+
+    [TestMethod]
+    public void GetUserByEmail()
+    {
+        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+        var userFromService = _service.GetUserByEmailFromDb(_user.Email);
+        Assert.IsNotNull(userFromService);
+    }
+    
+    [TestMethod]
+    public void ResetUserPassword()
+    {
+        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+        var oldPassword = _user.Password;
+        var restedPassword = _service.ResetUserPassword(_user.Email);
+        Assert.IsTrue(isPasswordReset);
+    }
+    
     
     
     [TestMethod]

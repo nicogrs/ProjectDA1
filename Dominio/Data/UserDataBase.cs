@@ -28,12 +28,7 @@ public class UserDataBase : IUserDatabase
 
        return user;
     }
-
-    public List<User> GetAllUsers()
-    {
-        return null;
-    }
-
+    
     public void AddUser(User user)
     {
         this.Users.Add(user);

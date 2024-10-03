@@ -21,4 +21,8 @@ public class Task
         priority = _priority;
         return priority == _priority;
     }
+
+    public void MarkCommentAsResolved(User user, Comment comment)
+    {
+    }
 }

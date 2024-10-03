@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Dominio;
 
-public class UserService
+public class UserService : IUserService
 {
     private readonly IUserDatabase _userDatabase;
     private readonly PasswordService _passwordService;
@@ -18,6 +18,7 @@ public class UserService
     {
        return _userDatabase.GetUserByEmail(email) != null;
     }
+    
 
     public bool CreateUser(User user)
     {
@@ -45,6 +46,35 @@ public class UserService
             throw new DataException("Error al agregar un usuario en la base de datos", e);
         }
 
+    }
+
+    public User GetUserByEmail(string email)
+    {
+        return _userDatabase.GetUserByEmail(email);
+    }
+    
+    public string ResetUserPassword(string email)
+    {
+        try
+        {
+            var actualUser = GetUserByEmail(email);
+            string newPassword = _passwordService.GenerateRandomPassword();
+            var userWithNewPassword = new User
+            {
+                Name = actualUser.Name,
+                Email = actualUser.Email,
+                Password = newPassword,
+                BirthDate = actualUser.BirthDate,
+            };
+            UpdateUser(userWithNewPassword);
+            return newPassword;
+        }
+        catch (Exception e)
+        {
+            throw new DataException("Error al resetear la contraseña en la base de datos", e);
+        }
+
+       
     }
 
     public bool UpdateUser(User user)

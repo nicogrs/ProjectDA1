@@ -78,7 +78,7 @@ public class UserServiceTest
     public void GetUserByEmail()
     {
         _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
-        var userFromService = _service.GetUserByEmailFromDb(_user.Email);
+        var userFromService = _service.GetUserByEmail(_user.Email);
         Assert.IsNotNull(userFromService);
     }
     
@@ -87,8 +87,8 @@ public class UserServiceTest
     {
         _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
         var oldPassword = _user.Password;
-        var restedPassword = _service.ResetUserPassword(_user.Email);
-        Assert.IsTrue(isPasswordReset);
+        var resetedPassword = _service.ResetUserPassword(_user.Email);
+        Assert.AreNotEqual(oldPassword, resetedPassword);
     }
     
     

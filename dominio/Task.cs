@@ -24,5 +24,8 @@ public class Task
 
     public void MarkCommentAsResolved(User user, Comment comment)
     {
+        comment.Resolved = true;
+        comment.ResolvedBy = user;
+        comment.ResolvedTime = DateTime.Now;
     }
 }

@@ -18,12 +18,18 @@
     &lt;/TestAncestor&gt;&#xD;
   &lt;/Or&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=601c5048_002Df951_002D4f13_002D933d_002D308116a46c28/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CreateUserWithInvalidPassword" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;ProjectFile&gt;687A33A1-9721-481E-AFE1-E4EB33DE1FC4/f:UserServiceTest.cs&lt;/ProjectFile&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=6dc6d0df_002D0ef2_002D4746_002Da15c_002Da100b827104d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="PasswordGenerate" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;MSTest::687A33A1-9721-481E-AFE1-E4EB33DE1FC4::net6.0::Test.UserServiceTest.PasswordGenerate&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b76c7e43_002D28ed_002D413e_002D9fc7_002D76748a0b2dce/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;Test&amp;gt; #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=abb6eed8_002D5550_002D46b7_002Da704_002D3b0df3b56365/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ValidUser" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Project Location="C:\Users\PC\Desktop\265403_243045_174039\Test" Presentation="&amp;lt;Test&amp;gt;" /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b76c7e43_002D28ed_002D413e_002D9fc7_002D76748a0b2dce/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;Test&amp;gt; #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;MSTest::687A33A1-9721-481E-AFE1-E4EB33DE1FC4::net6.0::Test.UserListTest.UserNotExists&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;

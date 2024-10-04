@@ -84,12 +84,12 @@ public class UserService : IUserService
                 _userDatabase.UpdateUser(user);
                 return true;
             }
-
+        Console.WriteLine("No se puede realizar el usuario");
             return false;
         }
         catch (Exception e)
         {
-            throw new InvalidDataException("No es posible actualizar el usuario en al base de datos", e);
+            throw new InvalidDataException("No es posible actualizar el usuario en la base de datos", e);
         }
         
     }

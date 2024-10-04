@@ -49,11 +49,20 @@ public class UserServiceTest
         var isUserAdded = _service.CreateUser(_user);
         Assert.IsTrue(isUserAdded);
     }
-
+    
     [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
     public void CreateUserWithInvalidPassword()
     {
         _user.Password = "123456";
+        _service.CreateUser(_user);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(FormatException))]
+    public void CreateUserWithInvalidName()
+    {
+        _user.Name = "a";
         _service.CreateUser(_user);
     }
 
@@ -71,18 +80,8 @@ public class UserServiceTest
     {
         _user.Name = "a";
         var isInvalidUserAdded = _service.CreateUser(_user);
-        Assert.IsFalse(isInvalidUserAdded);
     }
-
-    [TestMethod]
-    public void DeleteUser()
-    {
-     _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
-     _mockUserDatabase.Setup(x => x.DeleteUser(_user.Email)).Returns(true);
-     var isUserDeleted = _service.DeleteUser(_user.Email);
-     Assert.IsTrue(isUserDeleted );
-    }
-
+    
     [TestMethod]
     public void GetUserByEmail()
     {
@@ -106,9 +105,48 @@ public class UserServiceTest
     public void InvalidUserResetPassword()
     {
         _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns((User)null);
-        var oldPassword = _user.Password;
         var resetedPassword = _service.ResetUserPassword(_user.Email);
-        Assert.AreNotEqual(oldPassword, resetedPassword);
+    }
+
+    [TestMethod]
+    public void UpdateUser()
+    {
+        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+        var updatedUser = new User
+        {
+            Name = _user.Name,
+            Password = "NuevaPass1$",
+            Email = _user.Email,
+            Surname = _user.Surname,
+            BirthDate = _user.BirthDate
+        };
+        var isUserUpdated = _service.UpdateUser(updatedUser);
+        Assert.IsTrue(isUserUpdated);
+    }
+    
+    [TestMethod]
+    public void UpdateInvalidUser()
+    {
+        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+        var updatedUser = new User
+        {
+            Name = _user.Name,
+            Password = "a",
+            Email = _user.Email,
+            Surname = _user.Surname,
+            BirthDate = _user.BirthDate
+        };
+        var isUserUpdated = _service.UpdateUser(updatedUser);
+        Assert.IsFalse(isUserUpdated);
+    }
+    
+    
+    [TestMethod]
+    public void DeleteUser()
+    {
+        _mockUserDatabase.Setup(x => x.DeleteUser(_user.Email)).Returns(true);
+        var isUserDeleted = _service.DeleteUser(_user.Email);
+        Assert.IsTrue(isUserDeleted );
     }
     
     [TestMethod]

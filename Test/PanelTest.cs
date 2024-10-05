@@ -58,6 +58,15 @@ public class PanelTest
         Assert.AreEqual(panel.CreatedBy, u);
     }
 
-    
+    [TestMethod]
+    public void PanelAddTaskTest()
+    {
+        int initialTaskCount = panel.Tasks.Count;
+        
+        panel.AddTask(t1);
+        
+        Assert.AreEqual(t1,panel.Tasks.Last());
+        Assert.AreEqual(initialTaskCount + 1, panel.Tasks.Count);
+    }
     
 }

@@ -32,8 +32,18 @@ public class Task
     public bool AddComment(User user, string content)
     {
         bool success = false;
-        
-        
+
+        try
+        {
+            Comment commentToAdd = new Comment(user, content);
+            comments.Add(commentToAdd);
+            success = true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
         
         return success;
     }

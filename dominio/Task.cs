@@ -28,4 +28,9 @@ public class Task
         comment.ResolvedBy = user;
         comment.ResolvedTime = DateTime.Now;
     }
+
+    public bool AddComment(User user, Comment comment)
+    {
+        return false;
+    }
 }

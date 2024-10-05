@@ -83,4 +83,21 @@ public class TaskTest
         Assert.AreEqual(c1.ResolvedBy,u2);
         Assert.IsTrue(timeDifference.TotalSeconds <= 5);
     }
+
+    [TestMethod]
+    public void AddCommentTest()
+    {
+        //Arrange
+        int initialCommentCount = t1.comments.Count;
+        Comment c4 = new Comment(u1, "Comentario de AddComentTest");
+        Comment lastAddedComment;
+        
+        //Act
+        t1.AddComment(u1,c4);
+        
+        //Assert
+        lastAddedComment = t1.comments.Last();
+        Assert.AreEqual(t1.comments.Count, initialCommentCount + 1);
+        Assert.AreEqual(t1.comments.Last(), c4);
+    }
 }

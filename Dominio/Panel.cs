@@ -1,5 +1,6 @@
 ﻿namespace Dominio;
 
-public class Team
+public class Panel
 {
+    
 }

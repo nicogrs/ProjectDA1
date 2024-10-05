@@ -29,8 +29,12 @@ public class Task
         comment.ResolvedTime = DateTime.Now;
     }
 
-    public bool AddComment(User user, Comment comment)
+    public bool AddComment(User user, string content)
     {
-        return false;
+        bool success = false;
+        
+        
+        
+        return success;
     }
 }

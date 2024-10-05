@@ -89,15 +89,15 @@ public class TaskTest
     {
         //Arrange
         int initialCommentCount = t1.comments.Count;
-        Comment c4 = new Comment(u1, "Comentario de AddComentTest");
+        string content = "Comentario de AddComentTest";
         Comment lastAddedComment;
         
         //Act
-        t1.AddComment(u1,c4);
+        t1.AddComment(u1,content);
         
         //Assert
         lastAddedComment = t1.comments.Last();
         Assert.AreEqual(t1.comments.Count, initialCommentCount + 1);
-        Assert.AreEqual(t1.comments.Last(), c4);
+        Assert.AreEqual(t1.comments.Last().Content, content);
     }
 }

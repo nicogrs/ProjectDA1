@@ -34,7 +34,7 @@ public class UserService : IUserService
 
         if (!user.IsUserValid())
         {
-            throw new FormatException("Usuario no valido");
+            throw new ArgumentException("Usuario no valido");
         }
         try
         {
@@ -43,7 +43,7 @@ public class UserService : IUserService
         }
         catch (Exception e)
         {
-            throw new DataException("Error al agregar un usuario en la base de datos", e);
+            throw new NullReferenceException("Error al agregar un usuario en la base de datos", e);
         }
 
     }

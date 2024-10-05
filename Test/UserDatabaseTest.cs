@@ -30,15 +30,16 @@ public class UserDatabaseTest
         var result = db.GetUserByEmail(_user.Email);
         Assert.AreSame(_user.Email, result.Email);
     }
-
+    
     [TestMethod]
-    [ExpectedException(typeof(NullReferenceException))]
-    public void UpdateInvalidUser()
+    public void GetUserByEmail()
     {
-        var getUser = db.GetUserByEmail(_user.Email);
         db.AddUser(_user);
+        var user = db.GetUserByEmail(_user.Email);
+        Assert.AreEqual(user, _user);
     }
-
+    
+    
     [TestMethod]
     public void UpdateUser()
     {

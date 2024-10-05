@@ -20,12 +20,12 @@ public class UserDataBase : IUserDatabase
     
     public User GetUserByEmail(string email)
     {
-       var user = Users.Find(u => u.Email == email);
-       if (string.IsNullOrEmpty(user.Email))
-       {
-           throw new NullReferenceException("Usuario no encontrado");
-       }
 
+       var user = Users.Find(u => u.Email == email);
+       if (user == null)
+       {
+           throw new NullReferenceException();
+       }
        return user;
     }
     

@@ -7,4 +7,5 @@ public class Panel
     public string Description { get; set; }
     public User CreatedBy { get; set; }
     public List<Task> Tasks { get; set; }
+    
 }

@@ -8,8 +8,17 @@ public class Panel
     public User CreatedBy { get; set; }
     public List<Task> Tasks { get; set; }
 
+    public Panel()
+    {
+        Name = "";
+        Team = "";
+        Description = "";
+        CreatedBy = null;
+        Tasks = new List<Task>();
+    }
+    
     public void AddTask(Task task)
     {
-        
+        Tasks.Add(task);
     }
 }

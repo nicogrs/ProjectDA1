@@ -4,7 +4,7 @@ using Task = Dominio.Task;
 namespace Test;
 
 [TestClass]
-public class TaskCreateTest
+public class TaskTest
 {
     private User u1;
     private User u2;
@@ -34,7 +34,7 @@ public class TaskCreateTest
     }
     
     [TestMethod]
-    public void TaskCreate()
+    public void TaskCreateTest()
     {
         Assert.AreEqual(t1.priority, Task.Priority.Low);
         Assert.AreEqual(t1.Title, "Titulo 1");
@@ -52,6 +52,20 @@ public class TaskCreateTest
         
         Assert.IsTrue(succesfulChange);
         Assert.AreEqual(Task.Priority.Medium, t1.priority);
+    }
+    
+    [TestMethod]
+    public void ChangePriorityTest2()
+    {
+        bool firstSuccesfulChange;
+        bool secondSuccesfulChange;
+        
+        firstSuccesfulChange = t1.ChangePriority(Task.Priority.Medium);
+        secondSuccesfulChange = t1.ChangePriority(Task.Priority.Urgent);
+        
+        Assert.IsTrue(firstSuccesfulChange);
+        Assert.IsTrue(secondSuccesfulChange);
+        Assert.AreEqual(Task.Priority.Urgent, t1.priority);
     }
     
     

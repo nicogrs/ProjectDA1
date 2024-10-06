@@ -3,10 +3,10 @@
 public class Task
 {
     public string Title { get; set; }
-    public Priority priority { get; set; }
+    public Priority Precedence { get; set; }
     public string Description { get; set; }
-    public DateTime expDate { get; set; }
-    public List<Comment> comments { get; set; }
+    public DateTime ExpirationDate { get; set; }
+    public List<Comment> Comments { get; set; }
 
 
     public enum Priority
@@ -18,8 +18,8 @@ public class Task
 
     public bool ChangePriority(Priority _priority)
     {
-        priority = _priority;
-        return priority == _priority;
+        Precedence = _priority;
+        return Precedence == _priority;
     }
 
     public void MarkCommentAsResolved(User user, Comment comment)
@@ -36,7 +36,7 @@ public class Task
         try
         {
             Comment commentToAdd = new Comment(user, content);
-            comments.Add(commentToAdd);
+            Comments.Add(commentToAdd);
             success = true;
         }
         catch (Exception e)
@@ -50,6 +50,6 @@ public class Task
     
     public bool IsExpired()
     {
-        return DateTime.Now > expDate;
+        return DateTime.Now > ExpirationDate;
     }
 }

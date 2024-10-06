@@ -1,0 +1,104 @@
+@page "/teams/add"
+@using Dominio
+@using Dominio.Data
+@using Logica
+@inject TeamDatabase TDatabase
+@inject UserDataBase UDatabase
+@inject NavigationManager Navigation
+@inject Session Session
+
+<PageTitle>Add to Team</PageTitle>
+<h3>Agregar Usuario a Equipo</h3>
+<EditForm Model="modelAddToTeam" OnValidSubmit="HandleAdd">
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+        <label for="releaseYear">Equipo</label>
+        <InputSelect @bind-Value="selectedTeamName" @onchange="OnChangeCategory">
+            <option value="0" disabled>
+                Ninguna seleccionada
+            </option>
+            @foreach (var team in Teams)
+            {
+            <option value="@team.Name">@team.Name </option>
+            }
+        </InputSelect>
+    </div>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Selecciona Usuarios
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
+            @foreach (var user in Users)
+            {
+                <li class="dropdown-item">
+                    <input type="checkbox" @onchange="(e) => ToggleUserSelection(user.Email, e.Value)" /> @user.Name @user.Surname
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit">Añadir Usuario</button>
+    </div>
+    <div class="col-4">
+        <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
+    </div>
+    <div class="alert alert-danger" role="alert">
+        @createMessage
+    </div>
+</EditForm>
+
+@code {
+    Team modelAddToTeam = new Team();
+    string selectedTeamName = "";
+    private List<Team> Teams;
+    private List<User> Users;
+    private string createMessage;
+    public List<User> SelectedUser;
+
+    protected override void OnInitialized()
+    {
+        if (!Session.IsAdmin)
+        {
+            Navigation.NavigateTo("/error");
+        }
+
+        Teams = TDatabase.Teams;
+        Users = UDatabase.GetUsers();
+        SelectedUser = new List<User>();
+    }
+
+    private void OnChangeCategory(ChangeEventArgs e)
+    {
+        string category = e.Value.ToString();
+        modelAddToTeam.Name = TDatabase.Teams.FirstOrDefault(t => t.Name.Equals(category)).Name;
+    }
+
+    private void ToggleUserSelection(string email, object isSelected)
+    {
+        if ((bool)isSelected)
+        {
+            SelectedUser.Add(UDatabase.GetUserByEmail(email));
+        }
+    }
+
+    private void HandleAdd()
+    {
+        Team existingTeam = TDatabase.Teams.FirstOrDefault(t => t.Name.Equals(modelAddToTeam.Name));
+
+        if (existingTeam != null)
+        {
+            if (SelectedUser.Any())
+            {
+                existingTeam.Users.AddRange(SelectedUser.Where(newUser =>
+                    !existingTeam.Users.Any(existingUser => existingUser.Email == newUser.Email)));
+
+                createMessage = "Usuarios agregados exitosamente al equipo existente.";
+            }
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/account/teams");
+    }
+}

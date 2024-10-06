@@ -1,0 +1,111 @@
+@page "/teams/create"
+@using Dominio
+@using Dominio.Data
+@using Logica
+@inject TeamDatabase TDatabase
+@inject UserDataBase UDatabase
+@inject NavigationManager Navigation
+@inject Session Session
+
+
+<PageTitle>Create Team</PageTitle>
+<h3>Agregar Equipo</h3>
+<EditForm Model="modelCreateTeam" OnValidSubmit="HandleCreate">
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+        <label id="name">Nombre</label>
+        <InputText class="form-control" @bind-Value="@modelCreateTeam.Name" id="name"></InputText>
+        <ValidationMessage For="@(() => modelCreateTeam.Name)"/>
+    </div>
+    <div class="form-group">
+        <label id="userAmount">Cantidad de Usuarios</label>
+        <InputNumber class="form-control" @bind-Value="@modelCreateTeam.UserAmount" id="userAmount"></InputNumber>
+        <ValidationMessage For="@(() => modelCreateTeam.UserAmount)"/>
+    </div>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Selecciona Usuarios
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
+            @foreach (var user in users)
+            {
+            <li class="dropdown-item">
+                <input type="checkbox" @onchange="(e) => ToggleUserSelection(user.Email, e.Value)" /> @user.Name @user.Surname
+            </li>
+            }
+        </ul>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit">Crear Grupo</button>
+    </div>
+    <div class="col-4">
+        <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
+    </div>
+    <div class="alert alert-danger" role="alert">
+        @createMessage
+    </div>
+
+</EditForm>
+
+
+    
+@code{
+
+    Team modelCreateTeam = new Team();
+    private List<User> users;
+    private string createMessage;
+    public List<User> SelectedUser;
+    private Panel p;
+    public List<Panel> panels;
+    
+    protected override void OnInitialized()
+    {
+        if (!Session.IsAdmin || Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+        users = UDatabase.GetUsers();
+        SelectedUser = new List<User> { Session.CurrentUser };
+        
+    }
+    private void ToggleUserSelection(string email, object isSelected)
+    {
+        if ((bool)isSelected)
+        {
+            SelectedUser.Add(UDatabase.GetUserByEmail(email));
+        }
+
+    }
+    
+    private void HandleCreate()
+    {
+        
+        Team t = new Team
+        {
+            Name = modelCreateTeam.Name,
+            CreationDate = DateTime.Now,
+            Users = SelectedUser,
+            Tasks = new List<Dominio.Task>(),
+            Panels = new List<Panel>(),  
+            UserAmount = modelCreateTeam.UserAmount
+        };
+        
+        Panel nuevoPanel = new Panel
+        {
+            Name = $"{t.Name}_ExpiratedTasks",
+            Team = t, 
+            Tasks = new List<Dominio.Task>(),
+            Creator = Session.CurrentUser,
+            Description = "Panel de tareas expiradas"
+        };
+
+
+        t.Panels.Add(p);
+        TDatabase.Teams.Add(t);
+        createMessage="Equipo creado con éxito";
+    }
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/account/teams");
+    }
+}

@@ -1,0 +1,52 @@
+@using Dominio
+@using Dominio.Data
+@inject TaskDatabase Database
+@inject NavigationManager Navigation
+
+<div class="card">
+    <div class="card-body">
+        <p class="card-title">@Title</p>
+        <div class="d-flex justify-content-between">
+            <p class="card-text">@Priority</p>
+            <p class="card-text">@EndDate</p>
+        </div>
+        <p class="card-text">@Description</p>
+        @if (Comments != null && Comments.Count > 0)
+        {
+            foreach (var comment in Comments)
+            {
+                <div class="card-text border-bottom mb-2 pb-2">
+                    <p>@comment.Content</p>
+                </div>
+            }
+        }
+    </div>
+    <div class="card-footer">
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit" @onclick="AddComment">Agregar Comentario</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public int Priority { get; set; }
+    [Parameter]
+    public DateTime EndDate { get; set; }
+    [Parameter]
+    public string Description { get; set; }
+    
+    private List<Comment> Comments;
+
+    protected override void OnInitialized()
+    {
+        Comments = Database.Tasks.FirstOrDefault(t => t.Title.Equals(Title)).Comments;
+    }
+
+    private void AddComment()
+    {
+        //Navigation.NavigateTo($"/{teamName}/{panelName}/{Title}/comments/create");
+    }
+}

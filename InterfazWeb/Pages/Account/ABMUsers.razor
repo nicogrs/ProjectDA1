@@ -1,0 +1,27 @@
+@page "/users"
+@using Logica
+@inject NavigationManager Navigation
+@inject Session Session
+
+<PageTitle>ABMUsers</PageTitle>
+<h3>Alta Baja Modificacion de usuarios</h3>
+<div class="form-group">
+    <div class="col-4">
+        <button class="btn btn-primary" type="submit" @onclick="AddUsers">Agregar Usuarios</button>
+    </div>
+</div>
+<p class="text">Pagina en construccion</p>
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (!Session.IsAdmin)
+        {
+            Navigation.NavigateTo("/error");
+        }
+    }
+    private void AddUsers()
+    {
+        Navigation.NavigateTo("/account/register");
+    }
+}

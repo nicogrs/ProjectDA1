@@ -17,6 +17,10 @@ public class UserDataBase : IUserDatabase
             Teams = new List<Team>()
         });
     }
+    public List<User> GetUsers()
+    {
+        return new List<User>(Users); 
+    }
     
     public User GetUserByEmail(string email)
     {

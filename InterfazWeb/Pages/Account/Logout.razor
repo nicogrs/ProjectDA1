@@ -1,0 +1,18 @@
+@page "/account/logout"
+@using Logica
+@inject Session Session
+@inject NavigationManager Navigation
+<h3>Cerrar Sesion</h3>
+
+<div class="form-group">
+    <p class="text">¿Seguro que quieres cerrar sesión?</p>
+    <button class="btn btn-primary" type="submit" @onclick="CloseSession">Cerrar Sesion</button>
+</div>
+
+@code {
+    private void CloseSession()
+    {
+        Session.Logout();
+        Navigation.NavigateTo("/account/login");
+    }
+}

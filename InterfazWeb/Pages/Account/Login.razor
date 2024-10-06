@@ -1,0 +1,61 @@
+@page "/account/login"
+@using Dominio.Data
+@using DTOs
+@using Logica
+@inject NavigationManager Navigation
+@inject Session Session
+@inject UserDataBase Database
+
+<h3>Login</h3>
+
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Email</label>
+        <InputText @bind-Value="loginModel.Email" />
+    </div>
+
+    <div class="form-group">
+        <label>Contraseña</label>
+        <InputText @bind-Value="loginModel.Password" type="password" />
+    </div>
+
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit">Ingresar</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+    <div class="alert alert-danger" role="alert">
+        @errorMessage
+    </div>
+    }
+</EditForm>
+
+
+@code {
+    private UserLoginDTO loginModel = new UserLoginDTO();
+    private string errorMessage;
+    
+    
+    private void HandleLogin()
+    {
+        var user = Database.GetUserByEmail(loginModel.Email);
+        if (user != null && user.Password == loginModel.Password)
+        {
+            loginModel = UserLoginDTO.FromEntity(user);
+            Navigation.NavigateTo("/");
+            Session.Login(user);
+        }
+        else
+        {
+            errorMessage = "El email o la contraseña son incorrectos.";
+            loginModel = new UserLoginDTO();
+        }
+    }
+
+}
+
+

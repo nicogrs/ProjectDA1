@@ -1,0 +1,86 @@
+@page "/account/register"
+
+@using Dominio.Data
+@using Logica
+@using DTOs
+@inject UserDataBase Database
+@inject NavigationManager Navigation
+@inject Session Session
+
+<PageTitle>Registro</PageTitle>
+
+<EditForm Model="registerModel" OnValidSubmit="HandleRegister">
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+        <label id="name">Nombre</label>
+        <InputText class="form-control" @bind-Value="@registerModel.Name" id="name"></InputText>
+        <ValidationMessage For="@(() => registerModel.Name)"/>
+    </div>
+    
+    <div class="form-group">
+        <label for="lastName">Apellido</label>
+        <InputText class="form-control" @bind-Value="@registerModel.Surname" id="lastName"></InputText>
+        <ValidationMessage For="@(() => registerModel.Surname)"/>
+    </div>
+   
+    <div class="form-group">
+        <label for="birthDate">Fecha de nacimiento</label>
+        <InputDate class="form-control" id="birthDate" @bind-Value="@registerModel.BirthDate" min="1900-01-01"></InputDate>
+        <ValidationMessage For="@(() => registerModel.BirthDate)"/>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <InputText class="form-control" id="email" @bind-Value="@registerModel.Email"></InputText>
+        <ValidationMessage For="@(() => registerModel.Email)"/>
+    </div>
+
+    <div class="form-group">
+        <label for="password">Contraseña</label>
+        <InputText class="form-control" id="password" @bind-Value="@registerModel.Password" type="@passwordInputType"></InputText>
+        <ValidationMessage For="@(() => registerModel.Password)"/>
+    </div>
+    
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit">Registrarse</button>
+    </div>
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+    <div class="alert alert-danger" role="alert">
+        @errorMessage
+    </div>
+    }
+</EditForm>
+
+@code {
+    UserRegisterDTO registerModel = new UserRegisterDTO();
+    private string errorMessage;
+    private bool showPassword = false;
+    private string passwordInputType => showPassword ? "text" : "password";
+    
+    protected override void OnInitialized()
+    {
+        if (!Session.IsAdmin)
+        {
+            Navigation.NavigateTo("/error");
+        }
+    }
+    
+    private void HandleRegister()
+    {
+        UserRegisterDTO u = new UserRegisterDTO
+        {
+            Name = registerModel.Name,
+            Surname = registerModel.Surname,
+            BirthDate = registerModel.BirthDate,
+            Email = registerModel.Email,
+            Password = registerModel.Password
+        };
+
+        Database.AddUser(u.ToEntity());
+        errorMessage = null;
+
+        Navigation.NavigateTo("/");
+    }
+    
+}

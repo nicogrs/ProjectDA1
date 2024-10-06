@@ -1,0 +1,43 @@
+@page "/{teamName}/{panelName}/tasks"
+@using Logica
+@inject Session Session
+@inject NavigationManager Navigation
+<PageTitle>Equipos</PageTitle>
+
+<div class="row">
+    <h3>Equipos</h3>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" type="submit" @onclick="CreateTask">Crear Nuevo Tarea</button>
+    </div>
+    @if (Session.GetTasks(teamName,panelName).Count != 0)
+    {
+        foreach (var task in Session.GetTasks(teamName,panelName))
+        {
+            if (task.ExpirationDate > DateTime.Today)
+            {
+                <TaskCard Title="@task.Title" 
+                          Description="@task.Description" 
+                          Precedence="@task.Precedence" 
+                          EndDate="@task.ExpirationDate" 
+                          Comments="@task.Comments" />
+            }
+        }
+    }
+    else
+    {
+        <p>Panel sin tareas.</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public string panelName { get; set; }
+    
+    private void CreateTask()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelName}/create");
+    }
+    
+}

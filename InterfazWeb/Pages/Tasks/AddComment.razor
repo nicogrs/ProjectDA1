@@ -1,0 +1,67 @@
+@page "/{teamName}/{panelName}/{taskName}/comments/create"
+
+@using Dominio
+@using Dominio.Data
+@using Logica
+@inject CommentDatabase CDatabase
+@inject UserDataBase UDatabase
+@inject NavigationManager Navigation
+@inject Session Session
+
+
+<PageTitle>Add Comment</PageTitle>
+<h3>Agregar Comentario</h3>
+<EditForm Model="modelAddComment" OnValidSubmit="HandleCreate">
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+        <label id="content">Comentario</label>
+        <InputText class="form-control" @bind-Value="@modelAddComment.Content" id="content"></InputText>
+        <ValidationMessage For="@(() => modelAddComment.Content)"/>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit">Agregar Comentario</button>
+    </div>
+    <div class="alert alert-danger" role="alert">
+        @addMessage
+    </div>
+</EditForm>
+<div class="col-4">
+    <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
+</div>
+
+
+@code{
+
+    private Comment modelAddComment;
+    private List<User> users;
+    private string addMessage;
+    public List<User> SelectedUser;
+    
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public string panelName { get; set; }
+    [Parameter]
+    public string taskName { get; set; }
+    
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser==null)
+        {
+        Navigation.NavigateTo("/error");
+        }
+        modelAddComment = new Comment(Session.CurrentUser, string.Empty);
+    }
+
+    private void HandleCreate()
+    {
+        CDatabase.Comments.Add(modelAddComment);
+        Session.GetTasks(teamName, panelName).Find(x => x.Title == taskName).Comments.Add(modelAddComment);
+        addMessage = "Comentario agregado con éxito";
+        modelAddComment = new Comment(Session.CurrentUser, string.Empty);
+    }
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelName}/tasks");
+    }
+}

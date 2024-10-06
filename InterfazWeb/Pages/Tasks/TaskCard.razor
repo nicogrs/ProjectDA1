@@ -1,5 +1,6 @@
 @using Dominio
 @using Dominio.Data
+@using Task = Dominio.Task
 @inject TaskDatabase Database
 @inject NavigationManager Navigation
 
@@ -7,7 +8,7 @@
     <div class="card-body">
         <p class="card-title">@Title</p>
         <div class="d-flex justify-content-between">
-            <p class="card-text">@Priority</p>
+            <p class="card-text">@Precedence</p>
             <p class="card-text">@EndDate</p>
         </div>
         <p class="card-text">@Description</p>
@@ -32,7 +33,7 @@
     [Parameter]
     public string Title { get; set; }
     [Parameter]
-    public int Priority { get; set; }
+    public Task.Priority Precedence { get; set; }
     [Parameter]
     public DateTime EndDate { get; set; }
     [Parameter]
@@ -47,6 +48,6 @@
 
     private void AddComment()
     {
-        //Navigation.NavigateTo($"/{teamName}/{panelName}/{Title}/comments/create");
+        Navigation.NavigateTo("/auxiliar");
     }
 }

@@ -1,0 +1,11 @@
+@page "/error"
+@inject NavigationManager Navigation
+<h3>Error</h3>
+<p>No tienes acceso a esta pagina.</p>
+<button class="btn btn-primary" type="button" @onclick="GoBack">Volver</button>
+@code {
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/index/user");
+    }
+}

@@ -1,9 +1,58 @@
 ﻿@page "/"
-
+@using Logica
+@inject NavigationManager Navigation
+@inject Session Session
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>TaskPanel</h1>
+<div class="form-group">
+    <p>¡Bienvenido a TaskPanel!</p>
+    <p>Por favor, inicia sesion para continuar.</p>
+    <div class="row">
+        <div class="col-4">
+            <button class="btn btn-primary" type="submit" @onclick="Logout">Cerrar Sesion</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary" type="submit" @onclick="ViewTeams">Ver Equipos</button>
+        </div>
+        @if (Session.IsAdmin)
+        {
+            <div class="col-4">
+                <button class="btn btn-primary" type="submit" @onclick="CreateTeam">Crear Nuevo Equipo</button>
+            </div>
+            <div class="col-4">
+                <button class="btn btn-primary" type="submit" @onclick="ABMUsers">Alta,Baja y Modificacion de Usuarios</button>
+            </div>
+            
+        }
+    </div>
+</div>
 
-Welcome to your new app.
+@code {
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser==null)
+        {
+            Navigation.NavigateTo("/account/login");
+        }
+    }
+    private void ViewTeams()
+    {
+        Navigation.NavigateTo("/account/teams");
+    }
+    private void CreateTeam()
+    {
+        Navigation.NavigateTo("/teams/create");
+    }
+    private void ABMUsers()
+    {
+        Navigation.NavigateTo("/users");
+    }
+    
+    
+    private void Logout()
+    {
+        Navigation.NavigateTo("/account/logout");
+    }
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+}

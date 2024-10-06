@@ -13,7 +13,7 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ATestResult_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E2_003Fresharper_002Dhost_003FDecompilerCache_003Fdecompiler_003F3be818c9fa714bfd81bc9709a0e0c21829190_003Fe0_003Fa03de46f_003FTestResult_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AUnitTestRunner_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E2_003Fresharper_002Dhost_003FDecompilerCache_003Fdecompiler_003F60e77dfc476b4b69937fe6b73366af4726bb0_003Faf_003Fc4ed12ae_003FUnitTestRunner_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	
-	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">C:\Users\PC\AppData\Local\JetBrains\Rider2024.2\resharper-host\temp\Rider\vAny\CoverageData\_TaskPanel.627697179\Snapshot\snapshot.utdcvr</s:String>
+	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=96378360_002D28cd_002D46f1_002Db14c_002Dd95bbaaa6381/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;Test&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="C:\Users\PC\Desktop\265403_243045_174039\Test" Presentation="&amp;lt;Test&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>

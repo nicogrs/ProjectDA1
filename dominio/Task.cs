@@ -47,4 +47,9 @@ public class Task
         
         return success;
     }
+    
+    public bool IsExpired()
+    {
+        return DateTime.Now > expDate;
+    }
 }

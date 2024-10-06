@@ -1,0 +1,44 @@
+@page "/{teamName}/panel"
+
+@inject NavigationManager Navigation
+@using Logica
+
+@inject Session session
+
+<PageTitle>Panel</PageTitle>
+
+
+
+
+<PageTitle>Equipos</PageTitle>
+
+<div class="row">
+    <h3>Equipos</h3>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" type="submit" @onclick="CreatePanel">Crear Nuevo Panel</button>
+    </div>
+    @if (session.GetTeams().Count != 0)
+    {
+        foreach (var panel in session.GetPanels(@teamName))
+        {
+            <PanelCard Title="@panel.Name" Description="@panel.Description"/>
+        }
+    }
+    else
+    {
+        <p>Equipo sin paneles.</p>
+    }
+    
+    
+</div>
+
+
+@code {
+    [Parameter]
+    public string teamName { get; set; }
+    private void CreatePanel()
+    {
+        Navigation.NavigateTo($"/{teamName}/panels/create");
+    }
+    
+}

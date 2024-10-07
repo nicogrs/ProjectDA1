@@ -6,4 +6,6 @@ public interface ITeamDatabase
     public void AddTeamToDatabase(Team team);
     public void RemoveTeamFromDatabase(Team team);
     public void UpdateTeamInDatabase(Team team);
+    public List<Team> GetTeamsByUserEmail(string email);
+    public List<Team> GetTeams();
 }

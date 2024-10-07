@@ -7,4 +7,30 @@ public class Team
     public string TasksDescription { get; set; }
     public int MaxUsers { get; set; }
     public List<Panel> Panels { get; set; }
+    public int MembersCount { get; set; }
+
+    public Team()
+    {
+        Panels = new List<Panel>();
+        MembersCount = 0;
+    }
+    
+    public bool TeamValidation()
+    {
+        var nameNotNull = !string.IsNullOrEmpty(Name);
+        var createdOnNotNull = CreatedOn != null;
+        var createdOnValid = CreatedOn <= DateTime.Now;
+        var maxUsersNotCero = MaxUsers > 0;
+        var panelsNotNull = Panels != null;
+        var membersCount = MembersCount > 0;
+        
+        if (nameNotNull && createdOnNotNull && createdOnValid && 
+            maxUsersNotCero && panelsNotNull && membersCount)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
+

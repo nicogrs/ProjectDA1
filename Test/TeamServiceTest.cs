@@ -20,16 +20,25 @@ public class TeamServiceTest
             Name = "Team Example",
             CreatedOn = new DateTime(2020, 05, 05),
             TasksDescription = "Tareas sobre desarrollo",
-            MaxUsers = 5,
-            Panels = new List<Panel>(),
+            MaxUsers = 5
         };
     }
 
     [TestMethod]
-    public void CreateTeam()
+    public void CreateTeamTest()
     {
+        team.MembersCount = 1;
         var isTeamCreated = _service.CreateTeam(team);
         Assert.IsTrue(isTeamCreated);
+    }
+
+    [TestMethod]
+
+    public void AddUserToTeam()
+    {
+        var userEmail = "user@email.com";
+        var isUserAdded = _service.AddUserToTeam(team, userEmail);
+        Assert.IsTrue(isUserAdded);
     }
     
 }

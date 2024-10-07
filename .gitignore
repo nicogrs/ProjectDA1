@@ -85,10 +85,8 @@ fabric.properties
 # Ignore build output directories
 **/bin/
 **/obj/
-Test/obj/
-Test/bin
-Test/bin/
-Dominio/obj/
+**/obj
+**/bin
 
 # NuGet Packages
 *.nupkg

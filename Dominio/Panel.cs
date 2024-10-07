@@ -21,4 +21,9 @@ public class Panel
     {
         Tasks.Add(task);
     }
+
+    public int getTaskCount()
+    {
+        return Tasks.Count;
+    }
 }

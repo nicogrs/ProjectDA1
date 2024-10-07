@@ -61,12 +61,12 @@ public class PanelTest
     [TestMethod]
     public void PanelAddTaskTest()
     {
-        int initialTaskCount = panel.Tasks.Count;
+        int initialTaskCount = panel.getTaskCount();
         
         panel.AddTask(t1);
         
         Assert.AreEqual(t1,panel.Tasks.Last());
-        Assert.AreEqual(initialTaskCount + 1, panel.Tasks.Count);
+        Assert.AreEqual(initialTaskCount + 1, panel.getTaskCount());
     }
     
 }

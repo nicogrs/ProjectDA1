@@ -26,6 +26,12 @@ public class TeamService
     { 
         return _teamDatabase.GetTeamByName(teamName) != null ? true : false;
     }
+
+    public Team GetTeamByName(string teamName)
+    {
+        return _teamDatabase.GetTeamByName(teamName);
+    }
+    
     public bool UserExistsInTeam(string userEmail, string teamName)
     {
         var team = _teamDatabase.GetTeamByName(teamName);
@@ -39,12 +45,31 @@ public class TeamService
     public bool AddUserToTeam(string teamName, string userEmail)
     {
        var user = _userService.GetUserByEmail(userEmail);
-       if (!UserExistsInTeam(userEmail, teamName))
+       var team = _teamDatabase.GetTeamByName(teamName);
+       if (!UserExistsInTeam(userEmail, teamName) && team.MembersCount < team.MaxUsers)  
        {
-           var team = _teamDatabase.GetTeamByName(teamName);
+           
            team.TeamMembers.Add(user);
+           team.MembersCount = team.TeamMembers.Count;
            return true;
        }
+        return false;
+    }
+    public bool UpdateTeam(string teamName, Team team)
+    {
+        var teamToUpdate = _teamDatabase.GetTeamByName(teamName);
+        Console.WriteLine($"Team {teamToUpdate.Name} has been updated");
+        team.CreatedOn = teamToUpdate.CreatedOn;
+        team.Panels = teamToUpdate.Panels;
+        team.TeamMembers = teamToUpdate.TeamMembers;
+        team.MembersCount = teamToUpdate.MembersCount;
+
+        if (team.TeamValidation())
+        {
+            _teamDatabase.UpdateTeamInDatabase(team);
+            return true;
+        }
+
         return false;
     }
 }

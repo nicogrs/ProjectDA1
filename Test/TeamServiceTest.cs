@@ -22,14 +22,15 @@ public class TeamServiceTest
             Name = "Team Example",
             CreatedOn = new DateTime(2020, 05, 05),
             TasksDescription = "Tareas sobre desarrollo",
-            MaxUsers = 5
+            MaxUsers = 5,
+            MembersCount = 1
         };
     }
 
     [TestMethod]
     public void CreateTeamTest()
     {
-        team.MembersCount = 1;
+
         var isTeamCreated = _teamService.CreateTeam(team);
         Assert.IsTrue(isTeamCreated);
     }
@@ -61,13 +62,14 @@ public class TeamServiceTest
     [TestMethod]
     public void UpdateTeamTest()
     {
-        var team = new Team
+        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
+        var teamTest = new Team
         {
-            Name = "Team Example",
+            Name = "New name",
             MaxUsers = 10,
             TasksDescription = "Tareas sobre facultad"
         };
-        var isTeamUpdated = _teamService.UpdateTeam(team);
+        var isTeamUpdated = _teamService.UpdateTeam(team.Name, teamTest);
         Assert.IsTrue(isTeamUpdated);
     }
     

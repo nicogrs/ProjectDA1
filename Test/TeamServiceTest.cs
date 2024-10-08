@@ -54,8 +54,21 @@ public class TeamServiceTest
         team.TeamMembers.Add(user);
         _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns(user);
-        var userAlreadyExists = _teamService.AddUserToTeam(team.Name, userEmail);
-        Assert.IsFalse(userAlreadyExists);
+        var isUserAdded = _teamService.AddUserToTeam(team.Name, userEmail);
+        Assert.IsFalse(isUserAdded);
+    }
+
+    [TestMethod]
+    public void UpdateTeamTest()
+    {
+        var team = new Team
+        {
+            Name = "Team Example",
+            MaxUsers = 10,
+            TasksDescription = "Tareas sobre facultad"
+        };
+        var isTeamUpdated = _teamService.UpdateTeam(team);
+        Assert.IsTrue(isTeamUpdated);
     }
     
 }

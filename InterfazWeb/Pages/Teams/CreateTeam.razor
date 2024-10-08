@@ -42,7 +42,7 @@
         <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
     </div>
     <div class="alert alert-danger" role="alert">
-        @createMessage
+        @CreateMessage
     </div>
 
 </EditForm>
@@ -53,14 +53,14 @@
 
     Team modelCreateTeam = new Team();
     private List<User> users;
-    private string createMessage;
+    private string CreateMessage;
     public List<User> SelectedUser;
     private Panel p;
     public List<Panel> panels;
     
     protected override void OnInitialized()
     {
-        if (!Session.IsAdmin || Session.CurrentUser == null)
+        if (!Session.IsAdmin)
         {
             Navigation.NavigateTo("/error");
         }
@@ -102,7 +102,7 @@
 
         t.Panels.Add(p);
         TDatabase.Teams.Add(t);
-        createMessage="Equipo creado con éxito";
+        CreateMessage="Equipo creado con éxito";
     }
     private void GoBack()
     {

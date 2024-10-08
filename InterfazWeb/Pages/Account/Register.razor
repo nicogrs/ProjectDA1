@@ -3,42 +3,42 @@
 @using Dominio.Data
 @using Logica
 @using DTOs
-@inject UserDataBase Database
+@inject UserDataBase UDatabase
 @inject NavigationManager Navigation
 @inject Session Session
 
 <PageTitle>Registro</PageTitle>
 
-<EditForm Model="registerModel" OnValidSubmit="HandleRegister">
+<EditForm Model="modelRegister" OnValidSubmit="HandleRegister">
     <DataAnnotationsValidator/>
     <div class="form-group">
         <label id="name">Nombre</label>
-        <InputText class="form-control" @bind-Value="@registerModel.Name" id="name"></InputText>
-        <ValidationMessage For="@(() => registerModel.Name)"/>
+        <InputText class="form-control" @bind-Value="@modelRegister.Name" id="name"></InputText>
+        <ValidationMessage For="@(() => modelRegister.Name)"/>
     </div>
     
     <div class="form-group">
         <label for="lastName">Apellido</label>
-        <InputText class="form-control" @bind-Value="@registerModel.Surname" id="lastName"></InputText>
-        <ValidationMessage For="@(() => registerModel.Surname)"/>
+        <InputText class="form-control" @bind-Value="@modelRegister.Surname" id="lastName"></InputText>
+        <ValidationMessage For="@(() => modelRegister.Surname)"/>
     </div>
    
     <div class="form-group">
         <label for="birthDate">Fecha de nacimiento</label>
-        <InputDate class="form-control" id="birthDate" @bind-Value="@registerModel.BirthDate" min="1900-01-01"></InputDate>
-        <ValidationMessage For="@(() => registerModel.BirthDate)"/>
+        <InputDate class="form-control" id="birthDate" @bind-Value="@modelRegister.BirthDate" min="1900-01-01"></InputDate>
+        <ValidationMessage For="@(() => modelRegister.BirthDate)"/>
     </div>
 
     <div class="form-group">
         <label for="email">Email</label>
-        <InputText class="form-control" id="email" @bind-Value="@registerModel.Email"></InputText>
-        <ValidationMessage For="@(() => registerModel.Email)"/>
+        <InputText class="form-control" id="email" @bind-Value="@modelRegister.Email"></InputText>
+        <ValidationMessage For="@(() => modelRegister.Email)"/>
     </div>
 
     <div class="form-group">
         <label for="password">Contraseña</label>
-        <InputText class="form-control" id="password" @bind-Value="@registerModel.Password" type="@passwordInputType"></InputText>
-        <ValidationMessage For="@(() => registerModel.Password)"/>
+        <InputText class="form-control" id="password" @bind-Value="@modelRegister.Password" type="@passwordInputType"></InputText>
+        <ValidationMessage For="@(() => modelRegister.Password)"/>
     </div>
     
     <div class="form-group">
@@ -53,7 +53,7 @@
 </EditForm>
 
 @code {
-    UserRegisterDTO registerModel = new UserRegisterDTO();
+    UserRegisterDTO modelRegister = new UserRegisterDTO();
     private string errorMessage;
     private bool showPassword = false;
     private string passwordInputType => showPassword ? "text" : "password";
@@ -70,14 +70,14 @@
     {
         UserRegisterDTO u = new UserRegisterDTO
         {
-            Name = registerModel.Name,
-            Surname = registerModel.Surname,
-            BirthDate = registerModel.BirthDate,
-            Email = registerModel.Email,
-            Password = registerModel.Password
+            Name = modelRegister.Name,
+            Surname = modelRegister.Surname,
+            BirthDate = modelRegister.BirthDate,
+            Email = modelRegister.Email,
+            Password = modelRegister.Password
         };
 
-        Database.AddUser(u.ToEntity());
+        UDatabase.AddUser(u.ToEntity());
         errorMessage = null;
 
         Navigation.NavigateTo("/");

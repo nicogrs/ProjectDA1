@@ -3,7 +3,8 @@
 @using Dominio.Data
 @using Task = Dominio.Task
 @using Logica
-@inject TaskDatabase Database
+@inject TaskDatabase TDatabase
+@inject PanelDatabase PDatabase
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -40,7 +41,7 @@
         <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
     </div>
     <div class="alert alert-danger" role="alert">
-        @createMessage
+        @CreateMessage
     </div>
 
 </EditForm>
@@ -48,7 +49,7 @@
 @code {
    
     Task modelCreateTask = new Task();
-    private string createMessage;
+    private string CreateMessage;
     
     [Parameter]
     public string teamName { get; set; }
@@ -74,9 +75,9 @@
             ExpirationDate = modelCreateTask.ExpirationDate,
             Comments = null
         };
-        Database.Tasks.Add(t);
-        Session.GetPanels(teamName).Find(x => x.Name == panelName).Tasks.Add(t);
-        createMessage="Tarea creado con éxito";
+        TDatabase.Tasks.Add(t);
+        PDatabase.GetPanelByName(panelName).Tasks.Add(t);
+        CreateMessage="Tarea creado con éxito";
     } 
     private void GoBack()
     {

@@ -1,7 +1,7 @@
 @page "/account/teams"
 
 @using Logica
-@inject Session session
+@inject Session Session
 @inject NavigationManager Navigation
 
 <PageTitle>Equipos</PageTitle>
@@ -9,33 +9,34 @@
 <div class="row">
     <h3>Equipos</h3>
     
-    @if(session.IsAdmin){
+    @if(Session.IsAdmin){
         <div class="form-group">
             <button class="btn btn-primary" type="submit" @onclick="CreateTeam">Crear un equipo</button>
         </div>
     }
+    
+    @if (Session.GetTeams().Count != 0)
+    {
+        foreach (var team in Session.GetTeams())
+        {
+            <TeamCard Title="@team.Name"/>
+        }
+    }
     else
     {
-        if (session.GetTeams().Count != 0)
+        <p>No tienes equipos asignados.</p>
+    }
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
         {
-            foreach (var team in session.GetTeams())
-            {
-                <TeamCard Title="@team.Name"/>
-            }
-        }
-        else
-        {
-            <p>No tienes equipos asignados.</p>
+            Navigation.NavigateTo("/error");
         }
     }
     
-    
-    
-    
-</div>
-
-
-@code {
     private void CreateTeam()
     {
         Navigation.NavigateTo("/teams/create");

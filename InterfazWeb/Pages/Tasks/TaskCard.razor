@@ -1,7 +1,7 @@
 @using Dominio
 @using Dominio.Data
 @using Task = Dominio.Task
-@inject TaskDatabase Database
+@inject TaskDatabase TDatabase
 @inject NavigationManager Navigation
 
 <div class="card">
@@ -43,7 +43,7 @@
 
     protected override void OnInitialized()
     {
-        Comments = Database.Tasks.FirstOrDefault(t => t.Title.Equals(Title)).Comments;
+        Comments = TDatabase.Tasks.FirstOrDefault(t => t.Title.Equals(Title)).Comments;
     }
 
     private void AddComment()

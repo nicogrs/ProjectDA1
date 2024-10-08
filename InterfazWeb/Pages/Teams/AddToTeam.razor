@@ -43,7 +43,7 @@
         <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
     </div>
     <div class="alert alert-danger" role="alert">
-        @createMessage
+        @CreateMessage
     </div>
 </EditForm>
 
@@ -52,7 +52,7 @@
     string selectedTeamName = "";
     private List<Team> Teams;
     private List<User> Users;
-    private string createMessage;
+    private string CreateMessage;
     public List<User> SelectedUser;
 
     protected override void OnInitialized()
@@ -92,7 +92,7 @@
                 existingTeam.Users.AddRange(SelectedUser.Where(newUser =>
                     !existingTeam.Users.Any(existingUser => existingUser.Email == newUser.Email)));
 
-                createMessage = "Usuarios agregados exitosamente al equipo existente.";
+                CreateMessage = "Usuarios agregados exitosamente al equipo existente.";
             }
         }
     }

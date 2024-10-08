@@ -1,6 +1,8 @@
 @using Dominio.Data
+@using Logica
 @inject NavigationManager Navigation
-@inject PanelDatabase Database
+@inject PanelDatabase PDatabase
+@inject Session Session
 
 <div class="card">
     <div class="card-body">
@@ -23,11 +25,16 @@
     
     protected override void OnParametersSet()
     {
-        var panel = Database.GetPanelByName(Title);
+        var panel = PDatabase.GetPanelByName(Title);
         if (panel != null && panel.Team != null)
         {
             teamName = panel.Team.Name;
         }
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+
     }
     
     private void GoToPanel()

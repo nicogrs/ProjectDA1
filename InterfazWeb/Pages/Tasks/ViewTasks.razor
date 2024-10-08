@@ -1,5 +1,7 @@
 @page "/{teamName}/{panelName}/tasks"
 @using Logica
+@using Dominio.Data
+@inject PanelDatabase PDatabase
 @inject Session Session
 @inject NavigationManager Navigation
 <PageTitle>Equipos</PageTitle>
@@ -9,9 +11,9 @@
     <div class="d-flex justify-content-end">
         <button class="btn btn-primary" type="submit" @onclick="CreateTask">Crear Nuevo Tarea</button>
     </div>
-    @if (Session.GetTasks(teamName,panelName).Count != 0)
+    @if (Tasks.Count != 0)
     {
-        foreach (var task in Session.GetTasks(teamName,panelName))
+        foreach (var task in Tasks)
         {
             if (task.ExpirationDate > DateTime.Today)
             {
@@ -34,6 +36,17 @@
     public string teamName { get; set; }
     [Parameter]
     public string panelName { get; set; }
+    
+    private List<Dominio.Task> Tasks;
+    
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+        Tasks = PDatabase.GetPanelByName(panelName).Tasks;
+    }
     
     private void CreateTask()
     {

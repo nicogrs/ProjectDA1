@@ -31,7 +31,7 @@
         <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
     </div>
     <div class="alert alert-danger" role="alert">
-        @createMessage
+        @CreateMessage
     </div>
 
 </EditForm>
@@ -42,7 +42,7 @@
 
     Panel modelCreatePanel = new Panel();
     private List<User> users;
-    private string createMessage;
+    private string CreateMessage;
     public List<User> SelectedUser; 
     
     [Parameter]
@@ -67,8 +67,8 @@
             Tasks = null
         };
         PDatabase.Panels.Add(p);
-        Session.GetTeams().Find(x => x.Name == teamName).Panels.Add(p);
-        createMessage="Panel agregado con éxito";
+        TDatabase.GetTeamByName(teamName).Panels.Add(p);
+        CreateMessage="Panel agregado con éxito";
     }
     private void GoBack()
     {

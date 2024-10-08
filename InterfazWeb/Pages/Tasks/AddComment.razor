@@ -4,7 +4,7 @@
 @using Dominio.Data
 @using Logica
 @inject CommentDatabase CDatabase
-@inject UserDataBase UDatabase
+@inject PanelDatabase PDatabase
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -56,7 +56,7 @@
     private void HandleCreate()
     {
         CDatabase.Comments.Add(modelAddComment);
-        Session.GetTasks(teamName, panelName).Find(x => x.Title == taskName).Comments.Add(modelAddComment);
+        PDatabase.GetPanelByName(panelName).Tasks.Find(x => x.Title == taskName).Comments.Add(modelAddComment);
         addMessage = "Comentario agregado con éxito";
         modelAddComment = new Comment(Session.CurrentUser, string.Empty);
     }

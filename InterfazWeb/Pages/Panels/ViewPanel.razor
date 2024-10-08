@@ -1,25 +1,23 @@
 @page "/{teamName}/panel"
 
-@inject NavigationManager Navigation
 @using Logica
-
-@inject Session session
+@using Dominio
+@using Dominio.Data
+@inject TeamDatabase TDatabase
+@inject NavigationManager Navigation
+@inject Session Session
 
 <PageTitle>Panel</PageTitle>
 
 
-
-
-<PageTitle>Equipos</PageTitle>
-
 <div class="row">
-    <h3>Equipos</h3>
+    <h3>@teamName</h3>
     <div class="d-flex justify-content-end">
         <button class="btn btn-primary" type="submit" @onclick="CreatePanel">Crear Nuevo Panel</button>
     </div>
-    @if (session.GetTeams().Count != 0)
+    @if (Panels.Count != 0)
     {
-        foreach (var panel in session.GetPanels(@teamName))
+        foreach (var panel in Panels)
         {
             <PanelCard Title="@panel.Name" Description="@panel.Description"/>
         }
@@ -28,14 +26,24 @@
     {
         <p>Equipo sin paneles.</p>
     }
-    
-    
 </div>
 
 
 @code {
     [Parameter]
     public string teamName { get; set; }
+    private List<Panel> Panels;
+    
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+
+        Panels = TDatabase.GetTeamByName(teamName).Panels;
+    }
+    
     private void CreatePanel()
     {
         Navigation.NavigateTo($"/{teamName}/panels/create");

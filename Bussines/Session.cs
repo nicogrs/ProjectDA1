@@ -24,16 +24,6 @@ public class Session
     {
         return CurrentUser?.Teams ?? new List<Team>();
     }
-    public List<Panel> GetPanels(string teamName)
-    {
-        var team = CurrentUser?.Teams.FirstOrDefault(t => t.Name == teamName);
-        return team?.Panels ?? new List<Panel>();
-    }
+   
     
-    public List<Task> GetTasks(string teamName, string panelName)
-    {
-        var team = CurrentUser?.Teams.FirstOrDefault(t => t.Name == teamName);
-        var panel = team?.Panels.FirstOrDefault(p => p.Name == panelName);
-        return panel?.Tasks ?? new List<Task>();
-    }
 }

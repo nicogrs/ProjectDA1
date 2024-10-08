@@ -8,10 +8,12 @@ public class Team
     public int MaxUsers { get; set; }
     public List<Panel> Panels { get; set; }
     public int MembersCount { get; set; }
+    public List<User> TeamMembers { get; set; }
 
     public Team()
     {
         Panels = new List<Panel>();
+        TeamMembers = new List<User>();
         MembersCount = 0;
     }
     

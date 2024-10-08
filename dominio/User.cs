@@ -9,7 +9,6 @@ public class User
     public string Password { get; set; }
     public bool Admin { get; set; }
     
-    public List<Team> Teams { get; set; }
 
     public bool IsNameValid()
     {

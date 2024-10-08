@@ -53,7 +53,6 @@ public class UserDatabaseTest
             BirthDate = _user.BirthDate,
             Admin = _user.Admin,
             Password = _user.Password,
-            Teams = new List<Team>()
         };
         db.UpdateUser(newUser);
         var userFromDb = db.GetUserByEmail(_user.Email);

@@ -13,7 +13,7 @@ public class TeamService
     
     public bool CreateTeam(Team team)
     {
-        if(team.TeamValidation())
+        if(team.TeamValidation() && !TeamExists(team.Name))
         {
             _teamDatabase.AddTeamToDatabase(team);
             Console.WriteLine("Team has been created");
@@ -23,8 +23,8 @@ public class TeamService
     }
 
     public bool TeamExists(string teamName)
-    { 
-        return _teamDatabase.GetTeamByName(teamName) != null ? true : false;
+    {
+        return _teamDatabase.GetTeams().Any(t => t.Name == teamName);
     }
 
     public Team GetTeamByName(string teamName)
@@ -34,12 +34,12 @@ public class TeamService
     
     public bool UserExistsInTeam(string userEmail, string teamName)
     {
-        var team = _teamDatabase.GetTeamByName(teamName);
-        if (team == null)
-        {
-            return false;
+        if (TeamExists(teamName))
+        { 
+            var team = _teamDatabase.GetTeamByName(teamName);
+            return team.TeamMembers.Any(x => x.Email == userEmail);
         }
-        return team.TeamMembers.Any(x => x.Email == userEmail);
+        return false;
     }
     
     public bool AddUserToTeam(string teamName, string userEmail)

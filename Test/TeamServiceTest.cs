@@ -72,5 +72,15 @@ public class TeamServiceTest
         var isTeamUpdated = _teamService.UpdateTeam(team.Name, teamTest);
         Assert.IsTrue(isTeamUpdated);
     }
+
+    [TestMethod]
+
+    public void AddNewPanel()
+    {
+        Panel panelTest = new Panel();
+        var isPanelAdded = _teamService.AddPanel(Panel panel);
+        Assert.IsTrue(isPanelAdded);
+    }
+    
     
 }

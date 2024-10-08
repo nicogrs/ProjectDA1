@@ -54,26 +54,10 @@
         </div>
 
         <div class="form-group">
-            <label for="email">Email</label>
-            <InputText class="form-control" id="email" @bind-Value="@modelChangeInformation.Email"></InputText>
-            <ValidationMessage For="@(() => modelChangeInformation.Email)"/>
-        </div>
-
-        <div class="form-group">
             <label for="password">Contraseña</label>
             <button class="btn btn-primary" type="button" @onclick="GeneratePassword">Generar contraseña</button>
             <InputText class="form-control" id="password" type="text" @bind-Value="@modelChangeInformation.Password" readonly="true" />
         </div>
-
-        <div class="form-group">
-            <label for="admin">Administrador</label>
-            <InputSelect @bind-Value="@modelChangeInformation.Admin" @onchange="OnChangeUser">
-                <option value="true">Sí</option>
-                <option value="false">No</option>
-            </InputSelect>
-            <ValidationMessage For="@(() => modelChangeInformation.Admin)" />
-        </div>
-
 
         <div class="mt-2">
             <div class="form-group">
@@ -93,8 +77,6 @@
     private string modifyMessage;
     private string selectedUser = "";
     private bool showConfirmation = false;
-    private bool showPassword = false;
-    private string passwordInputType => showPassword ? "text" : "password";
     private string newPassword;
     private PasswordService passwordService = new PasswordService();
 
@@ -124,46 +106,42 @@
         showConfirmation = true;
     }
 
-    private void ConfirmUpdate()
-    {
-        HandleUpdate();
-        showConfirmation = false;
-    }
-
     private void HandleUpdate()
     {
         User modifyUser = UDatabase.GetUserByEmail(modelModifyUser.Email);
         
+        UserModifyDTO u = new UserModifyDTO
+        {
+            Name = modifyUser.Name,
+            Surname = modifyUser.Surname,
+            BirthDate = modifyUser.BirthDate,
+            Password = modifyUser.Password,
+            Email = modelModifyUser.Email
+        };
+        
         if (modelChangeInformation.Name != null)
         {
-            modifyUser.Name = modelChangeInformation.Name;
+            u.Name = modelChangeInformation.Name;
         }
     
         if (modelChangeInformation.Surname != null)
         {
-            modifyUser.Surname = modelChangeInformation.Surname;
+            u.Surname = modelChangeInformation.Surname;
         }
-    
-        if (modelChangeInformation.Email != null)
-        {
-            modifyUser.Email = modelChangeInformation.Email;
-        }
-    
+
         if (modelChangeInformation.BirthDate != default(DateTime))
         {
-            modifyUser.BirthDate = modelChangeInformation.BirthDate;
+            u.BirthDate = modelChangeInformation.BirthDate;
         }
         
         if (modelChangeInformation.Password != null)
         {
-            modifyUser.Password = modelChangeInformation.Password;
+            u.Password = modelChangeInformation.Password;
         }
-    
-        if (modelChangeInformation.Admin)
-        {
-            modifyUser.Admin = modelChangeInformation.Admin;
-        }
-        modifyMessage = "No se puede eliminar al usuario actual.";
+        
+        UDatabase.UpdateUser(u.ToEntity());
+        showConfirmation = false;
+        modifyMessage = "Usuario modificado.";
         
     }
 

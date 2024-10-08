@@ -1,0 +1,118 @@
+﻿@page "/users/delete"
+@using Dominio
+@using Dominio.Data
+@using Logica
+@inject UserDataBase UDatabase
+@inject Session Session
+@inject NavigationManager Navigation
+
+<PageTitle>Eliminar Usuario</PageTitle>
+<h3>Eliminar Usuario</h3>
+
+<EditForm Model="modelDeleteUser" OnValidSubmit="ShowConfirmation">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="releaseYear">Usuario</label>
+        <InputSelect @bind-Value="selectedUser" @onchange="OnChangeUser">
+            <option value="0" disabled>Ninguna seleccionada</option>
+            @foreach (var user in Users)
+            {
+                <option value="@user.Email">@user.Email</option>
+            }
+        </InputSelect>
+    </div>
+    
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit">Borrar Usuario</button>
+    </div>
+    <div class="col-4">
+        <button class="btn btn-primary" type="button" @onclick="GoBack">Volver</button>
+    </div>
+</EditForm>
+
+@if (showConfirmation)
+{
+    <div class="alert alert-warning" role="alert">
+        <p>¿Estás seguro de que deseas eliminar al usuario @modelDeleteUser.Email? Este proceso no se puede deshacer.</p>
+        <div class="mt-2">
+            <button class="btn btn-primary" type="button" @onclick="ConfirmDelete">Confirmar</button>
+            <button class="btn btn-primary" type="button" @onclick="CancelDelete">Cancelar</button>
+        </div>
+        <div class="alert alert-danger" role="alert">
+            @deleteMessage
+        </div>
+    </div>
+}
+
+@code {
+    User modelDeleteUser = new User();
+    private List<User> Users;
+    private string deleteMessage;
+    private string selectedUser = "";
+    private bool showConfirmation = false;
+    private bool actualUser = false;
+
+    protected override void OnInitialized()
+    {
+        if (!Session.IsAdmin)
+        {
+            Navigation.NavigateTo("/error");
+        }
+        Users = UDatabase.GetUsers();
+    }
+
+    private void OnChangeUser(ChangeEventArgs e)
+    {
+        string userEmail = e.Value.ToString();
+        modelDeleteUser = UDatabase.GetUsers().FirstOrDefault(u => u.Email.Equals(userEmail));
+    }
+
+    private void ShowConfirmation()
+    {
+        showConfirmation = true;
+    }
+
+    private void ConfirmDelete()
+    {
+        HandleDelete();
+        showConfirmation = false;
+    }
+
+    private void HandleDelete()
+    {
+        User deleteUser = UDatabase.GetUserByEmail(modelDeleteUser.Email);
+        actualUser = (deleteUser == Session.CurrentUser);
+        if (deleteUser != null)
+        {
+            
+            if (actualUser)
+            {
+                Session.Logout();
+                UDatabase.DeleteUser(modelDeleteUser.Email);
+                Navigation.NavigateTo("/index");
+            }
+            else
+            {
+                UDatabase.DeleteUser(modelDeleteUser.Email);
+                deleteMessage = "Usuario eliminado exitosamente.";
+            }
+        }
+        else
+        {
+            deleteMessage = "No se puede eliminar al usuario actual.";
+        }
+
+        modelDeleteUser = new User();
+        Users = UDatabase.GetUsers();
+    }
+
+    private void CancelDelete()
+    {
+        showConfirmation = false;
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/users");
+    }
+}

@@ -13,6 +13,15 @@
         <div class="form-group">
             <button class="btn btn-primary" type="submit" @onclick="GoToPanel">Ir</button>
         </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit" @onclick="ChangePanel">Modificar</button>
+        </div>
+        @if (Session.IsAdmin)
+        {
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit" @onclick="DeletePanel">Eliminar</button>
+            </div>
+        }
     </div>
 </div>
 @code {
@@ -40,5 +49,13 @@
     private void GoToPanel()
     {
         Navigation.NavigateTo($"/{teamName}/{Title}/tasks");
+    }
+    private void ChangePanel()
+    {
+        Navigation.NavigateTo("/auxiliar");
+    }
+    private void DeletePanel()
+    {
+        Navigation.NavigateTo("/auxiliar");
     }
 }

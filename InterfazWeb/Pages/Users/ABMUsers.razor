@@ -1,4 +1,4 @@
-@page "/users"
+@page "/users/"
 @using Logica
 @inject NavigationManager Navigation
 @inject Session Session
@@ -8,6 +8,12 @@
 <div class="form-group">
     <div class="col-4">
         <button class="btn btn-primary" type="submit" @onclick="AddUsers">Agregar Usuarios</button>
+    </div>
+    <div class="col-4">
+        <button class="btn btn-primary" type="submit" @onclick="DeleteUsers">Eliminar Usuarios</button>
+    </div>
+    <div class="col-4">
+        <button class="btn btn-primary" type="submit" @onclick="ModifyUsers">Modificar Usuarios</button>
     </div>
 </div>
 <p class="text">Pagina en construccion</p>
@@ -22,6 +28,14 @@
     }
     private void AddUsers()
     {
-        Navigation.NavigateTo("/account/register");
+        Navigation.NavigateTo("/users/register");
+    }
+    private void DeleteUsers()
+    {
+        Navigation.NavigateTo("/users/delete");
+    }
+    private void ModifyUsers()
+    {
+        Navigation.NavigateTo("/users/modify");
     }
 }

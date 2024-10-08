@@ -13,7 +13,7 @@
     <DataAnnotationsValidator/>
     <div class="form-group">
         <label for="releaseYear">Equipo</label>
-        <InputSelect @bind-Value="selectedTeamName" @onchange="OnChangeCategory">
+        <InputSelect @bind-Value="selectedTeamName" @onchange="OnChangeTeam">
             <option value="0" disabled>
                 Ninguna seleccionada
             </option>
@@ -67,10 +67,10 @@
         SelectedUser = new List<User>();
     }
 
-    private void OnChangeCategory(ChangeEventArgs e)
+    private void OnChangeTeam(ChangeEventArgs e)
     {
-        string category = e.Value.ToString();
-        modelAddToTeam.Name = TDatabase.Teams.FirstOrDefault(t => t.Name.Equals(category)).Name;
+        string team = e.Value.ToString();
+        modelAddToTeam.Name = TDatabase.Teams.FirstOrDefault(t => t.Name.Equals(team)).Name;
     }
 
     private void ToggleUserSelection(string email, object isSelected)

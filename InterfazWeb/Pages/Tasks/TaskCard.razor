@@ -26,6 +26,9 @@
         <div class="form-group">
             <button class="btn btn-primary" type="submit" @onclick="AddComment">Agregar Comentario</button>
         </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit" @onclick="ChangeTask">Modificar</button>
+        </div>
     </div>
 </div>
 
@@ -47,6 +50,10 @@
     }
 
     private void AddComment()
+    {
+        Navigation.NavigateTo("/auxiliar");
+    }
+    private void ChangeTask()
     {
         Navigation.NavigateTo("/auxiliar");
     }

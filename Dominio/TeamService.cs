@@ -72,4 +72,22 @@ public class TeamService
 
         return false;
     }
+
+
+    public Panel GetPanelByName(string teamName, string panelName)
+    {
+        var team = GetTeamByName(teamName);
+       return team.Panels.Find(x => x.Name == panelName);
+    }
+    
+    public bool AddPanel(string teamName, Panel panel)
+    {
+        if (GetPanelByName(teamName, panel.Name) == null)
+        {
+            var team = _teamDatabase.GetTeamByName(teamName);
+            team.Panels.Add(panel);
+            return true;
+        }
+        return false;
+    }
 }

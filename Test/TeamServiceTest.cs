@@ -77,8 +77,9 @@ public class TeamServiceTest
 
     public void AddNewPanel()
     {
-        Panel panelTest = new Panel();
-        var isPanelAdded = _teamService.AddPanel(Panel panel);
+        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
+        Panel panelTest = new Panel{Name = "New panel"};
+        var isPanelAdded = _teamService.AddPanel(team.Name, panelTest);
         Assert.IsTrue(isPanelAdded);
     }
     

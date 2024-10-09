@@ -71,7 +71,17 @@ public class TeamServiceTest
         _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns(user);
         var isUserDeleted = _teamService.RemoveUserFromTeam(team.Name, userEmail);
         Assert.IsTrue(isUserDeleted);
-        
+    }
+
+    [TestMethod]
+    public void RemoveUserThatNotExists()
+    {
+        var userEmail = "user@email.com";
+        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team });
+        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
+        _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns((User)null);
+        var isUserDeleted = _teamService.RemoveUserFromTeam(team.Name, userEmail);
+        Assert.IsFalse(isUserDeleted);
     }
     
     [TestMethod]

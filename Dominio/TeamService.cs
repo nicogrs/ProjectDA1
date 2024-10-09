@@ -92,8 +92,21 @@ public class TeamService
 
     public bool RemoveUserFromTeam(string teamName, string userEmail)
     {
+        var user = _userService.GetUserByEmail(userEmail);
         var team = GetTeamByName(teamName);
-        var result = team.TeamMembers.RemoveAll(x => x.Email == userEmail);
-        return (result > 0 ? true : false);
+        var result = team.TeamMembers.Remove(user);
+        return result;
+    }
+
+    public bool RemoveUserFromAllTeams(string userEmail)
+    {
+        var hasBeenRemoved = false;
+        var user = _userService.GetUserByEmail(userEmail);
+        var teams = _teamDatabase.GetTeams();
+        foreach (var team in teams)
+        {
+          hasBeenRemoved = team.TeamMembers.Remove(user);
+        }
+        return hasBeenRemoved;
     }
 }

@@ -103,10 +103,11 @@ public class TeamServiceTest
     {
         var userEmail = "user@email.com";
         var user = new User { Email = userEmail };
+        team.TeamMembers.Add(user);
         _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team });
         _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns(user);
         var isUserRemoved = _teamService.RemoveUserFromAllTeams(userEmail);
-        Assert.IsTrue(isUserRemoved);
+         Assert.IsTrue(isUserRemoved);
         
     }
 

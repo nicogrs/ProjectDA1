@@ -89,4 +89,11 @@ public class TeamService
         }
         return false;
     }
+
+    public bool RemoveUserFromTeam(string teamName, string userEmail)
+    {
+        var team = GetTeamByName(teamName);
+        var result = team.TeamMembers.RemoveAll(x => x.Email == userEmail);
+        return (result > 0 ? true : false);
+    }
 }

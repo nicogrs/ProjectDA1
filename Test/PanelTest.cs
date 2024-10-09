@@ -27,7 +27,8 @@ public class PanelTest
             Name = "Panel numero 1",
             Team = "Equipo 1",
             Description = "Descripcion panel 1",
-            CreatedBy = u
+            CreatedBy = u,
+            Id = 0
         };
         
         t1 = new Task()
@@ -56,6 +57,7 @@ public class PanelTest
         Assert.AreEqual(panel.Team, "Equipo 1");
         Assert.AreEqual(panel.Description, "Descripcion panel 1");
         Assert.AreEqual(panel.CreatedBy, u);
+        Assert.AreEqual(panel.Id, 0);
     }
 
     [TestMethod]

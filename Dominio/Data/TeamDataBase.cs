@@ -2,9 +2,16 @@
 
 public class TeamDataBase : ITeamDatabase
 {
+    public List<Team> Teams { get; set; }
+
+    public TeamDataBase()
+    {
+        Teams = new List<Team>();
+    }
+    
     public Team GetTeamByName(string teamName)
     {
-        throw new NotImplementedException();
+       return Teams.Find(x => x.Name == teamName);
     }
 
     public void AddTeamToDatabase(Team team)

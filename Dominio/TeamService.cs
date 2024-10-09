@@ -48,7 +48,6 @@ public class TeamService
        var team = _teamDatabase.GetTeamByName(teamName);
        if (!UserExistsInTeam(userEmail, teamName) && team.MembersCount < team.MaxUsers)  
        {
-           
            team.TeamMembers.Add(user);
            team.MembersCount = team.TeamMembers.Count;
            return true;

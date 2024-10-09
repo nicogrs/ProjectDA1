@@ -42,6 +42,7 @@ public class TeamServiceTest
         var userEmail = "user@email.com";
         var user = new User { Email = userEmail };
         _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team });
+        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name)).Returns(team);
         _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns(user);
         var isUserAdded = _teamService.AddUserToTeam(team.Name, userEmail);
         Assert.IsTrue(isUserAdded);
@@ -53,6 +54,7 @@ public class TeamServiceTest
         var userEmail = "user@email.com";
         var user = new User { Email = userEmail };
         team.TeamMembers.Add(user);
+        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team });
         _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns(user);
         var isUserAdded = _teamService.AddUserToTeam(team.Name, userEmail);
@@ -61,6 +63,14 @@ public class TeamServiceTest
     [TestMethod]
     public void RemoveUserFromTeam()
     {
+        var userEmail = "user@email.com";
+        var user = new User { Email = userEmail };
+        team.TeamMembers.Add(user);
+        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team });
+        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
+        _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns(user);
+        var isUserDeleted = _teamService.RemoveUserFromTeam(team.Name, userEmail);
+        Assert.IsTrue(isUserDeleted);
         
     }
     

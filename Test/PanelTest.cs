@@ -1,6 +1,6 @@
 ﻿namespace Test;
-using Task = Dominio.Task;
 using Dominio;
+using Task = Dominio.Task;
 
 [TestClass]
 public class PanelTest

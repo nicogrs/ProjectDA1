@@ -1,0 +1,24 @@
+﻿@page "/{teamName}/modify"
+@using Dominio
+@using Dominio.Data
+@using Logica
+@inject TeamDatabase TDatabase
+@inject UserDataBase UDatabase
+@inject NavigationManager Navigation
+@inject Session Session
+
+<h3>Modificar Equipo</h3>
+
+@code {
+    [Parameter]
+    public string teamName { get; set; }
+    
+    protected override void OnInitialized()
+    {
+        if (!Session.IsAdmin)
+        {
+            Navigation.NavigateTo("/error");
+        }
+       
+    }
+}

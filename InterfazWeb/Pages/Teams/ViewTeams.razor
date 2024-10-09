@@ -1,6 +1,9 @@
 @page "/account/teams"
 
 @using Logica
+@using Dominio
+@using Dominio.Data
+@inject TeamDatabase TDatabase
 @inject Session Session
 @inject NavigationManager Navigation
 
@@ -13,6 +16,17 @@
         <div class="form-group">
             <button class="btn btn-primary" type="submit" @onclick="CreateTeam">Crear un equipo</button>
         </div>
+        if (Teams.Count() != 0)
+        {
+            foreach (var team in Teams)
+            {
+                <TeamCard Title="@team.Name"/>
+            }
+        }
+        else
+        {
+            <p>No tienes equipos asignados.</p>
+        }
     }
     
     @if (Session.GetTeams().Count != 0)
@@ -29,12 +43,16 @@
 </div>
 
 @code {
+    
+    private List<Team> Teams;
+    
     protected override void OnInitialized()
     {
         if (Session.CurrentUser == null)
         {
             Navigation.NavigateTo("/error");
         }
+        Teams.TDatabase.GetTeams();
     }
     
     private void CreateTeam()
@@ -42,3 +60,4 @@
         Navigation.NavigateTo("/teams/create");
     }
 }
+

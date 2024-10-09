@@ -8,6 +8,12 @@
         <div class="form-group">
             <button class="btn btn-primary" type="submit" @onclick="GoToTeam">Ir</button>
         </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit" @onclick="DeleteTeam">Borrar</button>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit" @onclick="ModifyTeam">Modificar</button>
+        </div>
     </div>
 
 </div>
@@ -20,5 +26,13 @@
     private void GoToTeam()
     {
         Navigation.NavigateTo($"/{Title}/panel");
+    }
+    private void DeleteTeam()
+    {
+        Navigation.NavigateTo($"/{Title}/delete");
+    }
+    private void ModifyTeam()
+    {
+        Navigation.NavigateTo($"/{Title}/modify");
     }
 }

@@ -4,6 +4,10 @@ public class TaskImport
 {
     public static List<string> SplitString(string str)
     {
-        return null;
+        string[] strArr = str.Split(",");
+        
+        List<string> toReturn = strArr.ToList();
+        
+        return toReturn;
     }
 }

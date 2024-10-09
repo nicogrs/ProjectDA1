@@ -23,8 +23,8 @@ public class TaskImportTest
         List<string> splitLine = TaskImport.SplitString(line0);
         
         Assert.AreEqual(splitLine.Count, 4);
-        Assert.AreEqual(splitLine[0], "Titulo");
-        Assert.AreEqual(splitLine[1], "Descripcion");
+        Assert.AreEqual(splitLine[0], "Título");
+        Assert.AreEqual(splitLine[1], "Descripción");
         Assert.AreEqual(splitLine[2], "Fecha de vencimiento");
         Assert.AreEqual(splitLine[3], "ID de panel");
     }

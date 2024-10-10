@@ -11,6 +11,10 @@ public class TaskImport
         return toReturn;
     }
 
+    public static bool IsLineValid(string line)
+    {
+        return false;
+    }
     public static Task TaskFromStringList(List<string> strList)
     {
         Task task = new Task();

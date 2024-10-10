@@ -13,7 +13,17 @@ public class TaskImport
 
     public static bool IsLineValid(string line)
     {
-        return false;
+        List<string> elements = SplitString(line);
+        
+        bool isDateValid = StringIsValidDate(elements[2]);
+        bool isPanelIdValid = IsPanelIdValid(elements[3]);
+        
+        return isDateValid && isPanelIdValid;
+    }
+
+    private static bool IsPanelIdValid(string panelId)
+    {
+        return int.TryParse(panelId, out int _);
     }
     public static Task TaskFromStringList(List<string> strList)
     {
@@ -38,8 +48,14 @@ public class TaskImport
 
     public static bool StringIsValidDate(string str)
     {
+        if (!str.Contains('/'))
+            return false;
+        
         int day, month, year;
         string[] dateArray = str.Split("/");
+        
+        if (dateArray.Length != 3)
+            return false;
         
         bool isDayNumber = int.TryParse(dateArray[0], out day);
         bool isMonthNumber = int.TryParse(dateArray[1], out month);

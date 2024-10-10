@@ -30,10 +30,19 @@ public class TeamServiceTest
     [TestMethod]
     public void CreateTeamTest()
     {
-        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(() => new List<Team>());
+        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns( new List<Team>());
         var isTeamCreated = _teamService.CreateTeam(team);
         Assert.IsTrue(isTeamCreated);
     }
+    
+    [TestMethod]
+    public void CreateTeamAlreadyExists()
+    {
+        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(new List<Team>() {team});
+        var isTeamCreated = _teamService.CreateTeam(team);
+        Assert.IsFalse(isTeamCreated);
+    }
+
 
     [TestMethod]
 
@@ -66,7 +75,7 @@ public class TeamServiceTest
         var userEmail = "user@email.com";
         var user = new User { Email = userEmail };
         team.TeamMembers.Add(user);
-        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team });
+        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(new List<Team> { team });
         _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns(user);
         var isUserDeleted = _teamService.RemoveUserFromTeam(team.Name, userEmail);
@@ -77,7 +86,7 @@ public class TeamServiceTest
     public void RemoveUserThatNotExists()
     {
         var userEmail = "user@email.com";
-        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team });
+        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(new List<Team> { team });
         _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns((User)null);
         var isUserDeleted = _teamService.RemoveUserFromTeam(team.Name, userEmail);
@@ -119,6 +128,17 @@ public class TeamServiceTest
         Panel panelTest = new Panel{Name = "New panel"};
         var isPanelAdded = _teamService.AddPanel(team.Name, panelTest);
         Assert.IsTrue(isPanelAdded);
+    }
+    
+    [TestMethod]
+
+    public void GetPanelByNAme()
+    {
+        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
+        Panel panelTest = new Panel{Name = "New panel"};
+        team.Panels.Add(panelTest);
+        var panelFromTeam = _teamService.GetPanelByName(team.Name, panelTest.Name);
+        Assert.AreEqual(panelFromTeam, panelTest);
     }
     
     

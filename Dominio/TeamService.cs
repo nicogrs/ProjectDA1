@@ -13,6 +13,7 @@ public class TeamService
     
     public bool CreateTeam(Team team)
     {
+        Console.WriteLine($"Creating team {team.Name}");
         if(team.TeamValidation() && !TeamExists(team.Name))
         {
             _teamDatabase.AddTeamToDatabase(team);
@@ -24,7 +25,7 @@ public class TeamService
 
     public bool TeamExists(string teamName)
     {
-        return _teamDatabase.GetTeams().Any(t => t.Name == teamName);
+        return _teamDatabase.GetTeams().Exists(t => t.Name == teamName);
     }
 
     public Team GetTeamByName(string teamName)

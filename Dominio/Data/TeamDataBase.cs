@@ -11,7 +11,13 @@ public class TeamDataBase : ITeamDatabase
     
     public Team GetTeamByName(string teamName)
     {
-       return Teams.Find(x => x.Name == teamName);
+        var team = Teams.Find(x => x.Name == teamName);
+        if (team == null)
+        {
+            throw new NullReferenceException("Team not found");
+        }
+
+        return team;
     }
 
     public void AddTeamToDatabase(Team team)

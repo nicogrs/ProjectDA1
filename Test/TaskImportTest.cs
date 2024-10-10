@@ -127,4 +127,25 @@ public class TaskImportTest
         Assert.IsTrue(TaskImport.IsLineValid(line1));
         Assert.IsTrue(TaskImport.IsLineValid(line2));
     }
+    
+    [TestMethod]
+    public void isLineValidTest2()
+    {
+        string line = "Titulo X,Descripcion X.,10/09/2024,Manzana";
+        Assert.IsFalse(TaskImport.IsLineValid(line));
+    }
+    
+    [TestMethod]
+    public void isLineValidTest3()
+    {
+        string line = "Titulo X,Descripcion X.,fecha: 10/09/2024,1";
+        Assert.IsFalse(TaskImport.IsLineValid(line));
+    }
+    
+    [TestMethod]
+    public void isLineValidTest4()
+    {
+        string line = "Titulo X,Descripcion X.,1,10/09/2024";
+        Assert.IsFalse(TaskImport.IsLineValid(line));
+    }
 }

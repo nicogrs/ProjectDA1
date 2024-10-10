@@ -51,12 +51,12 @@ public class TaskImport
         if (!str.Contains('/'))
             return false;
         
-        int day, month, year;
         string[] dateArray = str.Split("/");
         
         if (dateArray.Length != 3)
             return false;
         
+        int day, month, year;
         bool isDayNumber = int.TryParse(dateArray[0], out day);
         bool isMonthNumber = int.TryParse(dateArray[1], out month);
         bool isYearNumber = int.TryParse(dateArray[2], out year);

@@ -10,4 +10,9 @@ public class TaskImport
         
         return toReturn;
     }
+
+    public static Task TaskFromStringList(List<string> strList)
+    {
+        return null;
+    }
 }

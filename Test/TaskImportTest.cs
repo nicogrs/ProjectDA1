@@ -52,4 +52,29 @@ public class TaskImportTest
         Assert.AreEqual(splitLine[2], "19/09/2024");
         Assert.AreEqual(splitLine[3], "1");
     }
+
+    [TestMethod]
+    public void taskFromStringListTest()
+    {
+        Task t = new Task()
+        {
+            Title = "Titulo 1",
+            Description = "Descripcion 1",
+            expDate = new DateTime(2024, 10, 01),
+        };
+        List<string> strList = new List<string>()
+        {
+            "Titulo 1",
+            "Descripcion 1",
+            "01/10/2024",
+            "1"
+        };
+
+
+        Task parsedTask = TaskImport.TaskFromStringList(strList);
+        
+        Assert.AreEqual(t.Title, parsedTask.Title);
+        Assert.AreEqual(t.Description, parsedTask.Description);
+        Assert.AreEqual(t.expDate, parsedTask.expDate);
+    }
 }

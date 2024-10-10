@@ -17,10 +17,18 @@ public class TaskImport
         task.Title = strList[0];
         task.Description = strList[1];
         
-        string[] dateArray = strList[2].Split("/");
+        string strDate = strList[2];
         
-        task.expDate = new DateTime(int.Parse(dateArray[2]), int.Parse(dateArray[1]), int.Parse(dateArray[0]));
+        task.expDate = StringToDate(strDate);
 
         return task;
+    }
+
+    private static DateTime StringToDate(string strDate)
+    {
+        string[] dateArray = strDate.Split("/");
+        DateTime date = new DateTime(int.Parse(dateArray[2]), int.Parse(dateArray[1]), int.Parse(dateArray[0]));
+        
+        return date;
     }
 }

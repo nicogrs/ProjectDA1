@@ -42,6 +42,6 @@ public class TeamDataBase : ITeamDatabase
 
     public List<Team> GetTeams()
     {
-        throw new NotImplementedException();
+        return Teams;
     }
 }

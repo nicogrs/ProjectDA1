@@ -37,7 +37,7 @@ public class TeamDataBase : ITeamDatabase
 
     public List<Team> GetTeamsByUserEmail(string email)
     {
-        throw new NotImplementedException();
+      return  Teams.Where(x => x.TeamMembers.Exists(y=> y.Email == email)).ToList();
     }
 
     public List<Team> GetTeams()

@@ -22,7 +22,7 @@ public class TeamDataBase : ITeamDatabase
 
     public void AddTeamToDatabase(Team team)
     {
-        throw new NotImplementedException();
+        Teams.Add(team);
     }
 
     public void RemoveTeamFromDatabase(string teamName)

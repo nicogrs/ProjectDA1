@@ -1,6 +1,6 @@
 ﻿namespace Dominio;
 
-public class Task
+public class Task : IPaperBinElement
 {
     public string Title { get; set; }
     public Priority priority { get; set; }
@@ -46,5 +46,10 @@ public class Task
         }
         
         return success;
+    }
+
+    public void DeleteItem()
+    {
+        throw new NotImplementedException();
     }
 }

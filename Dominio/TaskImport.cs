@@ -31,4 +31,9 @@ public class TaskImport
         
         return date;
     }
+
+    public static bool StringIsValidDate(string str)
+    {
+        return false;
+    }
 }

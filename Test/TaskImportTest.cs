@@ -77,4 +77,11 @@ public class TaskImportTest
         Assert.AreEqual(t.Description, parsedTask.Description);
         Assert.AreEqual(t.expDate, parsedTask.expDate);
     }
+
+    [TestMethod]
+    public void validDateTest1()
+    {
+        string testDate = "01/10/2024";
+        Assert.IsTrue(TaskImport.StringIsValidDate(testDate));
+    }
 }

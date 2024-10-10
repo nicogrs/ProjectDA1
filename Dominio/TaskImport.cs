@@ -45,11 +45,18 @@ public class TaskImport
         if (!areNumbers)
             return false;
         
+
+        bool areNumbersValid = AreNumbersValid(day,month,year);
+        
+        return areNumbers && areNumbersValid;
+    }
+
+    private static bool AreNumbersValid(int day, int month, int year)
+    {
         bool isDayValid = day >= 1 && day <= 31;
         bool isMonthValid = month >= 1 && month <= 12;
         bool isYearValid = year >= 2000 && year <= DateTime.Now.Year;
-        bool areNumbersValid = isDayValid && isMonthValid && isYearValid;
         
-        return areNumbers && areNumbersValid;
+        return isDayValid && isMonthValid && isYearValid;
     }
 }

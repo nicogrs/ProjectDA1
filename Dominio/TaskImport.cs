@@ -13,6 +13,14 @@ public class TaskImport
 
     public static Task TaskFromStringList(List<string> strList)
     {
-        return null;
+        Task task = new Task();
+        task.Title = strList[0];
+        task.Description = strList[1];
+        
+        string[] dateArray = strList[2].Split("/");
+        
+        task.expDate = new DateTime(int.Parse(dateArray[2]), int.Parse(dateArray[1]), int.Parse(dateArray[0]));
+
+        return task;
     }
 }

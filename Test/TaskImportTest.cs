@@ -112,4 +112,11 @@ public class TaskImportTest
         string testDate = "01/10/20/24";
         Assert.IsFalse(TaskImport.StringIsValidDate(testDate));
     }
+    
+    [TestMethod]
+    public void validDateTest6()
+    {
+        string testDate = "01/asd/24";
+        Assert.IsFalse(TaskImport.StringIsValidDate(testDate));
+    }
 }

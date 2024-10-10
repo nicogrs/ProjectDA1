@@ -1,0 +1,9 @@
+C:\Users\PC\Desktop\265403_243045_174039\Test\bin\Debug\net6.0\CoverletSourceRootsMapping
+C:\Users\PC\Desktop\265403_243045_174039\Test\obj\Debug\net6.0\Test.csproj.AssemblyReference.cache
+C:\Users\PC\Desktop\265403_243045_174039\Test\obj\Debug\net6.0\Test.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\PC\Desktop\265403_243045_174039\Test\obj\Debug\net6.0\Test.AssemblyInfoInputs.cache
+C:\Users\PC\Desktop\265403_243045_174039\Test\obj\Debug\net6.0\Test.AssemblyInfo.cs
+C:\Users\PC\Desktop\265403_243045_174039\Test\obj\Debug\net6.0\Test.csproj.CoreCompileInputs.cache
+C:\Users\PC\Desktop\265403_243045_174039\Test\obj\Debug\net6.0\Test.dll
+C:\Users\PC\Desktop\265403_243045_174039\Test\obj\Debug\net6.0\refint\Test.dll
+C:\Users\PC\Desktop\265403_243045_174039\Test\obj\Debug\net6.0\Test.pdb

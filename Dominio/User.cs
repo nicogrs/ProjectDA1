@@ -1,4 +1,4 @@
-namespace Dominio;
+﻿namespace Dominio;
 
 public class User
 {
@@ -8,8 +8,7 @@ public class User
     public DateTime BirthDate { get; set; }
     public string Password { get; set; }
     public bool Admin { get; set; }
-    
-    public List<Team> Teams { get; set; }
+    public List<IPaperBinElement> PaperBin { get; set; }
 
     public bool IsNameValid()
     {

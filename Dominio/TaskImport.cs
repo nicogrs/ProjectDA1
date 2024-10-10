@@ -45,10 +45,9 @@ public class TaskImport
         if (!areNumbers)
             return false;
         
-
         bool areNumbersValid = AreNumbersValid(day,month,year);
         
-        return areNumbers && areNumbersValid;
+        return areNumbersValid;
     }
 
     private static bool AreNumbersValid(int day, int month, int year)

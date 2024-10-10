@@ -34,12 +34,22 @@ public class TaskImport
 
     public static bool StringIsValidDate(string str)
     {
+        int day, month, year;
         string[] dateArray = str.Split("/");
         
-        bool isDayValid = int.TryParse(dateArray[0], out int day);
-        bool isMonthValid = int.TryParse(dateArray[1], out int month);
-        bool isYearValid = int.TryParse(dateArray[2], out int year);
+        bool isDayNumber = int.TryParse(dateArray[0], out day);
+        bool isMonthNumber = int.TryParse(dateArray[1], out month);
+        bool isYearNumber = int.TryParse(dateArray[2], out year);
+        bool areNumbers = isDayNumber && isMonthNumber && isYearNumber;
         
-        return isDayValid && isMonthValid && isYearValid;
+        if (!areNumbers)
+            return false;
+        
+        bool isDayValid = day >= 1 && day <= 31;
+        bool isMonthValid = month >= 1 && month <= 12;
+        bool isYearValid = year >= 2000 && year <= DateTime.Now.Year;
+        bool areNumbersValid = isDayValid && isMonthValid && isYearValid;
+        
+        return areNumbers && areNumbersValid;
     }
 }

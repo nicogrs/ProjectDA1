@@ -1,4 +1,4 @@
-﻿namespace Logica;
+﻿namespace InterfazWeb;
 using Dominio;
 
 public class Session

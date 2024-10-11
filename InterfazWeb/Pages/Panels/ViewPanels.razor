@@ -1,17 +1,22 @@
 @page "/{teamName}/panel"
 
-@using Logica
+
 @using Dominio
 @using Dominio.Data
 @inject TeamDataBase TDatabase
 @inject NavigationManager Navigation
 @inject Session Session
 
-<PageTitle>Panel</PageTitle>
+<PageTitle>ViewPanels</PageTitle>
 
-
+<h3>@teamName</h3>
 <div class="row">
-    <h3>@teamName</h3>
+    <div class="d-flex justify-content-between">
+        <button class="btn btn-primary" type="submit" @onclick="DeleteTeam">Eliminar Equipo</button>
+    </div>
+    <div class="d-flex justify-content-between">
+        <button class="btn btn-primary" type="submit" @onclick="ModifyTeam">Modificar Equipo</button>
+    </div>
     <div class="d-flex justify-content-end">
         <button class="btn btn-primary" type="submit" @onclick="CreatePanel">Crear Nuevo Panel</button>
     </div>
@@ -47,6 +52,15 @@
     private void CreatePanel()
     {
         Navigation.NavigateTo($"/{teamName}/panels/create");
+    }
+    public void DeleteTeam()
+    {
+        TDatabase.RemoveTeamFromDatabase(teamName);
+    }
+    
+    public void ModifyTeam()
+    {
+        Navigation.NavigateTo($"/{teamName}/modify");
     }
     
 }

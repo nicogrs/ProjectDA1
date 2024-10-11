@@ -1,0 +1,34 @@
+﻿@page "/teams"
+
+@inject NavigationManager Navigation
+@inject Session Session
+
+<PageTitle>ABMTeams</PageTitle>
+<h3>Alta Baja Modificacion de equipos</h3>
+<div class="form-group">
+    <div class="col-4">
+        <button class="btn btn-primary" type="submit" @onclick="AddTeam">Agregar Equipo</button>
+    </div>
+    <div class="col-4">
+        <button class="btn btn-primary" type="submit" @onclick="AddUsers">Agregar Usuarios</button>
+    </div>
+</div>
+<p class="text">Pagina en construccion</p>
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (!Session.IsAdmin)
+        {
+            Navigation.NavigateTo("/error");
+        }
+    }
+    private void AddUsers()
+    {
+        Navigation.NavigateTo("/teams/add");
+    }
+    private void AddTeam()
+    {
+        Navigation.NavigateTo("/teams/create");
+    }
+}

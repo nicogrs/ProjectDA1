@@ -1,5 +1,5 @@
 ﻿@page "/"
-@using Logica
+
 @inject NavigationManager Navigation
 @inject Session Session
 <PageTitle>Index</PageTitle>
@@ -7,8 +7,7 @@
 <h1>TaskPanel</h1>
 <div class="form-group">
     <p>¡Bienvenido a TaskPanel!</p>
-    <p>Por favor, inicia sesion para continuar.</p>
-    <div class="row">
+    @*<div class="row">
         <div class="col-4">
             <button class="btn btn-primary" type="submit" @onclick="Logout">Cerrar Sesion</button>
         </div>
@@ -25,7 +24,7 @@
             </div>
             
         }
-    </div>
+    </div>*@
 </div>
 
 @code {
@@ -36,7 +35,7 @@
             Navigation.NavigateTo("/account/login");
         }
     }
-    private void ViewTeams()
+    /*private void ViewTeams()
     {
         Navigation.NavigateTo("/account/teams");
     }
@@ -53,6 +52,6 @@
     private void Logout()
     {
         Navigation.NavigateTo("/account/logout");
-    }
+    }*/
 
 }

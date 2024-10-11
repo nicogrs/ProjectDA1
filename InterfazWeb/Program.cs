@@ -1,5 +1,5 @@
 using Dominio.Data;
-using Logica;
+using Dominio;
 
 namespace InterfazWeb;
 

@@ -1,9 +1,9 @@
 @page "/teams/add"
 @using Dominio
 @using Dominio.Data
-@using Logica
 @inject TeamDataBase TDatabase
 @inject UserDataBase UDatabase
+@inject TeamService TmService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -31,7 +31,7 @@
             @foreach (var user in Users)
             {
                 <li class="dropdown-item">
-                    <input type="checkbox" @onchange="(e) => ToggleUserSelection(user.Email, e.Value)" /> @user.Name @user.Surname
+                    <input type="checkbox" @onchange="(e) => ToggleUserSelection(user.Email, e.Value)" /> @user.Email
                 </li>
             }
         </ul>
@@ -83,16 +83,14 @@
 
     private void HandleAdd()
     {
-        Team existingTeam = TDatabase.Teams.FirstOrDefault(t => t.Name.Equals(modelAddToTeam.Name));
+        string existingTeam = modelAddToTeam.Name;
 
-        if (existingTeam != null)
+        if (existingTeam != null && SelectedUser != null)
         {
-            if (SelectedUser.Any())
+            foreach (var u in SelectedUser)
             {
-                existingTeam.TeamMembers.AddRange(SelectedUser.Where(newUser =>
-                    !existingTeam.TeamMembers.Any(existingUser => existingUser.Email == newUser.Email)));
-
-                CreateMessage = "Usuarios agregados exitosamente al equipo existente.";
+                string addUser = u.Name;
+                TmService.AddUserToTeam(existingTeam, addUser);
             }
         }
     }

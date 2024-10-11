@@ -26,6 +26,15 @@ public class UserServiceTest
         };
 
     }
+
+    [TestMethod]
+    public void AddElementToTrash()
+    {
+        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+        var panelTest = new Panel { Name = "Panel 1" };
+        _service.AddElementToPaperBin(panelTest, _user.Email);
+        CollectionAssert.Contains(_user.Trash.Paperbin, panelTest);
+    }
     
     [TestMethod]
     public void UserExists()

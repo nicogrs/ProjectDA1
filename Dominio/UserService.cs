@@ -103,4 +103,10 @@ public class UserService : IUserService
 
         return _userDatabase.DeleteUser(email);
     }
+    
+    public void AddElementToPaperBin(IPaperBinElement element, string email)
+    {
+        var user = GetUserByEmail(email);
+        user.Trash.Paperbin.Add(element);
+    }
 }

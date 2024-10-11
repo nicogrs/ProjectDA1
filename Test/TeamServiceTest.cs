@@ -131,13 +131,23 @@ public class TeamServiceTest
     }
     
     [TestMethod]
+    public void RemovePanelTest()
+    {
+        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
+        Panel panelTest = new Panel{Name = "Panel Test"};
+        team.Panels.Add(panelTest);
+        _teamService.RemovePanel(team.Name, panelTest.PanelId);
+        CollectionAssert.DoesNotContain(team.Panels, panelTest);
+    }
+    
+    [TestMethod]
 
-    public void GetPanelByNAme()
+    public void GetPanelById()
     {
         _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         Panel panelTest = new Panel{Name = "New panel"};
         team.Panels.Add(panelTest);
-        var panelFromTeam = _teamService.GetPanelByName(team.Name, panelTest.Name);
+        var panelFromTeam = _teamService.GetPanelById(team.Name, panelTest.PanelId);
         Assert.AreEqual(panelFromTeam, panelTest);
     }
     

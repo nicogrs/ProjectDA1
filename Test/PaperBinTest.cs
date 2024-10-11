@@ -29,4 +29,12 @@ public class PaperBinTest
         _user.PaperBin.Add(taskTest);
         Assert.AreEqual(_user.PaperBin.Count, 1);
     }
+    
+    [TestMethod]
+    public void AddPanelToPaperBin()
+    {
+        Panel panelTest = new Panel{Name = "Panel 1"};
+        _user.PaperBin.Add(panelTest);
+        Assert.AreEqual(_user.PaperBin.Count, 1);
+    }
 }

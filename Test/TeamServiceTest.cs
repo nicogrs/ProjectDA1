@@ -142,12 +142,12 @@ public class TeamServiceTest
     
     [TestMethod]
 
-    public void GetPanelByName()
+    public void GetPanelById()
     {
         _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         Panel panelTest = new Panel{Name = "New panel"};
         team.Panels.Add(panelTest);
-        var panelFromTeam = _teamService.GetPanelByName(team.Name, panelTest.Name);
+        var panelFromTeam = _teamService.GetPanelById(team.Name, panelTest.PanelId);
         Assert.AreEqual(panelFromTeam, panelTest);
     }
     

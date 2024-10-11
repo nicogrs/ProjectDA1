@@ -110,4 +110,11 @@ public class TeamService
         }
         return hasBeenRemoved;
     }
+
+    public void DeletePanel(string teamName, int panelId)
+    {
+        var team = GetTeamByName(teamName);
+        var panel = team.Panels.Find(x => x.PanelId == panelId);
+        team.Panels.Remove(panel);
+    }
 }

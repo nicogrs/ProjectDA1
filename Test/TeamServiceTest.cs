@@ -136,7 +136,7 @@ public class TeamServiceTest
         _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         Panel panelTest = new Panel{Name = "Panel Test"};
         team.Panels.Add(panelTest);
-        var isPanelRemoved = _teamService.DeletePanel(team.Name, panelTest.PanelId);
+        _teamService.DeletePanel(team.Name, panelTest.PanelId);
         CollectionAssert.DoesNotContain(team.Panels, panelTest);
     }
     

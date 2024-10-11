@@ -5,7 +5,7 @@
 
 @inject UserDataBase UDatabase
 @inject UserService UService
-@* @inject PasswordService PService *@
+@inject PasswordService PService  
 @inject Session Session
 @inject NavigationManager Navigation
 
@@ -81,7 +81,6 @@
     private string selectedUser = "";
     private bool showConfirmation = false;
     private string newPassword;
-    private PasswordService passwordService = new PasswordService();
 
 
     protected override void OnInitialized()
@@ -96,7 +95,7 @@
     }
     private void GeneratePassword()
     {
-        newPassword = passwordService.GenerateRandomPassword();
+        newPassword = PService.GenerateRandomPassword();
         modelChangeInformation.Password = newPassword;
     }
 

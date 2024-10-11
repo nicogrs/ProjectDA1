@@ -4,6 +4,8 @@
 
 @inject TeamDataBase TDatabase
 @inject UserDataBase UDatabase
+@inject TeamService TmService
+@inject UserService UService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -57,6 +59,7 @@
     public List<User> SelectedUser;
     private Panel p;
     public List<Panel> panels;
+    private int teamCount = 0;
     
     protected override void OnInitialized()
     {
@@ -72,7 +75,7 @@
     {
         if ((bool)isSelected)
         {
-            SelectedUser.Add(UDatabase.GetUserByEmail(email));
+            SelectedUser.Add(UService.GetUserByEmail(email));
         }
 
     }
@@ -89,8 +92,9 @@
             Panels = new List<Panel>(),  
             MaxUsers = modelCreateTeam.MaxUsers
         };
-        
-        Panel nuevoPanel = new Panel
+        TmService.CreateTeam(t);
+        teamCount = TDatabase.Teams.Count();
+        Panel p = new Panel("expiredTasks", teamCount)
         {
             Name = $"{t.Name}_ExpiratedTasks",
             Team = t.Name, 
@@ -98,10 +102,7 @@
             CreatedBy = Session.CurrentUser,
             Description = "Panel de tareas expiradas"
         };
-
-
-        t.Panels.Add(p);
-        TDatabase.Teams.Add(t);
+        TmService.AddPanel(modelCreateTeam.Name, p);
         CreateMessage="Equipo creado con éxito";
     }
     private void GoBack()

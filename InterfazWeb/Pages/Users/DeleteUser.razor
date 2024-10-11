@@ -3,6 +3,8 @@
 @using Dominio.Data
 
 @inject UserDataBase UDatabase
+@inject UserService UService
+@inject TeamService TmService
 @inject Session Session
 @inject NavigationManager Navigation
 
@@ -38,11 +40,12 @@
             <button class="btn btn-primary" type="button" @onclick="ConfirmDelete">Confirmar</button>
             <button class="btn btn-primary" type="button" @onclick="CancelDelete">Cancelar</button>
         </div>
-        <div class="alert alert-danger" role="alert">
-            @deleteMessage
-        </div>
     </div>
 }
+
+<div class="alert alert-danger" role="alert">
+    @deleteMessage
+</div>
 
 @code {
     User modelDeleteUser = new User();
@@ -88,18 +91,20 @@
             if (actualUser)
             {
                 Session.Logout();
-                UDatabase.DeleteUser(modelDeleteUser.Email);
+                TmService.RemoveUserFromAllTeams(modelDeleteUser.Email);
+                UService.DeleteUser(modelDeleteUser.Email);
                 Navigation.NavigateTo("/index");
             }
             else
             {
+                TmService.RemoveUserFromAllTeams(modelDeleteUser.Email);
                 UDatabase.DeleteUser(modelDeleteUser.Email);
-                deleteMessage = "Usuario eliminado exitosamente.";
+                deleteMessage = "Usuario eliminado.";
             }
         }
         else
         {
-            deleteMessage = "No se puede eliminar al usuario actual.";
+            deleteMessage = "No se seleccionó ningun usuario.";
         }
 
         modelDeleteUser = new User();

@@ -4,11 +4,13 @@
 @using DTOs
 
 @inject UserDataBase UDatabase
+@inject UserService UService
+@* @inject PasswordService PService *@
 @inject Session Session
 @inject NavigationManager Navigation
 
-<PageTitle>Eliminar Usuario</PageTitle>
-<h3>Eliminar Usuario</h3>
+<PageTitle>ModifyUser</PageTitle>
+<h3>Modificar Usuario</h3>
 
 <EditForm Model="modelModifyUser" OnValidSubmit="ShowModify">
     <DataAnnotationsValidator />
@@ -136,7 +138,7 @@
             u.Password = modelChangeInformation.Password;
         }
         
-        UDatabase.UpdateUser(u.ToEntity());
+        UService.UpdateUser(u.ToEntity());
         showConfirmation = false;
         modifyMessage = "Usuario modificado.";
         

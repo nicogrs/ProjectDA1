@@ -44,6 +44,7 @@
     private List<User> users;
     private string CreateMessage;
     public List<User> SelectedUser; 
+    private int teamCount = 0;
     
     [Parameter]
     public string teamName { get; set; }
@@ -54,11 +55,12 @@
         {
             Navigation.NavigateTo("/error");
         }
+        teamCount = TDatabase.Teams.Count();
     }
     
     private void HandleCreate()
     {
-        Panel p = new Panel
+        Panel p = new Panel("panel", teamCount)
         {
             Name = modelCreatePanel.Name,
             Team = TDatabase.GetTeamByName(teamName).Name,

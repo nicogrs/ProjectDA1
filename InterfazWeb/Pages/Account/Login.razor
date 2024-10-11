@@ -47,6 +47,7 @@
             modelLogin = UserLoginDTO.FromEntity(user);
             Navigation.NavigateTo("/");
             Session.Login(user);
+            StateHasChanged();
         }
         else
         {

@@ -13,7 +13,6 @@ public class TeamService
     
     public bool CreateTeam(Team team)
     {
-        Console.WriteLine($"Creating team {team.Name}");
         if(team.TeamValidation() && !TeamExists(team.Name))
         {
             _teamDatabase.AddTeamToDatabase(team);

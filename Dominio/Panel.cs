@@ -33,5 +33,9 @@ public class Panel : IPaperBinElement
         return Tasks.Count;
     }
 
-    
+
+    public void DeleteTask(Task task)
+    {
+
+    }
 }

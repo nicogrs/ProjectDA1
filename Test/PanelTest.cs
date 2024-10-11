@@ -10,7 +10,7 @@ public class PanelTest
     private User u;
     private Panel panel;
     private List<Comment> comments1;
-    
+
     [TestInitialize]
     public void Setup()
     {
@@ -19,9 +19,9 @@ public class PanelTest
         Comment c2 = new Comment(u, "Segundo comentario");
         Comment c3 = new Comment(u, "Primer comentario T2");
         Comment c4 = new Comment(u, "Segundo comentario T2");
-        comments1 = new List<Comment>(){c1, c2};
-        List<Comment> comments2 = new List<Comment>(){c3, c4};
-        
+        comments1 = new List<Comment>() { c1, c2 };
+        List<Comment> comments2 = new List<Comment>() { c3, c4 };
+
         panel = new Panel()
         {
             Name = "Panel numero 1",
@@ -29,7 +29,7 @@ public class PanelTest
             Description = "Descripcion panel 1",
             CreatedBy = u
         };
-        
+
         t1 = new Task()
         {
             Title = "Tarea 1",
@@ -62,11 +62,20 @@ public class PanelTest
     public void PanelAddTaskTest()
     {
         int initialTaskCount = panel.getTaskCount();
-        
+
         panel.AddTask(t1);
-        
-        Assert.AreEqual(t1,panel.Tasks.Last());
+
+        Assert.AreEqual(t1, panel.Tasks.Last());
         Assert.AreEqual(initialTaskCount + 1, panel.getTaskCount());
     }
-    
+
+    [TestMethod]
+    public void DeleteTaskTest()
+    {
+        Task taskTest = new Task { Title = "Task 1" };
+        panel.AddTask(taskTest);
+        panel.DeleteTask(taskTest);
+        CollectionAssert.DoesNotContain(panel.Tasks, taskTest);
+    }
+
 }

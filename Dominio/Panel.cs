@@ -1,6 +1,6 @@
 ﻿namespace Dominio;
 
-public class Panel
+public class Panel : IPaperBinElement
 {
     public string Name { get; set; }
     public string Team { get; set; }
@@ -25,5 +25,10 @@ public class Panel
     public int getTaskCount()
     {
         return Tasks.Count;
+    }
+
+    public void DeleteItem()
+    {
+        throw new NotImplementedException();
     }
 }

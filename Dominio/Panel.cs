@@ -34,8 +34,12 @@ public class Panel : IPaperBinElement
     }
 
 
-    public void DeleteTask(Task task)
+    public void DeleteTask(int taskId)
     {
-
+        var task = Tasks.Find(x => x.TaskId == taskId);
+        if (task != null)
+        {
+            Tasks.Remove(task);
+        }
     }
 }

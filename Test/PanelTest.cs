@@ -74,7 +74,7 @@ public class PanelTest
     {
         Task taskTest = new Task { Title = "Task 1" };
         panel.AddTask(taskTest);
-        panel.DeleteTask(taskTest);
+        panel.DeleteTask(taskTest.TaskId);
         CollectionAssert.DoesNotContain(panel.Tasks, taskTest);
     }
 

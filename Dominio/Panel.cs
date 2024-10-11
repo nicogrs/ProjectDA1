@@ -2,7 +2,7 @@
 
 public class Panel : IPaperBinElement
 {
-    public static int contadorDeId = 0;
+    public static int contadorId = 0;
     
     public string Name { get; set; }
     public string Team { get; set; }
@@ -19,8 +19,8 @@ public class Panel : IPaperBinElement
         Description = "";
         CreatedBy = null;
         Tasks = new List<Task>();
-        contadorDeId++;
-        PanelId = contadorDeId;
+        contadorId++;
+        PanelId = contadorId;
     }
     
     public void AddTask(Task task)
@@ -28,13 +28,13 @@ public class Panel : IPaperBinElement
         Tasks.Add(task);
     }
 
-    public int getTaskCount()
+    public int GetTaskCount()
     {
         return Tasks.Count;
     }
 
 
-    public void DeleteTask(int taskId)
+    public void RemoveTask(int taskId)
     {
         var task = Tasks.Find(x => x.TaskId == taskId);
         if (task != null)

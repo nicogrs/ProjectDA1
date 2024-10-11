@@ -131,12 +131,12 @@ public class TeamServiceTest
     }
     
     [TestMethod]
-    public void DeletePanelTest()
+    public void RemovePanelTest()
     {
         _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         Panel panelTest = new Panel{Name = "Panel Test"};
         team.Panels.Add(panelTest);
-        _teamService.DeletePanel(team.Name, panelTest.PanelId);
+        _teamService.RemovePanel(team.Name, panelTest.PanelId);
         CollectionAssert.DoesNotContain(team.Panels, panelTest);
     }
     

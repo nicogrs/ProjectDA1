@@ -8,8 +8,7 @@ public class User
     public DateTime BirthDate { get; set; }
     public string Password { get; set; }
     public bool Admin { get; set; }
-    public List<IPaperBinElement> PaperBin { get; set; }
-
+    public PaperBin Trash { get; set; }
     public bool IsNameValid()
     {
         return Name != null && Name.Length > 2 && Name.Length < 100;

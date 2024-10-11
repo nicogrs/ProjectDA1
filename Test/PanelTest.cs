@@ -61,20 +61,20 @@ public class PanelTest
     [TestMethod]
     public void PanelAddTaskTest()
     {
-        int initialTaskCount = panel.getTaskCount();
+        int initialTaskCount = panel.GetTaskCount();
 
         panel.AddTask(t1);
 
         Assert.AreEqual(t1, panel.Tasks.Last());
-        Assert.AreEqual(initialTaskCount + 1, panel.getTaskCount());
+        Assert.AreEqual(initialTaskCount + 1, panel.GetTaskCount());
     }
 
     [TestMethod]
-    public void DeleteTaskTest()
+    public void RemoveTaskTest()
     {
         Task taskTest = new Task { Title = "Task 1" };
         panel.AddTask(taskTest);
-        panel.DeleteTask(taskTest.TaskId);
+        panel.RemoveTask(taskTest.TaskId);
         CollectionAssert.DoesNotContain(panel.Tasks, taskTest);
     }
 

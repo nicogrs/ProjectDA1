@@ -9,6 +9,12 @@ public class User
     public string Password { get; set; }
     public bool Admin { get; set; }
     public PaperBin Trash { get; set; }
+
+    public User()
+    {
+        Trash = new PaperBin();
+    }
+    
     public bool IsNameValid()
     {
         return Name != null && Name.Length > 2 && Name.Length < 100;
@@ -38,5 +44,5 @@ public class User
     {
         return Admin;
     }
-
+    
 }

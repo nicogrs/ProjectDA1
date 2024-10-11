@@ -48,8 +48,5 @@ public class Task : IPaperBinElement
         return success;
     }
 
-    public void DeleteItem()
-    {
-        throw new NotImplementedException();
-    }
+    
 }

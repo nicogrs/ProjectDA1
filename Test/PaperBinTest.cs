@@ -37,4 +37,10 @@ public class PaperBinTest
         _user.PaperBin.Add(panelTest);
         Assert.AreEqual(_user.PaperBin.Count, 1);
     }
+
+    [TestMethod]
+    public void DeletePanelFromTeams()
+    {
+        Panel panelTest = new Panel{Name = "Panel 1"};
+    }
 }

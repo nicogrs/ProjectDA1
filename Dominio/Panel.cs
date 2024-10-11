@@ -2,11 +2,15 @@
 
 public class Panel : IPaperBinElement
 {
+    public static int contadorDeId = 0;
+    
     public string Name { get; set; }
     public string Team { get; set; }
     public string Description { get; set; }
     public User CreatedBy { get; set; }
     public List<Task> Tasks { get; set; }
+    public int PanelId { get; private set; }
+    
 
     public Panel()
     {
@@ -15,6 +19,8 @@ public class Panel : IPaperBinElement
         Description = "";
         CreatedBy = null;
         Tasks = new List<Task>();
+        contadorDeId++;
+        PanelId = contadorDeId;
     }
     
     public void AddTask(Task task)
@@ -27,8 +33,5 @@ public class Panel : IPaperBinElement
         return Tasks.Count;
     }
 
-    public void DeleteItem()
-    {
-        throw new NotImplementedException();
-    }
+    
 }

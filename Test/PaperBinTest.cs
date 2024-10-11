@@ -47,6 +47,7 @@ public class PaperBinTest
     {
         Panel panelTest = new Panel{Name = "Panel 1"};
         _user.Trash.AddElementToPaperbin(panelTest);
+        _user.Trash.DeleteElementFromPaperbin(panelTest);
         CollectionAssert.DoesNotContain(_user.Trash.Paperbin, panelTest);
         
     }

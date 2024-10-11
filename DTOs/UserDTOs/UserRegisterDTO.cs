@@ -38,8 +38,7 @@ public class UserRegisterDTO
             BirthDate = this.BirthDate,
             Email = this.Email,
             Password = this.Password,
-            Admin = this.Admin,
-            Teams = this.Teams
+            Admin = this.Admin
         };
     }
     

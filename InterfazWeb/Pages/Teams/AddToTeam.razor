@@ -2,7 +2,7 @@
 @using Dominio
 @using Dominio.Data
 @using Logica
-@inject TeamDatabase TDatabase
+@inject TeamDataBase TDatabase
 @inject UserDataBase UDatabase
 @inject NavigationManager Navigation
 @inject Session Session
@@ -89,8 +89,8 @@
         {
             if (SelectedUser.Any())
             {
-                existingTeam.Users.AddRange(SelectedUser.Where(newUser =>
-                    !existingTeam.Users.Any(existingUser => existingUser.Email == newUser.Email)));
+                existingTeam.TeamMembers.AddRange(SelectedUser.Where(newUser =>
+                    !existingTeam.TeamMembers.Any(existingUser => existingUser.Email == newUser.Email)));
 
                 CreateMessage = "Usuarios agregados exitosamente al equipo existente.";
             }

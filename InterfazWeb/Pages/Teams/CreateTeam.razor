@@ -2,7 +2,7 @@
 @using Dominio
 @using Dominio.Data
 @using Logica
-@inject TeamDatabase TDatabase
+@inject TeamDataBase TDatabase
 @inject UserDataBase UDatabase
 @inject NavigationManager Navigation
 @inject Session Session
@@ -19,8 +19,8 @@
     </div>
     <div class="form-group">
         <label id="userAmount">Cantidad de Usuarios</label>
-        <InputNumber class="form-control" @bind-Value="@modelCreateTeam.UserAmount" id="userAmount"></InputNumber>
-        <ValidationMessage For="@(() => modelCreateTeam.UserAmount)"/>
+        <InputNumber class="form-control" @bind-Value="@modelCreateTeam.MaxUsers" id="userAmount"></InputNumber>
+        <ValidationMessage For="@(() => modelCreateTeam.MaxUsers)"/>
     </div>
     <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -83,19 +83,19 @@
         Team t = new Team
         {
             Name = modelCreateTeam.Name,
-            CreationDate = DateTime.Now,
-            Users = SelectedUser,
-            Tasks = new List<Dominio.Task>(),
+            CreatedOn = DateTime.Now,
+            TeamMembers = SelectedUser,
+            TasksDescription = " ",
             Panels = new List<Panel>(),  
-            UserAmount = modelCreateTeam.UserAmount
+            MaxUsers = modelCreateTeam.MaxUsers
         };
         
         Panel nuevoPanel = new Panel
         {
             Name = $"{t.Name}_ExpiratedTasks",
-            Team = t, 
+            Team = t.Name, 
             Tasks = new List<Dominio.Task>(),
-            Creator = Session.CurrentUser,
+            CreatedBy = Session.CurrentUser,
             Description = "Panel de tareas expiradas"
         };
 

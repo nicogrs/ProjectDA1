@@ -1,0 +1,160 @@
+{
+  "version": 3,
+  "targets": {
+    "net6.0": {
+      "Bussines/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "DTOs": "1.0.0",
+          "Dominio": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Bussines.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Bussines.dll": {}
+        }
+      },
+      "Dominio/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/Dominio.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Dominio.dll": {}
+        }
+      },
+      "DTOs/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "Dominio": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/DTOs.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DTOs.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Bussines/1.0.0": {
+      "type": "project",
+      "path": "../Bussines/Bussines.csproj",
+      "msbuildProject": "../Bussines/Bussines.csproj"
+    },
+    "Dominio/1.0.0": {
+      "type": "project",
+      "path": "../Dominio/Dominio.csproj",
+      "msbuildProject": "../Dominio/Dominio.csproj"
+    },
+    "DTOs/1.0.0": {
+      "type": "project",
+      "path": "../DTOs/DTOs.csproj",
+      "msbuildProject": "../DTOs/DTOs.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net6.0": [
+      "Bussines >= 1.0.0",
+      "DTOs >= 1.0.0",
+      "Dominio >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\flopa\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\flopa\\RiderProjects\\265403_243045_174039\\InterfazWeb\\InterfazWeb.csproj",
+      "projectName": "InterfazWeb",
+      "projectPath": "C:\\Users\\flopa\\RiderProjects\\265403_243045_174039\\InterfazWeb\\InterfazWeb.csproj",
+      "packagesPath": "C:\\Users\\flopa\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\flopa\\RiderProjects\\265403_243045_174039\\InterfazWeb\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\flopa\\AppData\\Roaming\\NuGet\\NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net6.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "projectReferences": {
+            "C:\\Users\\flopa\\RiderProjects\\265403_243045_174039\\Bussines\\Bussines.csproj": {
+              "projectPath": "C:\\Users\\flopa\\RiderProjects\\265403_243045_174039\\Bussines\\Bussines.csproj"
+            },
+            "C:\\Users\\flopa\\RiderProjects\\265403_243045_174039\\Dominio\\Dominio.csproj": {
+              "projectPath": "C:\\Users\\flopa\\RiderProjects\\265403_243045_174039\\Dominio\\Dominio.csproj"
+            },
+            "C:\\Users\\flopa\\RiderProjects\\265403_243045_174039\\DTOs\\DTOs.csproj": {
+              "projectPath": "C:\\Users\\flopa\\RiderProjects\\265403_243045_174039\\DTOs\\DTOs.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      }
+    },
+    "frameworks": {
+      "net6.0": {
+        "targetAlias": "net6.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[6.0.32, 6.0.32]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[6.0.32, 6.0.32]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[6.0.32, 6.0.32]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[6.0.32, 6.0.32]"
+          }
+        ],
+        "frameworkReferences": {
+          "Microsoft.AspNetCore.App": {
+            "privateAssets": "none"
+          },
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Users\\flopa\\.dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

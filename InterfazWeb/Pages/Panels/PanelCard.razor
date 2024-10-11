@@ -37,7 +37,7 @@
         var panel = PDatabase.GetPanelByName(Title);
         if (panel != null && panel.Team != null)
         {
-            teamName = panel.Team.Name;
+            teamName = panel.Team;
         }
         if (Session.CurrentUser == null)
         {

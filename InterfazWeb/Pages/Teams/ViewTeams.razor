@@ -3,7 +3,7 @@
 @using Logica
 @using Dominio
 @using Dominio.Data
-@inject TeamDatabase TDatabase
+@inject TeamDataBase TDatabase
 @inject Session Session
 @inject NavigationManager Navigation
 
@@ -29,9 +29,9 @@
         }
     }
     
-    @if (Session.GetTeams().Count != 0)
+    @if (Teams.Count != 0)
     {
-        foreach (var team in Session.GetTeams())
+        foreach (var team in Teams)
         {
             <TeamCard Title="@team.Name"/>
         }
@@ -52,7 +52,8 @@
         {
             Navigation.NavigateTo("/error");
         }
-        //Teams.TDatabase.GetTeams();
+
+        Teams = TDatabase.GetTeamsByUserEmail(Session.CurrentUser.Email);
     }
     
     private void CreateTeam()

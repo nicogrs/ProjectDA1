@@ -1,38 +1,38 @@
-namespace Dominio;
+﻿namespace Dominio;
 
 public class Team
 {
+    
     public string Name { get; set; }
-    
-    public DateTime CreationDate { get; set; }
-    
-    public List<Dominio.Task> Tasks { get; set; }
-    
-    public int UserAmount { get; set; }
-    
-    public List<User> Users { get; set; }
-    
+    public DateTime CreatedOn { get; set; }
+    public string TasksDescription { get; set; }
+    public int MaxUsers { get; set; }
     public List<Panel> Panels { get; set; }
-    
-    public void MoveExpiredTasksToExpiredPanel()
+    public int MembersCount { get; set; }
+    public List<User> TeamMembers { get; set; }
+
+    public Team()
     {
-        string expiredPanelName = $"{Name}_ExpiredTasks";
-        Panel expiredPanel = Panels.FirstOrDefault(p => p.Name == expiredPanelName);
-        if (expiredPanel == null)
-        {
-            expiredPanel = new Panel { Name = "ExpiredTasks" };
-            Panels.Add(expiredPanel);
-        }
+        Panels = new List<Panel>();
+        TeamMembers = new List<User>();
+        MembersCount = 0;
+    }
+    
+    public bool TeamValidation()
+    {
+        var nameNotNull = !string.IsNullOrEmpty(Name);
+        var createdOnNotNull = CreatedOn != null;
+        var createdOnValid = CreatedOn <= DateTime.Now;
+        var maxUsersNotCero = MaxUsers > 0;
+        var panelsNotNull = Panels != null;
+        var membersCount = MembersCount > 0;
         
-        foreach (var panel in Panels)
+        if (nameNotNull && createdOnNotNull && createdOnValid && 
+            maxUsersNotCero && panelsNotNull && membersCount)
         {
-            if (panel.Name != "ExpiredTasks")
-            {
-                List<Task> expiredTasks = panel.Tasks.Where(t => t.IsExpired()).ToList();
-                expiredPanel.Tasks.AddRange(expiredTasks);
-                panel.Tasks.RemoveAll(t => t.IsExpired());
-            }
+            return true;
         }
+        return false;
     }
 }
-    
+

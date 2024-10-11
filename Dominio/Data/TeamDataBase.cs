@@ -1,6 +1,6 @@
 ﻿namespace Dominio.Data;
 
-public class TeamDataBase : ITeamDataBase
+public class TeamDataBase : ITeamDatabase
 {
     public List<Team> Teams { get; set; }
 

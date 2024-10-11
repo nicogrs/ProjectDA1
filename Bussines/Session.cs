@@ -1,7 +1,4 @@
-﻿using Dominio.Data;
-using Task = Dominio.Task;
-
-namespace Logica;
+﻿namespace Logica;
 using Dominio;
 
 public class Session
@@ -18,12 +15,5 @@ public class Session
     {
         CurrentUser = null;
     }
-
-
-    public List<Team> GetTeams()
-    {
-        return CurrentUser?.Teams ?? new List<Team>();
-    }
-   
     
 }

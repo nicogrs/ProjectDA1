@@ -4,7 +4,7 @@
 @using Logica
 @inject Session Session
 @inject PanelDatabase PDatabase
-@inject TeamDatabase TDatabase
+@inject TeamDataBase TDatabase
 @inject NavigationManager Navigation
 
 <h3>CreatePanel</h3>
@@ -61,9 +61,9 @@
         Panel p = new Panel
         {
             Name = modelCreatePanel.Name,
-            Team = TDatabase.GetTeamByName(teamName),
+            Team = TDatabase.GetTeamByName(teamName).Name,
             Description = modelCreatePanel.Description,
-            Creator = Session.CurrentUser,
+            CreatedBy = Session.CurrentUser,
             Tasks = null
         };
         PDatabase.Panels.Add(p);

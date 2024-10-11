@@ -1,7 +1,7 @@
-@page "/{teamName}/{panelName}/tasks"
+@page "/{teamName}/{panelId}/tasks"
 
-@using Dominio.Data
-@inject PanelDatabase PDatabase
+@using Dominio
+@inject TeamService TmService
 @inject Session Session
 @inject NavigationManager Navigation
 <PageTitle>Equipos</PageTitle>
@@ -35,7 +35,7 @@
     [Parameter]
     public string teamName { get; set; }
     [Parameter]
-    public string panelName { get; set; }
+    public string panelId { get; set; }
     
     private List<Dominio.Task> Tasks;
     
@@ -45,12 +45,13 @@
         {
             Navigation.NavigateTo("/error");
         }
-        Tasks = PDatabase.GetPanelByName(panelName).Tasks;
+
+        Tasks = TmService.GetPanelById(teamName, panelId).Tasks;
     }
     
     private void CreateTask()
     {
-        Navigation.NavigateTo($"/{teamName}/{panelName}/create");
+        Navigation.NavigateTo($"/{teamName}/{panelId}/create");
     }
     
 }

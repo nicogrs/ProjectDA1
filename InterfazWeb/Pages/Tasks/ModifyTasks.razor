@@ -1,8 +1,9 @@
-﻿@page "/{teamName}/{panelId}/{taskName}"
+﻿@page "/{teamName}/{panelId}/{taskTitle}"
 
 @using Dominio
 @using Dominio.Data
 @using Task = Dominio.Task
+@inject TeamService TmService
 @inject TaskDatabase TkDatabase
 @inject NavigationManager Navigation
 <PageTitle>ModifyTask</PageTitle>
@@ -38,19 +39,40 @@
     [Parameter]
     public string teamName { get; set; }
     [Parameter]
-    public int panelId { get; set; }
+    public string panelId { get; set; }
     [Parameter]
-    public string taskName { get; set; }
-    
+    public string taskTitle { get; set; }
+
     Task modelChangeTask = new Task();
+    Task toModify = new Task();
+
+    Panel panel = new Panel();
+
+    protected override void OnInitialized()
+    {
+        panel = TmService.GetPanelById(teamName, panelId);
+        toModify = panel.Tasks.FirstOrDefault(t => t.Title == taskTitle);
+
+    }
 
     private void HandleModify()
     {
-        
+        if (!String.IsNullOrEmpty(modelChangeTask.Title))
+        {
+            toModify.Title = modelChangeTask.Title;
+        }
+
+        if (!String.IsNullOrEmpty(modelChangeTask.Description))
+        {
+            toModify.Description = modelChangeTask.Description;
+        }
+
+ 
     }
 
     private void GoBack()
     {
         
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
     }
 }

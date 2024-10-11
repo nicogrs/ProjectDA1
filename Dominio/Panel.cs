@@ -29,7 +29,7 @@ public class Panel
         CreatedBy = null;
         Tasks = new List<Task>();
 
-        if (type == "espiredTasks")
+        if (type == "expiredTasks")
         {
             Id = new string('0', teams);
         }

@@ -74,15 +74,15 @@ public class TeamService
     }
 
 
-    public Panel GetPanelByName(string teamName, string panelName)
+    public Panel GetPanelById(string teamName, string panelId)
     {
         var team = GetTeamByName(teamName);
-       return team.Panels.Find(x => x.Name == panelName);
+       return team.Panels.Find(x => x.Id == panelId);
     }
     
     public bool AddPanel(string teamName, Panel panel)
     {
-        if (GetPanelByName(teamName, panel.Name) == null)
+        if (GetPanelById(teamName, panel.Id) == null)
         {
             var team = _teamDatabase.GetTeamByName(teamName);
             team.Panels.Add(panel);

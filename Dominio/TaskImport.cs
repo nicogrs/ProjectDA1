@@ -43,7 +43,7 @@ public class TaskImport
         return result;
     }
     
-    public static List<string> SplitString(string str)
+    private static List<string> SplitString(string str)
     {
         string[] strArr = str.Split(",");
         

@@ -52,42 +52,7 @@ public class TaskImportTest
         };
         taskImport = new TaskImport();
     }
-
-    [TestMethod]
-    public void SplitStringTest1()
-    {
-        List<string> splitLine = TaskImport.SplitString(line0);
-        
-        Assert.AreEqual(splitLine.Count, 4);
-        Assert.AreEqual(splitLine[0], "Título");
-        Assert.AreEqual(splitLine[1], "Descripción");
-        Assert.AreEqual(splitLine[2], "Fecha de vencimiento");
-        Assert.AreEqual(splitLine[3], "ID de panel");
-    }
     
-    [TestMethod]
-    public void SplitStringTest2()
-    {
-        List<string> splitLine = TaskImport.SplitString(line1);
-        
-        Assert.AreEqual(splitLine.Count, 4);
-        Assert.AreEqual(splitLine[0], "Contactar al cliente");
-        Assert.AreEqual(splitLine[1], "Contactar al cliente para actualizar el estado del proyecto.");
-        Assert.AreEqual(splitLine[2], "10/09/2024");
-        Assert.AreEqual(splitLine[3], "1");
-    }
-    
-    [TestMethod]
-    public void SplitStringTest3()
-    {
-        List<string> splitLine = TaskImport.SplitString(line2);
-        
-        Assert.AreEqual(splitLine.Count, 4);
-        Assert.AreEqual(splitLine[0], "Pagar proveedores");
-        Assert.AreEqual(splitLine[1], "Revisar planilla de proveedores y pagar.");
-        Assert.AreEqual(splitLine[2], "19/09/2024");
-        Assert.AreEqual(splitLine[3], "1");
-    }
 
     [TestMethod]
     public void TaskFromStringListTest()

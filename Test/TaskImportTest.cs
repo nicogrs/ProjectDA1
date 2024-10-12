@@ -11,6 +11,7 @@ public class TaskImportTest
     private TaskImport taskImport;
     private string fileName1;
     private string fileName2;
+    private string directoryAdjustment;
     
     [TestInitialize]
     public void Setup()
@@ -20,10 +21,12 @@ public class TaskImportTest
         line2 = "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2024,1";
         fileName1 = "Data/tareasTestData.csv";
         fileName2 = "Data/tareas.csv";
+        directoryAdjustment = "../../../";
+        
     }
 
     [TestMethod]
-    public void splitStringTest1()
+    public void SplitStringTest1()
     {
         List<string> splitLine = TaskImport.SplitString(line0);
         
@@ -35,7 +38,7 @@ public class TaskImportTest
     }
     
     [TestMethod]
-    public void splitStringTest2()
+    public void SplitStringTest2()
     {
         List<string> splitLine = TaskImport.SplitString(line1);
         
@@ -47,7 +50,7 @@ public class TaskImportTest
     }
     
     [TestMethod]
-    public void splitStringTest3()
+    public void SplitStringTest3()
     {
         List<string> splitLine = TaskImport.SplitString(line2);
         
@@ -59,7 +62,7 @@ public class TaskImportTest
     }
 
     [TestMethod]
-    public void taskFromStringListTest()
+    public void TaskFromStringListTest()
     {
         Task t = new Task()
         {
@@ -84,49 +87,49 @@ public class TaskImportTest
     }
 
     [TestMethod]
-    public void validDateTest1()
+    public void ValidDateTest1()
     {
         string testDate = "01/10/2024";
         Assert.IsTrue(TaskImport.StringIsValidDate(testDate));
     }
     
     [TestMethod]
-    public void validDateTest2()
+    public void ValidDateTest2()
     {
         string testDate = "32/10/2024";
         Assert.IsFalse(TaskImport.StringIsValidDate(testDate));
     }
     
     [TestMethod]
-    public void validDateTest3()
+    public void ValidDateTest3()
     {
         string testDate = "01/13/2024";
         Assert.IsFalse(TaskImport.StringIsValidDate(testDate));
     }
     
     [TestMethod]
-    public void validDateTest4()
+    public void ValidDateTest4()
     {
         string testDate = "01/10/-2024";
         Assert.IsFalse(TaskImport.StringIsValidDate(testDate));
     }
     
     [TestMethod]
-    public void validDateTest5()
+    public void ValidDateTest5()
     {
         string testDate = "01/10/20/24";
         Assert.IsFalse(TaskImport.StringIsValidDate(testDate));
     }
     
     [TestMethod]
-    public void validDateTest6()
+    public void ValidDateTest6()
     {
         string testDate = "01/asd/24";
         Assert.IsFalse(TaskImport.StringIsValidDate(testDate));
     }
 
     [TestMethod]
-    public void isLineValidTest1()
+    public void IsLineValidTest1()
     {
         Assert.IsFalse(TaskImport.IsLineValid(line0));
         Assert.IsTrue(TaskImport.IsLineValid(line1));
@@ -134,21 +137,21 @@ public class TaskImportTest
     }
     
     [TestMethod]
-    public void isLineValidTest2()
+    public void IsLineValidTest2()
     {
         string line = "Titulo X,Descripcion X.,10/09/2024,Manzana";
         Assert.IsFalse(TaskImport.IsLineValid(line));
     }
     
     [TestMethod]
-    public void isLineValidTest3()
+    public void IsLineValidTest3()
     {
         string line = "Titulo X,Descripcion X.,fecha: 10/09/2024,1";
         Assert.IsFalse(TaskImport.IsLineValid(line));
     }
     
     [TestMethod]
-    public void isLineValidTest4()
+    public void IsLineValidTest4()
     {
         string line = "Titulo X,Descripcion X.,1,10/09/2024";
         Assert.IsFalse(TaskImport.IsLineValid(line));
@@ -158,9 +161,10 @@ public class TaskImportTest
     public void LoadFileTest1()
     {
         taskImport = new TaskImport();
+        string fileName = directoryAdjustment + fileName1;
         
-        taskImport.LoadFile(fileName1);
+        taskImport.LoadFile(fileName);
 
-        Assert.AreEqual(taskImport.fileName, fileName1);
+        Assert.AreEqual(fileName, taskImport.fileName);
     }
 }

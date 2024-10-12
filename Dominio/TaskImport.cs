@@ -5,9 +5,10 @@ public class TaskImport
     public string fileName;
     public StreamReader reader;
 
-    public void LoadFile(string fileName)
+    public void LoadFile(string _fileName)
     {
-        
+        fileName = _fileName;
+        reader = new StreamReader(fileName);
     }
     public static List<string> SplitString(string str)
     {

@@ -88,7 +88,7 @@ public class TaskImport
     {
         return int.TryParse(panelId, out int _);
     }
-    public static bool StringIsValidDate(string str)
+    private static bool StringIsValidDate(string str)
     {
         if (!str.Contains('/'))
             return false;

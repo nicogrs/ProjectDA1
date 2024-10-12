@@ -70,10 +70,9 @@ public class TaskImport
         
         return date;
     }
-    
-    
-    
-    public static bool IsLineValid(string line)
+
+
+    private static bool IsLineValid(string line)
     {
         List<string> elements = SplitString(line);
         if (elements.Count != 4)

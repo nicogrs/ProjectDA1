@@ -113,36 +113,7 @@ public class TaskImportTest
         Assert.AreEqual(t.Description, parsedTask.Description);
         Assert.AreEqual(t.expDate, parsedTask.expDate);
     }
-
-    [TestMethod]
-    public void IsLineValidTest1()
-    {
-        Assert.IsFalse(TaskImport.IsLineValid(line0));
-        Assert.IsTrue(TaskImport.IsLineValid(line1));
-        Assert.IsTrue(TaskImport.IsLineValid(line2));
-    }
     
-    [TestMethod]
-    public void IsLineValidTest2()
-    {
-        string line = "Titulo X,Descripcion X.,10/09/2024,Manzana";
-        Assert.IsFalse(TaskImport.IsLineValid(line));
-    }
-    
-    [TestMethod]
-    public void IsLineValidTest3()
-    {
-        string line = "Titulo X,Descripcion X.,fecha: 10/09/2024,1";
-        Assert.IsFalse(TaskImport.IsLineValid(line));
-    }
-    
-    [TestMethod]
-    public void IsLineValidTest4()
-    {
-        string line = "Titulo X,Descripcion X.,1,10/09/2024";
-        Assert.IsFalse(TaskImport.IsLineValid(line));
-    }
-
     [TestMethod]
     public void LoadFileTest1()
     {

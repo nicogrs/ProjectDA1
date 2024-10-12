@@ -53,32 +53,6 @@ public class TaskImportTest
         taskImport = new TaskImport();
     }
     
-
-    [TestMethod]
-    public void TaskFromStringListTest()
-    {
-        Task t = new Task()
-        {
-            Title = "Titulo 1",
-            Description = "Descripcion 1",
-            expDate = new DateTime(2024, 10, 01),
-        };
-        List<string> strList = new List<string>()
-        {
-            "Titulo 1",
-            "Descripcion 1",
-            "01/10/2024",
-            "1"
-        };
-
-
-        Task parsedTask = taskImport.TaskFromStringList(strList);
-        
-        Assert.AreEqual(t.Title, parsedTask.Title);
-        Assert.AreEqual(t.Description, parsedTask.Description);
-        Assert.AreEqual(t.expDate, parsedTask.expDate);
-    }
-    
     [TestMethod]
     public void LoadFileTest1()
     {

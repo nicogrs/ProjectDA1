@@ -43,7 +43,7 @@ public class TaskImport
         return result;
     }
     
-    private static List<string> SplitString(string str)
+    private List<string> SplitString(string str)
     {
         string[] strArr = str.Split(",");
         
@@ -51,7 +51,7 @@ public class TaskImport
         
         return toReturn;
     }
-    public Task TaskFromStringList(List<string> strList)
+    private Task TaskFromStringList(List<string> strList)
     {
         Task task = new Task();
         task.Title = strList[0];

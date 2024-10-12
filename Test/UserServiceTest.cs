@@ -28,12 +28,27 @@ public class UserServiceTest
     }
 
     [TestMethod]
-    public void AddElementToTrash()
+    public void AddPanelToTrashTest()
     {
         _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
         var panelTest = new Panel { Name = "Panel 1" };
-        _service.AddElementToPaperBin(panelTest, _user.Email);
-        CollectionAssert.Contains(_user.Trash.Paperbin, panelTest);
+        var teamTest = new Team { Name = "Team 1" };
+        teamTest.Panels.Add(panelTest);
+        _service.AddPanelToPaperBin(teamTest, panelTest, _user.Email);
+        CollectionAssert.Contains(_user.PaperBin.Paperbin, panelTest);
+        CollectionAssert.DoesNotContain(teamTest.Panels, panelTest);
+    }
+    
+    [TestMethod]
+    public void AddTaskToTrash()
+    {
+        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+        var panelTest = new Panel { Name = "Panel 1" };
+        var task = new Task{Title = "Task 1"};
+        panelTest.Tasks.Add(task);
+        _service.AddTaskToPaperBin(panelTest,task, _user.Email);
+        CollectionAssert.Contains(_user.PaperBin.Paperbin, task);
+        CollectionAssert.DoesNotContain(panelTest.Tasks, task);
     }
     
     [TestMethod]

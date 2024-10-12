@@ -123,4 +123,14 @@ public class TeamService
     {
         return _teamDatabase.GetTeamsByUserEmail(userEmail);
     }
+
+    public List<Panel> GetAllPanelsFromTeam(string teamName)
+    {
+        var team = GetTeamByName(teamName);
+        if (team.Panels.Count == 0)
+        {
+            throw new InvalidOperationException($"Team {teamName} does not have a panels");
+        }
+        return team.Panels;
+    }
 }

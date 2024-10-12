@@ -152,6 +152,15 @@ public class TeamServiceTest
         var teamPanels = _teamService.GetAllPanelsFromTeam(team.Name);
         CollectionAssert.AreEquivalent(teamPanels, new List<Panel>{panel1, panel2});
     }
+    
+    
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void GetAllPanelsFromTeamTestException()
+    {
+        _mockTeamDatabase.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
+        var teamPanels = _teamService.GetAllPanelsFromTeam(team.Name);
+    }
 
 
     [TestMethod]

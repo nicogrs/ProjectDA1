@@ -141,6 +141,17 @@ public class TeamServiceTest
         Assert.AreEqual(panelFromTeam, panelTest);
     }
 
+    [TestMethod]
+    public void GetAllPanelsFromTeamTest()
+    {
+        var panel1 = new Panel{Name = "Panel 1"};
+        var panel2 = new Panel{Name = "Panel 2"};
+        team.Panels.Add(panel1);
+        team.Panels.Add(panel2);
+        _mockTeamDatabase.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
+        var teamPanels = _teamService.GetAllPanelsFromTeam(team.Name);
+        CollectionAssert.AreEquivalent(teamPanels, new List<Panel>{panel1, panel2});
+    }
 
 
     [TestMethod]

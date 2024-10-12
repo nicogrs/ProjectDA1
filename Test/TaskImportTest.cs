@@ -25,7 +25,8 @@ public class TaskImportTest
         {
             "../../../Data/tareasTestData.csv",
             "../../../Data/tareas.csv",
-            "../../../Data/tareasValidDateTests.csv"
+            "../../../Data/tareasValidDateTest.csv",
+            "../../../Data/tareasValidLineTest.csv"
         };
 
         referenceTasks = new List<Task>()
@@ -185,6 +186,22 @@ public class TaskImportTest
     public void ReadTasksValidDateTests()
     {
         taskImport.LoadFile(filesToTest[2]);
+
+        List<Task> taskList = taskImport.ReadTasksFromFile(new User());
+        
+        int taskListElementCount = taskList.Count;
+        for (int i = 0; i < taskListElementCount; i++)
+        {
+            Assert.AreEqual(taskList[i].Title, referenceTasks[i].Title);
+            Assert.AreEqual(taskList[i].Description, referenceTasks[i].Description);
+            Assert.AreEqual(taskList[i].expDate, referenceTasks[i].expDate);
+        }
+    }
+    
+    [TestMethod]
+    public void TasksValidLineTests()
+    {
+        taskImport.LoadFile(filesToTest[3]);
 
         List<Task> taskList = taskImport.ReadTasksFromFile(new User());
         

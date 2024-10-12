@@ -23,8 +23,11 @@ public class TaskImport
         
         return result;
     }
-    
-    
+
+    public List<Task> ReadTasksFromFile(User user)
+    {
+        return null;
+    }
     
     public static List<string> SplitString(string str)
     {

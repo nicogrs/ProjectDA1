@@ -12,6 +12,8 @@ public class TaskImportTest
     private string fileName1;
     private string fileName2;
     private string directoryAdjustment;
+    private List<Task> tasks;
+    
     
     [TestInitialize]
     public void Setup()
@@ -22,7 +24,21 @@ public class TaskImportTest
         fileName1 = "Data/tareasTestData.csv";
         fileName2 = "Data/tareas.csv";
         directoryAdjustment = "../../../";
-        
+        tasks = new List<Task>()
+        {
+            new Task()
+            {
+                Title = "Prueba correcta 1",
+                Description = "Descripcion de prueba 1.",
+                expDate = new DateTime(2024, 02, 02)
+            },
+            new Task()
+            {
+                Title = "Prueba correcta 2",
+                Description = "Descripcion de prueba 2.",
+                expDate = new DateTime(2024, 02, 02)
+            }
+        };
     }
 
     [TestMethod]
@@ -183,5 +199,16 @@ public class TaskImportTest
         Assert.AreEqual("Prueba incorrecta 1,Tiene una columna sobrante,Columna sobrante,03/03/2024,1",lines[3]);
         Assert.AreEqual("Prueba incorrecta 2,La fecha es incorrecta.,13/04/2024,1",lines[4]);
         Assert.AreEqual("Prueba incorrecta 3,No hay columna ID de panel,04/04/2024",lines[5]);
+    }
+
+    [TestMethod]
+    public void ReadTasksFromFileTest1()
+    {
+        taskImport = new TaskImport();
+        string fileName = directoryAdjustment + fileName1;
+
+        List<Task> taskList = taskImport.ReadTasksFromFile(new User());
+        
+        Assert.AreEqual(taskList, tasks);
     }
 }

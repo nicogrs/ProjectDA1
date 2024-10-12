@@ -31,7 +31,14 @@ public class UserRegisterDTO
     
     public User ToEntity()
     {
-        return new User();
+        return new User(){
+            Name = this.Name,
+            Surname = this.Surname,
+            BirthDate = this.BirthDate,
+            Email = this.Email,
+            Password = this.Password,
+            Admin = this.Admin
+        };
     }
     
     

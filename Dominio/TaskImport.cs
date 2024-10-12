@@ -3,7 +3,7 @@ namespace Dominio;
 public class TaskImport
 {
     public string fileName;
-    public StreamReader reader;
+    private StreamReader reader;
 
     public void LoadFile(string _fileName)
     {
@@ -51,7 +51,7 @@ public class TaskImport
         
         return toReturn;
     }
-    public static Task TaskFromStringList(List<string> strList)
+    public Task TaskFromStringList(List<string> strList)
     {
         Task task = new Task();
         task.Title = strList[0];
@@ -63,7 +63,7 @@ public class TaskImport
 
         return task;
     }
-    private static DateTime StringToDate(string strDate)
+    private DateTime StringToDate(string strDate)
     {
         string[] dateArray = strDate.Split("/");
         DateTime date = new DateTime(int.Parse(dateArray[2]), int.Parse(dateArray[1]), int.Parse(dateArray[0]));
@@ -72,7 +72,7 @@ public class TaskImport
     }
 
 
-    private static bool IsLineValid(string line)
+    private bool IsLineValid(string line)
     {
         List<string> elements = SplitString(line);
         if (elements.Count != 4)
@@ -83,11 +83,11 @@ public class TaskImport
         
         return isDateValid && isPanelIdValid;
     }
-    private static bool IsPanelIdValid(string panelId)
+    private bool IsPanelIdValid(string panelId)
     {
         return int.TryParse(panelId, out int _);
     }
-    private static bool StringIsValidDate(string str)
+    private bool StringIsValidDate(string str)
     {
         if (!str.Contains('/'))
             return false;
@@ -110,7 +110,7 @@ public class TaskImport
         
         return areNumbersValid;
     }
-    private static bool AreNumbersValid(int day, int month, int year)
+    private bool AreNumbersValid(int day, int month, int year)
     {
         bool isDayValid = day >= 1 && day <= 31;
         bool isMonthValid = month >= 1 && month <= 12;

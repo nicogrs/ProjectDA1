@@ -72,7 +72,7 @@ public class TaskImportTest
         };
 
 
-        Task parsedTask = TaskImport.TaskFromStringList(strList);
+        Task parsedTask = taskImport.TaskFromStringList(strList);
         
         Assert.AreEqual(t.Title, parsedTask.Title);
         Assert.AreEqual(t.Description, parsedTask.Description);

@@ -1,6 +1,5 @@
 ﻿namespace Test;
 using DTOs;
-using Dominio;
 
 [TestClass]
 public class UserRegisterDTOTest

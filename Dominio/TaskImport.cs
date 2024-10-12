@@ -10,6 +10,11 @@ public class TaskImport
         fileName = _fileName;
         reader = new StreamReader(fileName);
     }
+
+    public List<string> ReadLoadedFile()
+    {
+        return null;
+    }
     public static List<string> SplitString(string str)
     {
         string[] strArr = str.Split(",");

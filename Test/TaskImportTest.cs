@@ -167,4 +167,22 @@ public class TaskImportTest
 
         Assert.AreEqual(fileName, taskImport.fileName);
     }
+
+    [TestMethod]
+    public void ReadFileTest1()
+    {
+        taskImport = new TaskImport();
+        string fileName = directoryAdjustment + fileName1;
+        
+        taskImport.LoadFile(fileName);
+        List<string> lines = taskImport.ReadLoadedFile();
+        
+        Assert.AreEqual(6, lines.Count);
+        Assert.AreEqual("Título,Descripción,Fecha de vencimiento,ID de panel",lines[0]);
+        Assert.AreEqual("Prueba correcta 1,Descripcion de prueba 1.,01/01/2024,1",lines[1]);
+        Assert.AreEqual("Prueba correcta 2,Descripcion de prueba 2.,02/02/2024,1",lines[2]);
+        Assert.AreEqual("Prueba incorrecta 1,Tiene una columna sobrante,Columna sobrante,03/03/2024,1",lines[3]);
+        Assert.AreEqual("Prueba incorrecta 2,La fecha es incorrecta.,13/04/2024,1",lines[4]);
+        Assert.AreEqual("Prueba incorrecta 3,No hay columna ID de panel,04/04/2024",lines[5]);
+    }
 }

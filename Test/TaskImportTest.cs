@@ -14,6 +14,7 @@ public class TaskImportTest
     private string fileName1;
     private string fileName2;
     private string directoryAdjustment;
+    private string adjustedFileName1;
     private List<Task> tasks;
     
     
@@ -26,6 +27,8 @@ public class TaskImportTest
         fileName1 = "Data/tareasTestData.csv";
         fileName2 = "Data/tareas.csv";
         directoryAdjustment = "../../../";
+        fileName1 = directoryAdjustment + fileName1;
+        fileName2 = directoryAdjustment + fileName2;
         tasks = new List<Task>()
         {
             new Task()
@@ -41,6 +44,7 @@ public class TaskImportTest
                 expDate = new DateTime(2024, 02, 02)
             }
         };
+        taskImport = new TaskImport();
     }
 
     [TestMethod]
@@ -178,7 +182,6 @@ public class TaskImportTest
     [TestMethod]
     public void LoadFileTest1()
     {
-        taskImport = new TaskImport();
         string fileName = directoryAdjustment + fileName1;
         
         taskImport.LoadFile(fileName);
@@ -189,10 +192,7 @@ public class TaskImportTest
     [TestMethod]
     public void ReadFileTest1()
     {
-        taskImport = new TaskImport();
-        string fileName = directoryAdjustment + fileName1;
-        
-        taskImport.LoadFile(fileName);
+        taskImport.LoadFile(fileName1);
         List<string> lines = taskImport.ListLinesOfLoadedFile();
         
         Assert.AreEqual("Título,Descripción,Fecha de vencimiento,ID de panel",lines[0]);
@@ -206,9 +206,7 @@ public class TaskImportTest
     [TestMethod]
     public void ReadTasksFromFileTest1()
     {
-        taskImport = new TaskImport();
-        string fileName = directoryAdjustment + fileName1;
-        taskImport.LoadFile(fileName);
+        taskImport.LoadFile(fileName1);
 
         List<Task> taskList = taskImport.ReadTasksFromFile(new User());
 

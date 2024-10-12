@@ -10,7 +10,6 @@ public class TaskImport
         fileName = _fileName;
         reader = new StreamReader(fileName);
     }
-
     public List<string> ListLinesOfLoadedFile()
     {
         List<string> result = new List<string>();
@@ -24,6 +23,9 @@ public class TaskImport
         
         return result;
     }
+    
+    
+    
     public static List<string> SplitString(string str)
     {
         string[] strArr = str.Split(",");
@@ -31,21 +33,6 @@ public class TaskImport
         List<string> toReturn = strArr.ToList();
         
         return toReturn;
-    }
-
-    public static bool IsLineValid(string line)
-    {
-        List<string> elements = SplitString(line);
-        
-        bool isDateValid = StringIsValidDate(elements[2]);
-        bool isPanelIdValid = IsPanelIdValid(elements[3]);
-        
-        return isDateValid && isPanelIdValid;
-    }
-
-    private static bool IsPanelIdValid(string panelId)
-    {
-        return int.TryParse(panelId, out int _);
     }
     public static Task TaskFromStringList(List<string> strList)
     {
@@ -59,7 +46,6 @@ public class TaskImport
 
         return task;
     }
-
     private static DateTime StringToDate(string strDate)
     {
         string[] dateArray = strDate.Split("/");
@@ -67,7 +53,22 @@ public class TaskImport
         
         return date;
     }
-
+    
+    
+    
+    public static bool IsLineValid(string line)
+    {
+        List<string> elements = SplitString(line);
+        
+        bool isDateValid = StringIsValidDate(elements[2]);
+        bool isPanelIdValid = IsPanelIdValid(elements[3]);
+        
+        return isDateValid && isPanelIdValid;
+    }
+    private static bool IsPanelIdValid(string panelId)
+    {
+        return int.TryParse(panelId, out int _);
+    }
     public static bool StringIsValidDate(string str)
     {
         if (!str.Contains('/'))
@@ -91,7 +92,6 @@ public class TaskImport
         
         return areNumbersValid;
     }
-
     private static bool AreNumbersValid(int day, int month, int year)
     {
         bool isDayValid = day >= 1 && day <= 31;
@@ -100,4 +100,9 @@ public class TaskImport
         
         return isDayValid && isMonthValid && isYearValid;
     }
+    
+    
+    
+
+    
 }

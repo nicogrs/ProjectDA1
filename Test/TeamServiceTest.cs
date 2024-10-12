@@ -141,6 +141,8 @@ public class TeamServiceTest
         Assert.AreEqual(panelFromTeam, panelTest);
     }
 
+
+
     [TestMethod]
     public void GetAllTeamsTest()
     {
@@ -161,7 +163,7 @@ public class TeamServiceTest
         var user = new User { Email = "user@email.com" };
         team1.TeamMembers.Add(user);
         team2.TeamMembers.Add(user);
-        _mockTeamDatabase.Setup(x => x.GetTeamsByUserEmail(user.Email)).Returns(user);
+        _mockTeamDatabase.Setup(x => x.GetTeamsByUserEmail(user.Email)).Returns(new List<Team> { team1, team2 });
         var teamsByUserEmail = _teamService.GetTeamsByUserEmail(user.Email);
         CollectionAssert.AreEquivalent(teamsByUserEmail, new List<Team> { team1, team2 });
     }

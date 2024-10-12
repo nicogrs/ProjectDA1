@@ -118,4 +118,9 @@ public class TeamService
     {
         return _teamDatabase.GetTeams();
     }
+
+    public List<Team> GetTeamsByUserEmail(string userEmail)
+    {
+        return _teamDatabase.GetTeamsByUserEmail(userEmail);
+    }
 }

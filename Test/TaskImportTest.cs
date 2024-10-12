@@ -62,21 +62,6 @@ public class TaskImportTest
     }
 
     [TestMethod]
-    public void ReadFileTest1()
-    {
-        taskImport.LoadFile(filesToTest[0]);
-        List<string> lines = taskImport.ListLinesOfLoadedFile();
-        
-        Assert.AreEqual("Título,Descripción,Fecha de vencimiento,ID de panel",lines[0]);
-        Assert.AreEqual("Tarea Valida 1,Datos validos.,01/01/2000,1",lines[1]);
-        Assert.AreEqual("Tarea Valida 2,Datos validos.,12/12/2024,1",lines[2]);
-        Assert.AreEqual("Prueba incorrecta 1,Tiene una columna sobrante,Columna sobrante,03/03/2024,1",lines[3]);
-        Assert.AreEqual("Prueba incorrecta 2,La fecha es incorrecta.,04/13/2024,1",lines[4]);
-        Assert.AreEqual("Prueba incorrecta 3,No hay columna ID de panel,04/04/2024",lines[5]);
-        Assert.AreEqual("Tarea Valida 3,Datos validos, final.,06/06/2020,1",lines[6]);
-    }
-
-    [TestMethod]
     public void ReadTasksFromFileTest1()
     {
         taskImport.LoadFile(filesToTest[0]);

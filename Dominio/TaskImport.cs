@@ -10,7 +10,7 @@ public class TaskImport
         fileName = _fileName;
         reader = new StreamReader(fileName);
     }
-    public List<string> ListLinesOfLoadedFile()
+    private List<string> ListLinesOfLoadedFile()
     {
         List<string> result = new List<string>();
         string line;

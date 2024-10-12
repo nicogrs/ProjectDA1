@@ -1,6 +1,8 @@
-﻿namespace Dominio;
+﻿using System.Collections;
 
-public class TeamService
+namespace Dominio;
+
+public class TeamService : ITeamService
 {
     private readonly ITeamDatabase _teamDatabase;
     private readonly IUserService _userService;
@@ -72,22 +74,7 @@ public class TeamService
         return false;
     }
     
-    public Panel GetPanelById(string teamName, int panelId)
-    {
-        var team = GetTeamByName(teamName);
-       return team.Panels.Find(x => x.PanelId == panelId);
-    }
-    
-    public bool AddPanel(string teamName, Panel panel)
-    {
-        if (GetPanelById(teamName, panel.PanelId) == null)
-        {
-            var team = _teamDatabase.GetTeamByName(teamName);
-            team.Panels.Add(panel);
-            return true;
-        }
-        return false;
-    }
+
 
     public bool RemoveUserFromTeam(string teamName, string userEmail)
     {
@@ -108,14 +95,15 @@ public class TeamService
         }
         return hasBeenRemoved;
     }
-
-    public void RemovePanel(string teamName,int panelId)
+    
+    public List<Team> GetAllTeams()
     {
-        var team = GetTeamByName(teamName);
-        var panel = team.Panels.Find(x => x.PanelId == panelId);
-        if (panel != null)
-        {
-            team.Panels.Remove(panel); 
-        }
+        return _teamDatabase.GetTeams();
     }
+
+    public List<Team> GetTeamsByUserEmail(string userEmail)
+    {
+        return _teamDatabase.GetTeamsByUserEmail(userEmail);
+    }
+    
 }

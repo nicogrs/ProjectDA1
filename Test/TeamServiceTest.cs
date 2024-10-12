@@ -119,36 +119,30 @@ public class TeamServiceTest
          Assert.IsTrue(isUserRemoved);
         
     }
-
-    [TestMethod]
-
-    public void AddNewPanel()
-    {
-        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
-        Panel panelTest = new Panel{Name = "New panel"};
-        var isPanelAdded = _teamService.AddPanel(team.Name, panelTest);
-        Assert.IsTrue(isPanelAdded);
-    }
+    
     
     [TestMethod]
-    public void RemovePanelTest()
+    public void GetAllTeamsTest()
     {
-        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
-        Panel panelTest = new Panel{Name = "Panel Test"};
-        team.Panels.Add(panelTest);
-        _teamService.RemovePanel(team.Name, panelTest.PanelId);
-        CollectionAssert.DoesNotContain(team.Panels, panelTest);
+        Team team1 = new Team { Name = "Team 1" };
+        Team team2 = new Team { Name = "Team 2" };
+        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team, team1, team2 });
+        var allTeams = _teamService.GetAllTeams();
+        CollectionAssert.AreEquivalent(allTeams, new List<Team> { team, team1, team2 });
     }
-    
-    [TestMethod]
 
-    public void GetPanelById()
+
+    [TestMethod]
+    public void GetTeamsByUserEmailTest()
     {
-        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
-        Panel panelTest = new Panel{Name = "New panel"};
-        team.Panels.Add(panelTest);
-        var panelFromTeam = _teamService.GetPanelById(team.Name, panelTest.PanelId);
-        Assert.AreEqual(panelFromTeam, panelTest);
+        Team team1 = new Team { Name = "Team 1" };
+        Team team2 = new Team { Name = "Team 2" };
+        var user = new User { Email = "user@email.com" };
+        team1.TeamMembers.Add(user);
+        team2.TeamMembers.Add(user);
+        _mockTeamDatabase.Setup(x => x.GetTeamsByUserEmail(user.Email)).Returns(new List<Team> { team1, team2 });
+        var teamsByUserEmail = _teamService.GetTeamsByUserEmail(user.Email);
+        CollectionAssert.AreEquivalent(teamsByUserEmail, new List<Team> { team1, team2 });
     }
     
     

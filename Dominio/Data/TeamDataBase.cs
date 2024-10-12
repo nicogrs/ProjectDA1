@@ -27,12 +27,18 @@ public class TeamDataBase : ITeamDatabase
 
     public void RemoveTeamFromDatabase(string teamName)
     {
-        throw new NotImplementedException();
+        var team = GetTeamByName(teamName);
+        Teams.Remove(team);
     }
 
     public void UpdateTeamInDatabase(Team team)
     {
-        throw new NotImplementedException();
+        var teamInDb = GetTeamByName(team.Name);
+        if (teamInDb != null)
+        {
+            teamInDb.MaxUsers = team.MaxUsers;
+            teamInDb.TasksDescription = team.TasksDescription;    
+        }
     }
 
     public List<Team> GetTeamsByUserEmail(string email)

@@ -13,7 +13,16 @@ public class TaskImport
 
     public List<string> ReadLoadedFile()
     {
-        return null;
+        List<string> result = new List<string>();
+        string line;
+        
+        while (!reader.EndOfStream)
+        {
+            line = reader.ReadLine();
+            result.Add(line);
+        }
+        
+        return result;
     }
     public static List<string> SplitString(string str)
     {

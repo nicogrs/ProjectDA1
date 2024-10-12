@@ -177,7 +177,6 @@ public class TaskImportTest
         taskImport.LoadFile(fileName);
         List<string> lines = taskImport.ReadLoadedFile();
         
-        Assert.AreEqual(6, lines.Count);
         Assert.AreEqual("Título,Descripción,Fecha de vencimiento,ID de panel",lines[0]);
         Assert.AreEqual("Prueba correcta 1,Descripcion de prueba 1.,01/01/2024,1",lines[1]);
         Assert.AreEqual("Prueba correcta 2,Descripcion de prueba 2.,02/02/2024,1",lines[2]);

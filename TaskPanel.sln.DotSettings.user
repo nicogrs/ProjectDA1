@@ -18,6 +18,9 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=031f827d_002D69bf_002D4839_002D8171_002Dfd1c79ffab59/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;Test&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="C:\Users\PC\Desktop\265403_243045_174039\Test" Presentation="&amp;lt;Test&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=6081227d_002Df6e6_002D432a_002D8d16_002Df346210601df/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GetTeamByNameTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Project Location="C:\Users\PC\Desktop\265403_243045_174039\Test" Presentation="&amp;lt;Test&amp;gt;" /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=96378360_002D28cd_002D46f1_002Db14c_002Dd95bbaaa6381/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;Test&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="C:\Users\PC\Desktop\265403_243045_174039\Test" Presentation="&amp;lt;Test&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>

@@ -2,7 +2,7 @@
 
 namespace Dominio;
 
-public class TeamService
+public class TeamService : ITeamService
 {
     private readonly ITeamDatabase _teamDatabase;
     private readonly IUserService _userService;
@@ -74,22 +74,7 @@ public class TeamService
         return false;
     }
     
-    public Panel GetPanelById(string teamName, int panelId)
-    {
-        var team = GetTeamByName(teamName);
-       return team.Panels.Find(x => x.PanelId == panelId);
-    }
-    
-    public bool AddPanel(string teamName, Panel panel)
-    {
-        if (GetPanelById(teamName, panel.PanelId) == null)
-        {
-            var team = _teamDatabase.GetTeamByName(teamName);
-            team.Panels.Add(panel);
-            return true;
-        }
-        return false;
-    }
+
 
     public bool RemoveUserFromTeam(string teamName, string userEmail)
     {
@@ -119,39 +104,6 @@ public class TeamService
     public List<Team> GetTeamsByUserEmail(string userEmail)
     {
         return _teamDatabase.GetTeamsByUserEmail(userEmail);
-    }
-
-    public List<Panel> GetAllPanelsFromTeam(string teamName)
-    {
-        var team = GetTeamByName(teamName);
-        if (team.Panels.Count == 0)
-        {
-            throw new InvalidOperationException($"Team {teamName} does not have a panels");
-        }
-        return team.Panels;
-    }
-    public void RemovePanel(string teamName,int panelId)
-    {
-        var team = GetTeamByName(teamName);
-        var panel = team.Panels.Find(x => x.PanelId == panelId);
-        if (panel != null)
-        {
-            team.Panels.Remove(panel); 
-        }
-    }
-    
-    public List<Task> GetAllExpiredTasks(string teamName)
-    {
-        List<Task> expiredTasks = new List<Task>();
-        var team = GetTeamByName(teamName);
-        foreach (var panel in team.Panels )
-        {
-          var expiredInPanel = panel.Tasks.
-              Where(x => x.expDate <= DateTime.Now).ToList();  
-          
-          expiredTasks.AddRange(expiredInPanel);
-        }
-        return expiredTasks;
     }
     
 }

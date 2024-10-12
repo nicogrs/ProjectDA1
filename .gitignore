@@ -87,6 +87,12 @@ fabric.properties
 **/obj/
 **/obj
 **/bin
+*.dll
+*.pdb
+*.cache
+*.user
+*.DotSettings.user
+*.nuget.info
 
 # NuGet Packages
 *.nupkg

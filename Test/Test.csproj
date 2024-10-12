@@ -22,7 +22,31 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Remove="obj\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="obj\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="obj\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+<<<<<<< HEAD
       <Folder Include="OutData\" />
+=======
+      <Compile Remove="obj\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="obj\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="obj\**" />
+>>>>>>> develop
     </ItemGroup>
 
 </Project>

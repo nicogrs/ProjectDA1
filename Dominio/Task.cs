@@ -1,13 +1,21 @@
 ﻿namespace Dominio;
 
-public class Task
+public class Task : IPaperBinItem
 {
+    public static int taskCounter = 0;
     public string Title { get; set; }
     public Priority priority { get; set; }
     public string Description { get; set; }
     public DateTime expDate { get; set; }
     public List<Comment> comments { get; set; }
+    public int TaskId { get; private set; }
 
+    public Task()
+    {
+        comments = new List<Comment>();
+        taskCounter++;
+        TaskId = taskCounter;
+    }
 
     public enum Priority
     {
@@ -47,4 +55,5 @@ public class Task
         
         return success;
     }
+    
 }

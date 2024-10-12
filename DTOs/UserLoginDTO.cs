@@ -18,6 +18,10 @@ public class UserLoginDTO
     
     public static UserLoginDTO FromEntity(User u)
     {
-        return new UserLoginDTO();
+        return new UserLoginDTO()
+        {
+            Email = u.Email,
+            Password = u.Password
+        };
     }
 }

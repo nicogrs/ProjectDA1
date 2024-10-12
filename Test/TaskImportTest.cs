@@ -175,7 +175,7 @@ public class TaskImportTest
         string fileName = directoryAdjustment + fileName1;
         
         taskImport.LoadFile(fileName);
-        List<string> lines = taskImport.ReadLoadedFile();
+        List<string> lines = taskImport.ListLinesOfLoadedFile();
         
         Assert.AreEqual("Título,Descripción,Fecha de vencimiento,ID de panel",lines[0]);
         Assert.AreEqual("Prueba correcta 1,Descripcion de prueba 1.,01/01/2024,1",lines[1]);

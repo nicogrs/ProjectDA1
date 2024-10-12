@@ -11,7 +11,7 @@ public class TaskImport
         reader = new StreamReader(fileName);
     }
 
-    public List<string> ReadLoadedFile()
+    public List<string> ListLinesOfLoadedFile()
     {
         List<string> result = new List<string>();
         string line;

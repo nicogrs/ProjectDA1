@@ -10,3 +10,15 @@ C:\Users\PC\Desktop\265403_243045_174039\Dominio\obj\Debug\net6.0\Dominio.dll
 C:\Users\PC\Desktop\265403_243045_174039\Dominio\obj\Debug\net6.0\refint\Dominio.dll
 C:\Users\PC\Desktop\265403_243045_174039\Dominio\obj\Debug\net6.0\Dominio.pdb
 C:\Users\PC\Desktop\265403_243045_174039\Dominio\obj\Debug\net6.0\ref\Dominio.dll
+C:\Users\flopa\RiderProjects\265403_243045_174039\Dominio\bin\Debug\net6.0\Dominio.deps.json
+C:\Users\flopa\RiderProjects\265403_243045_174039\Dominio\bin\Debug\net6.0\Dominio.dll
+C:\Users\flopa\RiderProjects\265403_243045_174039\Dominio\bin\Debug\net6.0\Dominio.pdb
+C:\Users\flopa\RiderProjects\265403_243045_174039\Dominio\obj\Debug\net6.0\Dominio.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\flopa\RiderProjects\265403_243045_174039\Dominio\obj\Debug\net6.0\Dominio.AssemblyInfoInputs.cache
+C:\Users\flopa\RiderProjects\265403_243045_174039\Dominio\obj\Debug\net6.0\Dominio.AssemblyInfo.cs
+C:\Users\flopa\RiderProjects\265403_243045_174039\Dominio\obj\Debug\net6.0\Dominio.csproj.CoreCompileInputs.cache
+C:\Users\flopa\RiderProjects\265403_243045_174039\Dominio\obj\Debug\net6.0\Dominio.sourcelink.json
+C:\Users\flopa\RiderProjects\265403_243045_174039\Dominio\obj\Debug\net6.0\Dominio.dll
+C:\Users\flopa\RiderProjects\265403_243045_174039\Dominio\obj\Debug\net6.0\refint\Dominio.dll
+C:\Users\flopa\RiderProjects\265403_243045_174039\Dominio\obj\Debug\net6.0\Dominio.pdb
+C:\Users\flopa\RiderProjects\265403_243045_174039\Dominio\obj\Debug\net6.0\ref\Dominio.dll

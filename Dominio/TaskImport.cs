@@ -4,12 +4,86 @@ public class TaskImport
 {
     public string fileName;
     private StreamReader reader;
+    private StreamWriter writer;
+    private List<Task> tasks;
+    private List<string> errors;
 
     public void LoadFile(string _fileName)
     {
         fileName = _fileName;
         reader = new StreamReader(fileName);
     }
+    
+    public List<Task> ReadTasksFromFile(User user)
+    {
+        tasks = new List<Task>();
+        errors = new List<string>();
+        
+        List<string> linesOfLoadedFile = ListLinesOfLoadedFile();
+        
+        foreach (string line in linesOfLoadedFile)
+        {
+            if (IsLineValid(line))
+            {
+                List<string> splitLine = SplitString(line);
+                Task newTask = TaskFromStringList(splitLine);
+                tasks.Add(newTask);
+            }
+            else
+            {
+                ProcessError(line);
+            }
+        }
+
+        MakeErrorFile($"../../../OutData/ErroresImport-{user.Name}.txt");
+        return tasks;
+    }
+
+    private void MakeErrorFile(string errorFileName)
+    {
+        writer = new StreamWriter(errorFileName);
+        foreach (string line in errors)
+        {
+            writer.WriteLine(line);
+        }
+        writer.Close();
+    }
+
+    private void ProcessError(string line)
+    {
+        List<string> separatedLine = SplitString(line);
+        bool correctColumnAmount = separatedLine.Count == 4;
+
+        if (!correctColumnAmount)
+        {
+            LogError(line,"- Cantidad incorrecta de columnas. - ");
+            return;
+        }
+        
+        if (!StringIsValidDate(separatedLine[2]))
+        {
+            LogError(line,"- Formato de fecha incorrecto. - ");
+            return;
+        }
+        
+        if (!IsPanelIdValid(separatedLine[3]))
+        {
+            LogError(line,"- Id de panel incorrecto. -");
+            return;
+        }
+    }
+
+    private void LogError(string line, string errorMessage)
+    {
+        string error = line + errorMessage + CurrentDateTime();
+        errors.Add(error);
+    }
+
+    private string CurrentDateTime()
+    {
+        return DateTime.Now.ToString("yyyy-mm-dd HH:mm:ss");
+    }
+    
     private List<string> ListLinesOfLoadedFile()
     {
         List<string> result = new List<string>();
@@ -23,26 +97,6 @@ public class TaskImport
         
         return result;
     }
-
-    public List<Task> ReadTasksFromFile(User user)
-    {
-        List<Task> result = new List<Task>();
-        
-        List<string> linesOfLoadedFile = ListLinesOfLoadedFile();
-        
-        foreach (string line in linesOfLoadedFile)
-        {
-            if (IsLineValid(line))
-            {
-                List<string> splitLine = SplitString(line);
-                Task newTask = TaskFromStringList(splitLine);
-                result.Add(newTask);
-            }
-        }
-        
-        return result;
-    }
-    
     private List<string> SplitString(string str)
     {
         string[] strArr = str.Split(",");

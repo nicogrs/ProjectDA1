@@ -7,9 +7,6 @@ using Task = Dominio.Task;
 [TestClass]
 public class TaskImportTest
 {
-    private string line0;
-    private string line1;
-    private string line2;
     private TaskImport taskImport;
     private List<string> filesToTest;
     private List<Task> referenceTasks;
@@ -18,9 +15,6 @@ public class TaskImportTest
     [TestInitialize]
     public void Setup()
     {
-        line0 = "Título,Descripción,Fecha de vencimiento,ID de panel";
-        line1 = "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2024,1";
-        line2 = "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2024,1";
         filesToTest = new List<string>()
         {
             "../../../Data/tareasTestData.csv",
@@ -46,7 +40,7 @@ public class TaskImportTest
             new Task()
             {
             Title = "Tarea Valida 3",
-            Description = "Datos validos, final.",
+            Description = "Datos validos - final.",
             expDate = new DateTime(2020, 06, 06)
         }
         };
@@ -66,7 +60,7 @@ public class TaskImportTest
     {
         taskImport.LoadFile(filesToTest[0]);
 
-        List<Task> taskList = taskImport.ReadTasksFromFile(new User());
+        List<Task> taskList = taskImport.ReadTasksFromFile(new User(){Name = "Testuser 1"});
 
         int taskListElementCount = taskList.Count;
         for (int i = 0; i < taskListElementCount; i++)
@@ -82,7 +76,7 @@ public class TaskImportTest
     {
         taskImport.LoadFile(filesToTest[2]);
 
-        List<Task> taskList = taskImport.ReadTasksFromFile(new User());
+        List<Task> taskList = taskImport.ReadTasksFromFile(new User(){Name = "Testuser 2"});
         
         int taskListElementCount = taskList.Count;
         for (int i = 0; i < taskListElementCount; i++)
@@ -98,7 +92,7 @@ public class TaskImportTest
     {
         taskImport.LoadFile(filesToTest[3]);
 
-        List<Task> taskList = taskImport.ReadTasksFromFile(new User());
+        List<Task> taskList = taskImport.ReadTasksFromFile(new User(){Name = "Testuser 3"});
         
         int taskListElementCount = taskList.Count;
         for (int i = 0; i < taskListElementCount; i++)

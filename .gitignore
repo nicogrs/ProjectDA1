@@ -106,3 +106,6 @@ project.fragment.lock.json
 
 # Ignore Rider user settings
 *.DotSettings.user
+
+#Ignore output error log
+Test/OutData/

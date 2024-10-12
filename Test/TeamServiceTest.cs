@@ -150,6 +150,21 @@ public class TeamServiceTest
         var allTeams = _teamService.GetAllTeams();
         CollectionAssert.AreEquivalent(allTeams, new List<Team> { team, team1, team2 });
     }
+
+
+    [TestMethod]
+
+    public void GetTeamsByUserEmailTest()
+    {
+        Team team1 = new Team { Name = "Team 1" };
+        Team team2 = new Team { Name = "Team 2" };
+        var user = new User { Email = "user@email.com" };
+        team1.TeamMembers.Add(user);
+        team2.TeamMembers.Add(user);
+        _mockTeamDatabase.Setup(x => x.GetTeamsByUserEmail(user.Email)).Returns(user);
+        var teamsByUserEmail = _teamService.GetTeamsByUserEmail(user.Email);
+        CollectionAssert.AreEquivalent(teamsByUserEmail, new List<Team> { team1, team2 });
+    }
     
     
 }

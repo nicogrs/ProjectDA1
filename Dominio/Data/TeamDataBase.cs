@@ -27,7 +27,8 @@ public class TeamDataBase : ITeamDatabase
 
     public void RemoveTeamFromDatabase(string teamName)
     {
-        throw new NotImplementedException();
+        var team = GetTeamByName(teamName);
+        Teams.Remove(team);
     }
 
     public void UpdateTeamInDatabase(Team team)

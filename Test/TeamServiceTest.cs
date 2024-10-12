@@ -131,13 +131,23 @@ public class TeamServiceTest
     }
     
     [TestMethod]
-
-    public void GetPanelByName()
+    public void RemovePanelTest()
+    {
+        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
+        Panel panelTest = new Panel{Name = "Panel Test"};
+        team.Panels.Add(panelTest);
+        _teamService.RemovePanel(team.Name, panelTest.PanelId);
+        CollectionAssert.DoesNotContain(team.Panels, panelTest);
+    }
+    
+    [TestMethod]
+    
+    public void GetPanelById()
     {
         _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         Panel panelTest = new Panel{Name = "New panel"};
         team.Panels.Add(panelTest);
-        var panelFromTeam = _teamService.GetPanelByName(team.Name, panelTest.Name);
+        var panelFromTeam = _teamService.GetPanelById(team.Name, panelTest.PanelId);
         Assert.AreEqual(panelFromTeam, panelTest);
     }
 
@@ -162,7 +172,17 @@ public class TeamServiceTest
         var teamPanels = _teamService.GetAllPanelsFromTeam(team.Name);
     }
 
-
+    [TestMethod]
+    public void GetExpiredTasksFromPanels()
+    {
+        var panel1 = new Panel{Name = "Panel 1"};
+        var task1 = new Task{Title = "Task 1", expDate = DateTime.Now.AddHours(1)};
+        panel1.Tasks.Add(task1);
+        team.Panels.Add(panel1);
+        var expiredTasks = _teamService.GetAllExpiredTasks(team.Name);
+        CollectionAssert.AreEquivalent(expiredTasks, new List<Task>{task1});
+    }
+    
     [TestMethod]
     public void GetAllTeamsTest()
     {

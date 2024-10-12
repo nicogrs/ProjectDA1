@@ -5,6 +5,8 @@ public class Comment
     public User CreatedBy {get; set;}
     public bool Resolved {get; set;}
     public User ResolvedBy {get; set;}
+    
+    public DateTime ResolvedTime {get; set;}
     public string Content {get; set;}
 
     public Comment(User createdBy, string content)

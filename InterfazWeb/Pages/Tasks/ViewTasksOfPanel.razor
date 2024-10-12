@@ -1,5 +1,4 @@
 @page "/{teamName}/{panelId}/tasks"
-
 @using Dominio
 @using Dominio.Data
 @inject TeamService TmService
@@ -18,7 +17,6 @@
     </div>
 </div>
 <div class="row">
-    
     @if (Tasks.Count != 0)
     {
         foreach (var task in Tasks)

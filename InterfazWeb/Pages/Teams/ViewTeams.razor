@@ -8,10 +8,8 @@
 @inject NavigationManager Navigation
 
 <PageTitle>Equipos</PageTitle>
-
+<h3>Equipos</h3>
 <div class="row">
-    <h3>Equipos</h3>
-    
     @if (Teams.Count != 0)
     {
         foreach (var team in Teams)
@@ -23,8 +21,6 @@
     {
         <p>No tienes equipos asignados.</p>
     }
-    
-    
 </div>
 
 @code {
@@ -38,7 +34,6 @@
         {
             Navigation.NavigateTo("/error");
         }
-
         if (Session.IsAdmin)
         {
             Teams = TDatabase.GetTeams();

@@ -1,14 +1,19 @@
 ﻿@page "/{teamName}/{panelId}/{taskTitle}"
-
 @using Dominio
 @using Dominio.Data
 @using Task = Dominio.Task
 @inject TeamService TmService
 @inject TaskDatabase TkDatabase
 @inject NavigationManager Navigation
+
 <PageTitle>ModifyTask</PageTitle>
 <h3>Modificar Tareas</h3>
-
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success" role="alert">
+        @message
+    </div>
+}
 
 <EditForm Model="modelChangeTask" OnValidSubmit="HandleModify">
     <DataAnnotationsValidator/>
@@ -32,7 +37,6 @@
             <button class="btn btn-primary" type="button" @onclick="GoBack">Volver</button>
         </div>
     </div>
-
 </EditForm>
 
 @code {
@@ -45,14 +49,13 @@
 
     Task modelChangeTask = new Task();
     Task toModify = new Task();
-
     Panel panel = new Panel();
+    private string message;
 
     protected override void OnInitialized()
     {
         panel = TmService.GetPanelById(teamName, panelId);
         toModify = panel.Tasks.FirstOrDefault(t => t.Title == taskTitle);
-
     }
 
     private void HandleModify()
@@ -67,12 +70,11 @@
             toModify.Description = modelChangeTask.Description;
         }
 
- 
+        message = "Tarea modificada";
     }
 
     private void GoBack()
     {
-        
         Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
     }
 }

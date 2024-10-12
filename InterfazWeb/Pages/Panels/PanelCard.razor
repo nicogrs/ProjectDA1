@@ -1,5 +1,4 @@
 @using Dominio.Data
-
 @inject NavigationManager Navigation
 @inject PanelDatabase PDatabase
 @inject Session Session
@@ -24,6 +23,7 @@
         }
     </div>
 </div>
+
 @code {
     [Parameter]
     public string Title { get; set; }
@@ -43,17 +43,18 @@
         {
             Navigation.NavigateTo("/error");
         }
-
     }
     
     private void GoToPanel()
     {
         Navigation.NavigateTo($"/{teamName}/{Title}/tasks");
     }
+    
     private void ChangePanel()
     {
         Navigation.NavigateTo("/auxiliar");
     }
+    
     private void DeletePanel()
     {
         Navigation.NavigateTo("/auxiliar");

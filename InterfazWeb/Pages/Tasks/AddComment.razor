@@ -1,16 +1,19 @@
 @page "/{teamName}/{panelId}/{taskTitle}/createComment"
-
 @using Dominio
 @using Dominio.Data
-
 @inject CommentDatabase CDatabase
 @inject TeamService TmService
 @inject NavigationManager Navigation
 @inject Session Session
 
-
 <PageTitle>AddComment</PageTitle>
 <h3>Agregar Comentario</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success" role="alert">
+        @message
+    </div>
+}
 <EditForm Model="modelAddComment" OnValidSubmit="HandleCreate">
     <DataAnnotationsValidator/>
     <div class="form-group">
@@ -21,27 +24,22 @@
     <div class="form-group">
         <button class="btn btn-primary" type="submit">Agregar Comentario</button>
     </div>
-    <div class="alert alert-danger" role="alert">
-        @message
-    </div>
 </EditForm>
 <div class="col-4">
     <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
 </div>
 
-
 @code{
-
-    private Comment modelAddComment;
-    private List<User> users;
-    private string message;
-    
     [Parameter]
     public string teamName { get; set; }
     [Parameter]
     public string panelId { get; set; }
     [Parameter]
     public string taskTitle { get; set; }
+    
+    private Comment modelAddComment;
+    private List<User> users;
+    private string message;
     
     protected override void OnInitialized()
     {
@@ -59,6 +57,7 @@
         message = "Comentario agregado con éxito";
         modelAddComment = new Comment(Session.CurrentUser, string.Empty);
     }
+    
     private void GoBack()
     {
         Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");

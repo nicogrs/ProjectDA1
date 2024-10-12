@@ -1,13 +1,10 @@
 @page "/{teamName}/panels/create"
 @using Dominio
 @using Dominio.Data
-
 @inject Session Session
 @inject PanelDatabase PDatabase
 @inject TeamDataBase TDatabase
 @inject NavigationManager Navigation
-
-<h3>CreatePanel</h3>
 
 <PageTitle>Create Panel</PageTitle>
 <h3>Crear Panel</h3>
@@ -30,24 +27,22 @@
     <div class="col-4">
         <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
     </div>
-    <div class="alert alert-danger" role="alert">
-        @CreateMessage
-    </div>
-
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert alert-success" role="alert">
+            @message
+        </div>
+    }
 </EditForm>
 
-
-    
 @code{
-
-    Panel modelCreatePanel = new Panel();
-    private List<User> users;
-    private string CreateMessage;
-    public List<User> SelectedUser; 
-    private int teamCount = 0;
-    
     [Parameter]
     public string teamName { get; set; }
+    
+    Panel modelCreatePanel = new Panel();
+    private List<User> users;
+    private string message;
+    private int teamCount = 0;
     
     protected override void OnInitialized()
     {
@@ -70,8 +65,9 @@
         };
         PDatabase.Panels.Add(p);
         TDatabase.GetTeamByName(teamName).Panels.Add(p);
-        CreateMessage="Panel agregado con éxito";
+        message="Panel agregado con éxito";
     }
+    
     private void GoBack()
     {
         Navigation.NavigateTo($"/{teamName}/panel");

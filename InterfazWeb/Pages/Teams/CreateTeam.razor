@@ -1,7 +1,6 @@
 @page "/teams/create"
 @using Dominio
 @using Dominio.Data
-
 @inject TeamDataBase TDatabase
 @inject UserDataBase UDatabase
 @inject TeamService TmService
@@ -10,8 +9,14 @@
 @inject Session Session
 
 
-<PageTitle>Create Team</PageTitle>
+<PageTitle>CreateTeam</PageTitle>
 <h3>Agregar Equipo</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success" role="alert">
+        @message
+    </div>
+}
 <EditForm Model="modelCreateTeam" OnValidSubmit="HandleCreate">
     <DataAnnotationsValidator/>
     <div class="form-group">
@@ -31,9 +36,9 @@
         <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
             @foreach (var user in users)
             {
-            <li class="dropdown-item">
-                <input type="checkbox" @onchange="(e) => ToggleUserSelection(user.Email, e.Value)" /> @user.Name @user.Surname
-            </li>
+                <li class="dropdown-item">
+                    <input type="checkbox" @onchange="(e) => ToggleUserSelection(user.Email, e.Value)" /> @user.Name @user.Surname
+                </li>
             }
         </ul>
     </div>
@@ -43,19 +48,12 @@
     <div class="col-4">
         <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
     </div>
-    <div class="alert alert-danger" role="alert">
-        @CreateMessage
-    </div>
-
 </EditForm>
 
-
-    
 @code{
-
     Team modelCreateTeam = new Team();
     private List<User> users;
-    private string CreateMessage;
+    private string message;
     public List<User> SelectedUser;
     private Panel p;
     public List<Panel> panels;
@@ -103,7 +101,7 @@
             Description = "Panel de tareas expiradas"
         };
         TmService.AddPanel(modelCreateTeam.Name, p);
-        CreateMessage="Equipo creado con éxito";
+        message="Equipo creado con éxito";
     }
     private void GoBack()
     {

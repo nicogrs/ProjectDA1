@@ -1,9 +1,9 @@
 @page "/account/login"
-@using Dominio.Data
+@using Dominio
 @using DTOs
+@inject UserService UService
 @inject NavigationManager Navigation
 @inject Session Session
-@inject UserDataBase UDatabase
 
 <h3>Login</h3>
 
@@ -25,23 +25,23 @@
         <button class="btn btn-primary" type="submit">Ingresar</button>
     </div>
 
-    @if (!string.IsNullOrEmpty(errorMessage))
+    @if (!string.IsNullOrEmpty(message))
     {
-    <div class="alert alert-danger" role="alert">
-        @errorMessage
-    </div>
+        <div class="alert alert-danger" role="alert">
+            @message
+        </div>
     }
 </EditForm>
 
 
 @code {
     private UserLoginDTO modelLogin = new UserLoginDTO();
-    private string errorMessage;
+    private string message = "";
     
     
     private void HandleLogin()
     {
-        var user = UDatabase.GetUserByEmail(modelLogin.Email);
+        var user = UService.GetUserByEmail(modelLogin.Email);
         if (user != null && user.Password == modelLogin.Password)
         {
             modelLogin = UserLoginDTO.FromEntity(user);
@@ -51,11 +51,9 @@
         }
         else
         {
-            errorMessage = "El email o la contraseña son incorrectos.";
+            message = "El email o la contraseña son incorrectos.";
             modelLogin = new UserLoginDTO();
         }
     }
 
 }
-
-

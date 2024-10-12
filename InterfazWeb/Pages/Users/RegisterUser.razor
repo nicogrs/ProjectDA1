@@ -1,13 +1,19 @@
 @page "/users/register"
-
 @using Dominio.Data
-
 @using DTOs
 @inject UserDataBase UDatabase
 @inject NavigationManager Navigation
 @inject Session Session
 
-<PageTitle>Registro</PageTitle>
+<PageTitle>Register</PageTitle>
+
+<h3>Registro de usuarios</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+<div class="alert alert-danger" role="alert">
+    @message
+</div>
+}
 
 <EditForm Model="modelRegister" OnValidSubmit="HandleRegister">
     <DataAnnotationsValidator/>
@@ -44,17 +50,14 @@
     <div class="form-group">
         <button class="btn btn-primary" type="submit">Registrarse</button>
     </div>
-    @if (!string.IsNullOrEmpty(errorMessage))
-    {
-    <div class="alert alert-danger" role="alert">
-        @errorMessage
-    </div>
-    }
 </EditForm>
+<div class="col-4">
+    <button class="btn btn-primary" type="button" @onclick="GoBack">Volver</button>
+</div>
 
 @code {
     UserRegisterDTO modelRegister = new UserRegisterDTO();
-    private string errorMessage;
+    private string message;
     private bool showPassword = false;
     private string passwordInputType => showPassword ? "text" : "password";
     
@@ -78,9 +81,11 @@
         };
 
         UDatabase.AddUser(u.ToEntity());
-        errorMessage = null;
+        message = "Usuario Registrado con exito";
+    }
 
+    private void GoBack()
+    {
         Navigation.NavigateTo("/");
     }
-    
 }

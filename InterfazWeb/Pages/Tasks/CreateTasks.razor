@@ -1,16 +1,19 @@
 @page "/{teamName}/{panelName}/create"
-
 @using Dominio.Data
 @using Task = Dominio.Task
-
 @inject TaskDatabase TDatabase
 @inject PanelDatabase PDatabase
 @inject NavigationManager Navigation
 @inject Session Session
 
-
 <PageTitle>Create Team</PageTitle>
-<h3>Agregar Equipo</h3>
+<h3>Crear Equipo</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success" role="alert">
+        @message
+    </div>
+}
 <EditForm Model="modelCreateTask" OnValidSubmit="HandleCreate">
     <DataAnnotationsValidator/>
     <div class="form-group">
@@ -40,21 +43,16 @@
     <div class="col-4">
         <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
     </div>
-    <div class="alert alert-danger" role="alert">
-        @CreateMessage
-    </div>
-
 </EditForm>
 
 @code {
-   
-    Task modelCreateTask = new Task();
-    private string CreateMessage;
-    
     [Parameter]
     public string teamName { get; set; }
     [Parameter]
     public string panelName { get; set; }
+    
+    Task modelCreateTask = new Task();
+    private string message;
     
     protected override void OnInitialized()
     {
@@ -77,7 +75,7 @@
         };
         TDatabase.Tasks.Add(t);
         PDatabase.GetPanelByName(panelName).Tasks.Add(t);
-        CreateMessage="Tarea creado con éxito";
+        message="Tarea creado con éxito";
     } 
     private void GoBack()
     {

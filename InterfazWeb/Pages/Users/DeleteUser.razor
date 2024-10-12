@@ -1,15 +1,26 @@
 ﻿@page "/users/delete"
 @using Dominio
 @using Dominio.Data
-
 @inject UserDataBase UDatabase
 @inject UserService UService
 @inject TeamService TmService
 @inject Session Session
 @inject NavigationManager Navigation
 
-<PageTitle>Eliminar Usuario</PageTitle>
+<PageTitle>DeleteUser</PageTitle>
 <h3>Eliminar Usuario</h3>
+@if (!string.IsNullOrEmpty(messageSuccess))
+{
+    <div class="alert alert-success" role="alert">
+        @messageSuccess
+    </div>
+}
+@if (!string.IsNullOrEmpty(messageNotSuccess))
+{
+    <div class="alert alert-danger" role="alert">
+        @messageNotSuccess
+    </div>
+}
 
 <EditForm Model="modelDeleteUser" OnValidSubmit="ShowConfirmation">
     <DataAnnotationsValidator />
@@ -35,7 +46,7 @@
 @if (showConfirmation)
 {
     <div class="alert alert-warning" role="alert">
-        <p>¿Estás seguro de que deseas eliminar al usuario @modelDeleteUser.Email? Este proceso no se puede deshacer.</p>
+        <p>¿Seguro que quieres eliminar a @modelDeleteUser.Email?</p>
         <div class="mt-2">
             <button class="btn btn-primary" type="button" @onclick="ConfirmDelete">Confirmar</button>
             <button class="btn btn-primary" type="button" @onclick="CancelDelete">Cancelar</button>
@@ -43,14 +54,11 @@
     </div>
 }
 
-<div class="alert alert-danger" role="alert">
-    @deleteMessage
-</div>
-
 @code {
     User modelDeleteUser = new User();
     private List<User> Users;
-    private string deleteMessage;
+    private string messageSuccess;
+    private string messageNotSuccess;
     private string selectedUser = "";
     private bool showConfirmation = false;
     private bool actualUser = false;
@@ -99,12 +107,14 @@
             {
                 TmService.RemoveUserFromAllTeams(modelDeleteUser.Email);
                 UDatabase.DeleteUser(modelDeleteUser.Email);
-                deleteMessage = "Usuario eliminado.";
+                messageNotSuccess = "";
+                messageSuccess = "Usuario eliminado.";
             }
         }
         else
         {
-            deleteMessage = "No se seleccionó ningun usuario.";
+            messageSuccess = "";
+            messageNotSuccess = "No se seleccionó ningun usuario.";
         }
 
         modelDeleteUser = new User();

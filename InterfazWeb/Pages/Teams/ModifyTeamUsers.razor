@@ -20,6 +20,13 @@
     </div>
 </div>
 
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success" role="alert">
+        @message
+    </div>
+}
+
 @if (addUsers)
 {
     <h3>Agregar Usuario a Equipo</h3>
@@ -42,9 +49,6 @@
             <button class="btn btn-primary" type="submit">Añadir Usuario</button>
         </div>
         
-        <div class="alert alert-danger" role="alert">
-            @message
-        </div>
     </EditForm>
 }
 else if(deleteUsers)
@@ -69,9 +73,6 @@ else if(deleteUsers)
             <button class="btn btn-primary" type="submit">Eliminar Usuario</button>
         </div>
         
-        <div class="alert alert-danger" role="alert">
-            @message
-        </div>
     </EditForm>
 }
 

@@ -1,9 +1,8 @@
 @page "/{teamName}/panel"
-
-
 @using Dominio
 @using Dominio.Data
 @inject TeamDataBase TDatabase
+@inject TeamService TmService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -57,10 +56,9 @@
     {
         TDatabase.RemoveTeamFromDatabase(teamName);
     }
-    
+
     public void ModifyTeam()
     {
         Navigation.NavigateTo($"/{teamName}/modify");
     }
-    
 }

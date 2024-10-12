@@ -1,3 +1,4 @@
+using System.IO.Enumeration;
 using Microsoft.VisualBasic;
 
 namespace Test;
@@ -22,6 +23,8 @@ public class TaskImportTest
             "../../../Data/tareasValidDateTest.csv",
             "../../../Data/tareasValidLineTest.csv"
         };
+        
+        Directory.CreateDirectory("../../../Data/Out/");
 
         referenceTasks = new List<Task>()
         {

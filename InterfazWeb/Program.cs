@@ -13,9 +13,12 @@ public class Program
         builder.Services.AddServerSideBlazor();
 
         builder.Services.AddSingleton<UserDataBase>();
+        builder.Services.AddSingleton<IUserDatabase, UserDataBase>();
         builder.Services.AddSingleton<UserService>();
+        builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddSingleton<PasswordService>();
         builder.Services.AddSingleton<TeamDataBase>();
+        builder.Services.AddSingleton<ITeamDataBase, TeamDataBase>();
         builder.Services.AddSingleton<TeamService>();
         builder.Services.AddSingleton<PanelDatabase>();
         builder.Services.AddSingleton<TaskDatabase>();

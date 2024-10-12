@@ -182,11 +182,9 @@ public class TaskImportTest
     [TestMethod]
     public void LoadFileTest1()
     {
-        string fileName = directoryAdjustment + fileName1;
-        
-        taskImport.LoadFile(fileName);
+        taskImport.LoadFile(fileName1);
 
-        Assert.AreEqual(fileName, taskImport.fileName);
+        Assert.AreEqual(fileName1, taskImport.fileName);
     }
 
     [TestMethod]
@@ -199,7 +197,7 @@ public class TaskImportTest
         Assert.AreEqual("Prueba correcta 1,Descripcion de prueba 1.,01/01/2024,1",lines[1]);
         Assert.AreEqual("Prueba correcta 2,Descripcion de prueba 2.,02/02/2024,1",lines[2]);
         Assert.AreEqual("Prueba incorrecta 1,Tiene una columna sobrante,Columna sobrante,03/03/2024,1",lines[3]);
-        Assert.AreEqual("Prueba incorrecta 2,La fecha es incorrecta.,13/04/2024,1",lines[4]);
+        Assert.AreEqual("Prueba incorrecta 2,La fecha es incorrecta.,04/13/2024,1",lines[4]);
         Assert.AreEqual("Prueba incorrecta 3,No hay columna ID de panel,04/04/2024",lines[5]);
     }
 
@@ -217,5 +215,6 @@ public class TaskImportTest
             Assert.AreEqual(taskList[i].Description, tasks[i].Description);
             Assert.AreEqual(taskList[i].expDate, tasks[i].expDate);
         }
+
     }
 }

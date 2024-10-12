@@ -183,6 +183,19 @@ public class TeamServiceTest
         var expiredTasks = _teamService.GetAllExpiredTasks(team.Name);
         CollectionAssert.AreEquivalent(expiredTasks, new List<Task>{task1});
     }
+
+    [TestMethod]
+
+    public void GetNonExpiredTasksFromPanel()
+    {
+        var panel1 = new Panel{Name = "Panel 1",Id = 1};
+        var task1 = new Task{Title = "Task 1", expDate = DateTime.Now.AddHours(+1)};
+        panel1.Tasks.Add(task1);
+        team.Panels.Add(panel1);
+        _mockTeamDatabase.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
+        var expiredTasks = _teamService.GetNonExpiredTasks(team.Name, panel1.Id);
+        CollectionAssert.AreEquivalent(expiredTasks, new List<Task>{task1});
+    }
     
     [TestMethod]
     public void GetAllTeamsTest()

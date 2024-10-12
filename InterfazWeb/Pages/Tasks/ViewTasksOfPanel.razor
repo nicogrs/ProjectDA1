@@ -1,16 +1,24 @@
 @page "/{teamName}/{panelId}/tasks"
 
 @using Dominio
+@using Dominio.Data
 @inject TeamService TmService
+@inject TeamDataBase TmDatabase
 @inject Session Session
 @inject NavigationManager Navigation
-<PageTitle>Equipos</PageTitle>
+<PageTitle>Task</PageTitle>
 
+<h3>Tareas</h3>
 <div class="row">
-    <h3>Equipos</h3>
-    <div class="d-flex justify-content-end">
+    <div class="col-6">
         <button class="btn btn-primary" type="submit" @onclick="CreateTask">Crear Nuevo Tarea</button>
     </div>
+    <div class="col-6">
+        <button class="btn btn-primary" type="submit" @onclick="DeletePanel">Borrar Panel</button>
+    </div>
+</div>
+<div class="row">
+    
     @if (Tasks.Count != 0)
     {
         foreach (var task in Tasks)
@@ -21,7 +29,9 @@
                           Description="@task.Description" 
                           Precedence="@task.Precedence" 
                           EndDate="@task.ExpirationDate" 
-                          Comments="@task.Comments" />
+                          Comments="@task.Comments" 
+                          teamName="@teamName"
+                          panelId="@panelId"/>
             }
         }
     }
@@ -52,6 +62,12 @@
     private void CreateTask()
     {
         Navigation.NavigateTo($"/{teamName}/{panelId}/create");
+    }
+
+    private void DeletePanel()
+    {
+        Panel delete = TmService.GetPanelById(teamName, panelId);
+        TmDatabase.GetTeamByName(teamName).Panels.Remove(delete);
     }
     
 }

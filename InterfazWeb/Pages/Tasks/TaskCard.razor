@@ -1,8 +1,10 @@
+
 @using Dominio
 @using Dominio.Data
 @using Task = Dominio.Task
 @inject TaskDatabase TDatabase
 @inject NavigationManager Navigation
+@inject Session Session
 
 <div class="card">
     <div class="card-body">
@@ -18,7 +20,11 @@
             {
                 <div class="card-text border-bottom mb-2 pb-2">
                     <p>@comment.Content</p>
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit" @onclick="() => CompleteComment(comment)">Terminar</button>
+                    </div>
                 </div>
+                
             }
         }
     </div>
@@ -42,7 +48,13 @@
     [Parameter]
     public string Description { get; set; }
     
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public string panelId { get; set; }
+    
     private List<Comment> Comments;
+    
 
     protected override void OnInitialized()
     {
@@ -51,10 +63,15 @@
 
     private void AddComment()
     {
-        Navigation.NavigateTo("/auxiliar");
+        Navigation.NavigateTo($"/{teamName}/{panelId}/{Title}/createComment");
     }
     private void ChangeTask()
     {
-        Navigation.NavigateTo("/auxiliar");
+        Navigation.NavigateTo($"/{teamName}/{panelId}/{Title}");
+    }
+
+    private void CompleteComment(Comment comment)
+    {
+        TDatabase.Tasks.FirstOrDefault(t => t.Title == Title).MarkCommentAsResolved(Session.CurrentUser, comment);
     }
 }

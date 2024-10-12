@@ -8,7 +8,7 @@ public class Comment
     
     public DateTime ResolvedTime {get; set;}
     public string Content {get; set;}
-
+    
     public Comment(User createdBy, string content)
     {
         CreatedBy = createdBy;

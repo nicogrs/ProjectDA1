@@ -195,7 +195,6 @@ public class TeamServiceTest
 
 
     [TestMethod]
-
     public void GetTeamsByUserEmailTest()
     {
         Team team1 = new Team { Name = "Team 1" };

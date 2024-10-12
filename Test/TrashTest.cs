@@ -3,7 +3,7 @@ using Dominio;
 using Moq;
 
 [TestClass]
-public class PaperBinTest
+public class TrashTest
 {
     Mock<IUserDatabase> mockUserDatabase;
     private IUserService _userService;
@@ -21,7 +21,7 @@ public class PaperBinTest
             Email = "carlos@gmail.com",
             BirthDate = new DateTime(1980, 1, 1),
             Password = "TestPass$1",
-            Trash = new PaperBin(),
+            PaperBin = new Trash(),
             Admin = false
         };
     }
@@ -30,25 +30,25 @@ public class PaperBinTest
     public void AddTaskToPaperBin()
     {
         Task taskTest = new Task{Title = "Task 1"};
-        _user.Trash.AddElementToPaperbin(taskTest);
-        Assert.AreEqual(_user.Trash.ElementsCount, 1);
+        _user.PaperBin.AddElementToPaperbin(taskTest);
+        Assert.AreEqual(_user.PaperBin.ElementsCount, 1);
     }
     
     [TestMethod]
     public void AddPanelToPaperBin()
     {
         Panel panelTest = new Panel{Name = "Panel 1"};
-        _user.Trash.AddElementToPaperbin(panelTest);
-        Assert.AreEqual(_user.Trash.ElementsCount, 1);
+        _user.PaperBin.AddElementToPaperbin(panelTest);
+        Assert.AreEqual(_user.PaperBin.ElementsCount, 1);
     }
 
     [TestMethod]
     public void DeleteItem()
     {
         Panel panelTest = new Panel{Name = "Panel 1"};
-        _user.Trash.AddElementToPaperbin(panelTest);
-        _user.Trash.DeleteElementFromPaperbin(panelTest);
-        CollectionAssert.DoesNotContain(_user.Trash.Paperbin, panelTest);
+        _user.PaperBin.AddElementToPaperbin(panelTest);
+        _user.PaperBin.DeleteElementFromPaperbin(panelTest);
+        CollectionAssert.DoesNotContain(_user.PaperBin.Paperbin, panelTest);
         
     }
 }

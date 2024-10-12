@@ -1,6 +1,6 @@
 ﻿namespace Dominio;
 
-public class Panel : IPaperBinElement
+public class Panel : IPaperBinItem
 {
     public static int contadorId = 0;
     
@@ -34,7 +34,7 @@ public class Panel : IPaperBinElement
     }
 
 
-    public void RemoveTask(int taskId)
+    public void DeleteItem(int taskId)
     {
         var task = Tasks.Find(x => x.TaskId == taskId);
         if (task != null)

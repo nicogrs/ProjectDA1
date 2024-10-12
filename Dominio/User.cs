@@ -8,11 +8,11 @@ public class User
     public DateTime BirthDate { get; set; }
     public string Password { get; set; }
     public bool Admin { get; set; }
-    public PaperBin Trash { get; set; }
+    public Trash PaperBin { get; set; }
 
     public User()
     {
-        Trash = new PaperBin();
+        PaperBin = new Trash();
     }
     
     public bool IsNameValid()

@@ -104,9 +104,22 @@ public class UserService : IUserService
         return _userDatabase.DeleteUser(email);
     }
     
-    public void AddElementToPaperBin(IPaperBinElement element, string email)
+    public void AddPanelToPaperBin(Team team, Panel panel, string email)
     {
         var user = GetUserByEmail(email);
-        user.Trash.Paperbin.Add(element);
+        if (team.Panels.Remove(panel))
+        {
+            user.PaperBin.AddElementToPaperbin(panel);
+        }
+        
+    }
+
+    public void AddTaskToPaperBin(Panel panel, Task task, string email)
+    {
+        var user = GetUserByEmail(email);
+        if(panel.Tasks.Remove(task))
+        {
+            user.PaperBin.AddElementToPaperbin(task);  
+        }
     }
 }

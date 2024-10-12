@@ -71,8 +71,7 @@ public class TeamService
 
         return false;
     }
-
-
+    
     public Panel GetPanelById(string teamName, int panelId)
     {
         var team = GetTeamByName(teamName);
@@ -110,7 +109,7 @@ public class TeamService
         return hasBeenRemoved;
     }
 
-    public void RemovePanel(string teamName, int panelId)
+    public void RemovePanel(string teamName,int panelId)
     {
         var team = GetTeamByName(teamName);
         var panel = team.Panels.Find(x => x.PanelId == panelId);

@@ -1,6 +1,6 @@
 ﻿namespace Dominio;
 
-public class Task : IPaperBinElement
+public class Task : IPaperBinItem
 {
     public static int taskCounter = 0;
     public string Title { get; set; }
@@ -55,6 +55,5 @@ public class Task : IPaperBinElement
         
         return success;
     }
-
     
 }

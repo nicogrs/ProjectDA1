@@ -1,4 +1,6 @@
-﻿namespace Dominio;
+﻿using System.Collections;
+
+namespace Dominio;
 
 public class TeamService
 {
@@ -112,4 +114,8 @@ public class TeamService
     }
 
 
+    public List<Team> GetAllTeams()
+    {
+        return _teamDatabase.GetTeams();
+    }
 }

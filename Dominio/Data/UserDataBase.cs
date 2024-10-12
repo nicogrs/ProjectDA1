@@ -14,7 +14,6 @@ public class UserDataBase : IUserDatabase
             BirthDate = new DateTime(2000, 8, 30),
             Password = "Admin123$",
             Admin = true,
-            Teams = new List<Team>()
         });
     }
     

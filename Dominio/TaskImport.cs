@@ -26,7 +26,21 @@ public class TaskImport
 
     public List<Task> ReadTasksFromFile(User user)
     {
-        return null;
+        List<Task> result = new List<Task>();
+        
+        List<string> linesOfLoadedFile = ListLinesOfLoadedFile();
+        
+        foreach (string line in linesOfLoadedFile)
+        {
+            if (IsLineValid(line))
+            {
+                List<string> splitLine = SplitString(line);
+                Task newTask = TaskFromStringList(splitLine);
+                result.Add(newTask);
+            }
+        }
+        
+        return result;
     }
     
     public static List<string> SplitString(string str)
@@ -62,6 +76,8 @@ public class TaskImport
     public static bool IsLineValid(string line)
     {
         List<string> elements = SplitString(line);
+        if (elements.Count != 4)
+            return false;
         
         bool isDateValid = StringIsValidDate(elements[2]);
         bool isPanelIdValid = IsPanelIdValid(elements[3]);

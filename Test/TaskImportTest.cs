@@ -35,7 +35,7 @@ public class TaskImportTest
             {
                 Title = "Prueba correcta 1",
                 Description = "Descripcion de prueba 1.",
-                expDate = new DateTime(2024, 02, 02)
+                expDate = new DateTime(2024, 01, 01)
             },
             new Task()
             {
@@ -211,8 +211,11 @@ public class TaskImportTest
         List<Task> taskList = taskImport.ReadTasksFromFile(new User());
 
         int taskListElementCount = taskList.Count;
-        int tasksElementCount = tasks.Count;
-        Assert.AreEqual(taskListElementCount, tasksElementCount);
-        //CollectionAssert.AreEqual(taskList, tasks);
+        for (int i = 0; i < taskListElementCount; i++)
+        {
+            Assert.AreEqual(taskList[i].Title, tasks[i].Title);
+            Assert.AreEqual(taskList[i].Description, tasks[i].Description);
+            Assert.AreEqual(taskList[i].expDate, tasks[i].expDate);
+        }
     }
 }

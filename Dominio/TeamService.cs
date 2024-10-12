@@ -13,7 +13,6 @@ public class TeamService
     
     public bool CreateTeam(Team team)
     {
-        Console.WriteLine($"Creating team {team.Name}");
         if(team.TeamValidation() && !TeamExists(team.Name))
         {
             _teamDatabase.AddTeamToDatabase(team);
@@ -74,15 +73,15 @@ public class TeamService
     }
 
 
-    public Panel GetPanelByName(string teamName, string panelName)
+    public Panel GetPanelById(string teamName, int panelId)
     {
         var team = GetTeamByName(teamName);
-       return team.Panels.Find(x => x.Name == panelName);
+       return team.Panels.Find(x => x.PanelId == panelId);
     }
     
     public bool AddPanel(string teamName, Panel panel)
     {
-        if (GetPanelByName(teamName, panel.Name) == null)
+        if (GetPanelById(teamName, panel.PanelId) == null)
         {
             var team = _teamDatabase.GetTeamByName(teamName);
             team.Panels.Add(panel);
@@ -109,5 +108,15 @@ public class TeamService
           hasBeenRemoved = team.TeamMembers.Remove(user);
         }
         return hasBeenRemoved;
+    }
+
+    public void RemovePanel(string teamName, int panelId)
+    {
+        var team = GetTeamByName(teamName);
+        var panel = team.Panels.Find(x => x.PanelId == panelId);
+        if (panel != null)
+        {
+            team.Panels.Remove(panel); 
+        }
     }
 }

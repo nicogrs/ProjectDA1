@@ -30,6 +30,13 @@ public class TeamDatabaseTest
         var teamTest = teamDb.GetTeamByName(team.Name);
         Assert.AreEqual(team, teamTest);
     }
+    
+    [TestMethod]
+    [ExpectedException(typeof(NullReferenceException))]
+    public void GetTeamByNameTestException()
+    {
+        var teamTest = teamDb.GetTeamByName(team.Name);
+    }
 
     [TestMethod]
 

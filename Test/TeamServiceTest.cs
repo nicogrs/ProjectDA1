@@ -132,13 +132,23 @@ public class TeamServiceTest
     
     [TestMethod]
 
-    public void GetPanelByNAme()
+    public void GetPanelByName()
     {
         _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         Panel panelTest = new Panel{Name = "New panel"};
         team.Panels.Add(panelTest);
         var panelFromTeam = _teamService.GetPanelByName(team.Name, panelTest.Name);
         Assert.AreEqual(panelFromTeam, panelTest);
+    }
+
+    [TestMethod]
+    public void GetAllTeamsTest()
+    {
+        Team team1 = new Team { Name = "Team 1" };
+        Team team2 = new Team { Name = "Team 2" };
+        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team, team1, team2 });
+        var allTeams = _teamService.GetAllTeams();
+        CollectionAssert.AreEquivalent(allTeams, new List<Team> { team, team1, team2 });
     }
     
     

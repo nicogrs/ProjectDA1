@@ -34,4 +34,5 @@ public class UserRegisterDTOTest
         Assert.AreEqual(user.Password, _userRegisterDTO.Password);
         Assert.AreEqual(user.Admin, _userRegisterDTO.Admin);
     }
+    
 }

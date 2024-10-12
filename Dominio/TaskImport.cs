@@ -2,6 +2,13 @@ namespace Dominio;
 
 public class TaskImport
 {
+    public string fileName;
+    public StreamReader reader;
+
+    public void LoadFile(string fileName)
+    {
+        
+    }
     public static List<string> SplitString(string str)
     {
         string[] strArr = str.Split(",");

@@ -8,6 +8,9 @@ public class TaskImportTest
     private string line0;
     private string line1;
     private string line2;
+    private TaskImport taskImport;
+    private string fileName1;
+    private string fileName2;
     
     [TestInitialize]
     public void Setup()
@@ -15,6 +18,8 @@ public class TaskImportTest
         line0 = "Título,Descripción,Fecha de vencimiento,ID de panel";
         line1 = "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2024,1";
         line2 = "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2024,1";
+        fileName1 = "Data/tareasTestData.csv";
+        fileName2 = "Data/tareas.csv";
     }
 
     [TestMethod]
@@ -147,5 +152,15 @@ public class TaskImportTest
     {
         string line = "Titulo X,Descripcion X.,1,10/09/2024";
         Assert.IsFalse(TaskImport.IsLineValid(line));
+    }
+
+    [TestMethod]
+    public void LoadFileTest1()
+    {
+        taskImport = new TaskImport();
+        
+        taskImport.LoadFile(fileName1);
+
+        Assert.AreEqual(taskImport.fileName, fileName1);
     }
 }

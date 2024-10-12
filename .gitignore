@@ -83,8 +83,12 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/rider
 
 # Ignore build output directories
-/bin/
-/obj/
+**/bin/
+**/obj/
+**/obj
+**/bin
+Dominio/bin/
+Dominio/obj/
 *.dll
 *.pdb
 *.cache
@@ -110,3 +114,5 @@ project.fragment.lock.json
 
 # Ignore Rider user settings
 *.DotSettings.user
+
+Test/OutData/

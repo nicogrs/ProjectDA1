@@ -138,7 +138,20 @@ public class TeamService
         {
             team.Panels.Remove(panel); 
         }
-
+    }
+    
+    public List<Task> GetAllExpiredTasks(string teamName)
+    {
+        List<Task> expiredTasks = new List<Task>();
+        var team = GetTeamByName(teamName);
+        foreach (var panel in team.Panels )
+        {
+          var expiredInPanel = panel.Tasks.
+              Where(x => x.expDate <= DateTime.Now).ToList();  
+          
+          expiredTasks.AddRange(expiredInPanel);
+        }
+        return expiredTasks;
     }
     
 }

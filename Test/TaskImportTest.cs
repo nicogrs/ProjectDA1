@@ -11,11 +11,8 @@ public class TaskImportTest
     private string line1;
     private string line2;
     private TaskImport taskImport;
-    private string fileName1;
-    private string fileName2;
-    private string directoryAdjustment;
-    private string adjustedFileName1;
-    private List<Task> tasks;
+    private List<string> filesToTest;
+    private List<Task> referenceTasks;
     
     
     [TestInitialize]
@@ -24,25 +21,33 @@ public class TaskImportTest
         line0 = "Título,Descripción,Fecha de vencimiento,ID de panel";
         line1 = "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2024,1";
         line2 = "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2024,1";
-        fileName1 = "Data/tareasTestData.csv";
-        fileName2 = "Data/tareas.csv";
-        directoryAdjustment = "../../../";
-        fileName1 = directoryAdjustment + fileName1;
-        fileName2 = directoryAdjustment + fileName2;
-        tasks = new List<Task>()
+        filesToTest = new List<string>()
+        {
+            "../../../Data/tareasTestData.csv",
+            "../../../Data/tareas.csv",
+            "../../../Data/tareasValidDateTests.csv"
+        };
+
+        referenceTasks = new List<Task>()
         {
             new Task()
             {
-                Title = "Prueba correcta 1",
-                Description = "Descripcion de prueba 1.",
-                expDate = new DateTime(2024, 01, 01)
+                Title = "Tarea Valida 1",
+                Description = "Datos validos.",
+                expDate = new DateTime(2000, 01, 01)
             },
             new Task()
             {
-                Title = "Prueba correcta 2",
-                Description = "Descripcion de prueba 2.",
-                expDate = new DateTime(2024, 02, 02)
-            }
+                Title = "Tarea Valida 2",
+                Description = "Datos validos.",
+                expDate = new DateTime(2024, 12, 12)
+            },
+            new Task()
+            {
+            Title = "Tarea Valida 3",
+            Description = "Datos validos, final.",
+            expDate = new DateTime(2020, 06, 06)
+        }
         };
         taskImport = new TaskImport();
     }
@@ -182,39 +187,55 @@ public class TaskImportTest
     [TestMethod]
     public void LoadFileTest1()
     {
-        taskImport.LoadFile(fileName1);
+        taskImport.LoadFile(filesToTest[0]);
 
-        Assert.AreEqual(fileName1, taskImport.fileName);
+        Assert.AreEqual(filesToTest[0], taskImport.fileName);
     }
 
     [TestMethod]
     public void ReadFileTest1()
     {
-        taskImport.LoadFile(fileName1);
+        taskImport.LoadFile(filesToTest[0]);
         List<string> lines = taskImport.ListLinesOfLoadedFile();
         
         Assert.AreEqual("Título,Descripción,Fecha de vencimiento,ID de panel",lines[0]);
-        Assert.AreEqual("Prueba correcta 1,Descripcion de prueba 1.,01/01/2024,1",lines[1]);
-        Assert.AreEqual("Prueba correcta 2,Descripcion de prueba 2.,02/02/2024,1",lines[2]);
+        Assert.AreEqual("Tarea Valida 1,Datos validos.,01/01/2000,1",lines[1]);
+        Assert.AreEqual("Tarea Valida 2,Datos validos.,12/12/2024,1",lines[2]);
         Assert.AreEqual("Prueba incorrecta 1,Tiene una columna sobrante,Columna sobrante,03/03/2024,1",lines[3]);
         Assert.AreEqual("Prueba incorrecta 2,La fecha es incorrecta.,04/13/2024,1",lines[4]);
         Assert.AreEqual("Prueba incorrecta 3,No hay columna ID de panel,04/04/2024",lines[5]);
+        Assert.AreEqual("Tarea Valida 3,Datos validos, final.,06/06/2020,1",lines[6]);
     }
 
     [TestMethod]
     public void ReadTasksFromFileTest1()
     {
-        taskImport.LoadFile(fileName1);
+        taskImport.LoadFile(filesToTest[0]);
 
         List<Task> taskList = taskImport.ReadTasksFromFile(new User());
 
         int taskListElementCount = taskList.Count;
         for (int i = 0; i < taskListElementCount; i++)
         {
-            Assert.AreEqual(taskList[i].Title, tasks[i].Title);
-            Assert.AreEqual(taskList[i].Description, tasks[i].Description);
-            Assert.AreEqual(taskList[i].expDate, tasks[i].expDate);
+            Assert.AreEqual(taskList[i].Title, referenceTasks[i].Title);
+            Assert.AreEqual(taskList[i].Description, referenceTasks[i].Description);
+            Assert.AreEqual(taskList[i].expDate, referenceTasks[i].expDate);
         }
+    }
 
+    [TestMethod]
+    public void ReadTasksValidDateTests()
+    {
+        taskImport.LoadFile(filesToTest[2]);
+
+        List<Task> taskList = taskImport.ReadTasksFromFile(new User());
+        
+        int taskListElementCount = taskList.Count;
+        for (int i = 0; i < taskListElementCount; i++)
+        {
+            Assert.AreEqual(taskList[i].Title, referenceTasks[i].Title);
+            Assert.AreEqual(taskList[i].Description, referenceTasks[i].Description);
+            Assert.AreEqual(taskList[i].expDate, referenceTasks[i].expDate);
+        }
     }
 }

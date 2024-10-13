@@ -1,10 +1,14 @@
+using System.ComponentModel.DataAnnotations;
 using Dominio;
 namespace DTOs;
 
 public class UserLoginDTO
 {
+    [Required(ErrorMessage = "El email es requerido")]
+    [EmailAddress(ErrorMessage = "El formato de email es incorrecto")]
     public string Email { get; set; }
     
+    [Required(ErrorMessage = "La contraseña es requerida")]
     public string Password { get; set; }
     
     public User ToEntity()

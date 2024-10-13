@@ -21,6 +21,14 @@ public class TaskImport
         
         List<string> linesOfLoadedFile = ListLinesOfLoadedFile();
         
+        processLines(linesOfLoadedFile);
+
+        MakeErrorFile($"../../../Data/Out/ErroresImport-{user.Name}.txt");
+        return tasks;
+    }
+
+    private void processLines(List<string> linesOfLoadedFile)
+    {
         foreach (string line in linesOfLoadedFile)
         {
             if (IsLineValid(line))
@@ -34,9 +42,6 @@ public class TaskImport
                 ProcessError(line);
             }
         }
-
-        MakeErrorFile($"../../../Data/Out/ErroresImport-{user.Name}.txt");
-        return tasks;
     }
 
     private void MakeErrorFile(string errorFileName)

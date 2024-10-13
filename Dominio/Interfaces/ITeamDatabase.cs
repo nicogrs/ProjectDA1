@@ -1,6 +1,6 @@
 ﻿namespace Dominio;
 
-public interface ITeamDatabase
+public interface ITeamDataBase
 {
     public Team GetTeamByName(string teamName);
     public void AddTeamToDatabase(Team team);

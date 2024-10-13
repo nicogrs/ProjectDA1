@@ -19,14 +19,14 @@ public class UserModifyDTO
     public string Password { get; set; }
     
     public User ToEntity()
-    {
-        return new User()
         {
-            Name = this.Name,
-            Surname = this.Surname,
-            BirthDate = this.BirthDate,
-            Email = this.Email,
-            Password = this.Password,
-        };
-    }
+            return new User()
+            {
+                Name = this.Name,
+                Surname = this.Surname,
+                BirthDate = this.BirthDate,
+                Email = this.Email,
+                Password = this.Password,
+            };
+        }
 }

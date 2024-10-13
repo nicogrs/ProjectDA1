@@ -18,7 +18,7 @@ public class TaskService
         foreach (var panel in team.Panels )
         {
             var expiredInPanel = panel.Tasks.
-                Where(x => x.expDate <= DateTime.Now).ToList();  
+                Where(x => x.ExpirationDate <= DateTime.Now).ToList();  
           
             expiredTasks.AddRange(expiredInPanel);
         }
@@ -28,6 +28,6 @@ public class TaskService
     public List<Task> GetNonExpiredTasks(string teamName, int panelId)
     {
         var panel = _panelService.GetPanelById(teamName, panelId);
-        return panel.Tasks.Where(x => x.expDate > DateTime.Now).ToList();
+        return panel.Tasks.Where(x => x.ExpirationDate > DateTime.Now).ToList();
     }
 }

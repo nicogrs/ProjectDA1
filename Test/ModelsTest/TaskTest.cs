@@ -26,21 +26,21 @@ public class TaskTest
         t1 = new Task()
         {
             Title = "Titulo 1",
-            priority = Task.Priority.Low,
+            Precedence = Task.Priority.Low,
             Description = "Descripcion tarea 1",
-            expDate = new DateTime(2025, 10, 01),
-            comments = comments
+            ExpirationDate = new DateTime(2025, 10, 01),
+            Comments = comments
         };
     }
     
     [TestMethod]
     public void TaskCreateTest()
     {
-        Assert.AreEqual(t1.priority, Task.Priority.Low);
+        Assert.AreEqual(t1.Precedence, Task.Priority.Low);
         Assert.AreEqual(t1.Title, "Titulo 1");
         Assert.AreEqual(t1.Description, "Descripcion tarea 1");
-        Assert.AreEqual(t1.expDate, new DateTime(2025, 10, 01));
-        Assert.AreEqual(t1.comments, comments);
+        Assert.AreEqual(t1.ExpirationDate, new DateTime(2025, 10, 01));
+        Assert.AreEqual(t1.Comments, comments);
     }
 
     [TestMethod]
@@ -51,7 +51,7 @@ public class TaskTest
         succesfulChange = t1.ChangePriority(Task.Priority.Medium);
         
         Assert.IsTrue(succesfulChange);
-        Assert.AreEqual(Task.Priority.Medium, t1.priority);
+        Assert.AreEqual(Task.Priority.Medium, t1.Precedence);
     }
     
     [TestMethod]
@@ -65,7 +65,7 @@ public class TaskTest
         
         Assert.IsTrue(firstSuccesfulChange);
         Assert.IsTrue(secondSuccesfulChange);
-        Assert.AreEqual(Task.Priority.Urgent, t1.priority);
+        Assert.AreEqual(Task.Priority.Urgent, t1.Precedence);
     }
     
     
@@ -87,22 +87,14 @@ public class TaskTest
     [TestMethod]
     public void AddCommentTest()
     {
-        int initialCommentCount = t1.comments.Count;
+        int initialCommentCount = t1.Comments.Count;
         string content = "Comentario de AddComentTest";
         Comment lastAddedComment;
         
         t1.AddComment(u1,content);
         
-        lastAddedComment = t1.comments.Last();
-        Assert.AreEqual(t1.comments.Count, initialCommentCount + 1);
-        Assert.AreEqual(t1.comments.Last().Content, content);
+        lastAddedComment = t1.Comments.Last();
+        Assert.AreEqual(t1.Comments.Count, initialCommentCount + 1);
+        Assert.AreEqual(t1.Comments.Last().Content, content);
     }
-
-    [TestMethod]
-
-    public void DeleteItemTest()
-    {
-        
-    }
-    
 }

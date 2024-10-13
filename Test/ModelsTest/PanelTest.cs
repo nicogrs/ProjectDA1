@@ -28,24 +28,24 @@ public class PanelTest
             Team = "Equipo 1",
             Description = "Descripcion panel 1",
             CreatedBy = u,
-            Id = 0
+            PanelId = 0
         };
 
         t1 = new Task()
         {
             Title = "Tarea 1",
-            priority = Task.Priority.Low,
+            Precedence = Task.Priority.Low,
             Description = "Descripcion tarea 1",
-            expDate = new DateTime(2025, 10, 01),
-            comments = comments1
+            ExpirationDate = new DateTime(2025, 10, 01),
+            Comments = comments1
         };
         t2 = new Task()
         {
             Title = "Tarea 2",
-            priority = Task.Priority.Medium,
+            Precedence = Task.Priority.Medium,
             Description = "Descripcion tarea 2",
-            expDate = new DateTime(2025, 03, 01),
-            comments = comments2
+            ExpirationDate = new DateTime(2025, 03, 01),
+            Comments = comments2
         };
     }
 
@@ -57,7 +57,7 @@ public class PanelTest
         Assert.AreEqual(panel.Team, "Equipo 1");
         Assert.AreEqual(panel.Description, "Descripcion panel 1");
         Assert.AreEqual(panel.CreatedBy, u);
-        Assert.AreEqual(panel.Id, 0);
+        Assert.AreEqual(panel.PanelId, 0);
     }
 
     [TestMethod]

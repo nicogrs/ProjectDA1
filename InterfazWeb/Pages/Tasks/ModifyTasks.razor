@@ -1,0 +1,77 @@
+﻿@page "/{teamName}/{panelId}/{taskTitle}"
+@using Dominio
+@using Task = Dominio.Task
+@inject PanelService PlService
+@inject NavigationManager Navigation
+
+<PageTitle>ModifyTask</PageTitle>
+<h3>Modificar Tareas</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success" role="alert">
+        @message
+    </div>
+}
+
+<EditForm Model="modelChangeTask" OnValidSubmit="HandleModify">
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+        <label id="name">Titulo</label>
+        <InputText class="form-control" @bind-Value="@modelChangeTask.Title" id="name"></InputText>
+        <ValidationMessage For="@(() => modelChangeTask.Title)"/>
+    </div>
+
+    <div class="form-group">
+        <label for="lastName">Descripcion</label>
+        <InputText class="form-control" @bind-Value="@modelChangeTask.Description" id="lastName"></InputText>
+        <ValidationMessage For="@(() => modelChangeTask.Description)"/>
+    </div>
+
+    <div class="mt-2">
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Modificar Tarea</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary" type="button" @onclick="GoBack">Volver</button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public int panelId { get; set; }
+    [Parameter]
+    public string taskTitle { get; set; }
+    Task modelChangeTask = new Task();
+    Task toModify = new Task();
+    Panel panel = new Panel();
+    private string message;
+
+    protected override void OnInitialized()
+    {
+        panel = PlService.GetPanelById(teamName, panelId);
+        toModify = panel.Tasks.FirstOrDefault(t => t.Title == taskTitle);
+    }
+
+    private void HandleModify()
+    {
+        if (!String.IsNullOrEmpty(modelChangeTask.Title))
+        {
+            toModify.Title = modelChangeTask.Title;
+        }
+
+        if (!String.IsNullOrEmpty(modelChangeTask.Description))
+        {
+            toModify.Description = modelChangeTask.Description;
+        }
+
+        message = "Tarea modificada";
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
+    }
+}

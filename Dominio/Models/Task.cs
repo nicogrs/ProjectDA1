@@ -3,16 +3,17 @@
 public class Task : IPaperBinItem
 {
     public static int taskCounter = 0;
+    
     public string Title { get; set; }
-    public Priority priority { get; set; }
+    public Priority Precedence { get; set; }
     public string Description { get; set; }
-    public DateTime expDate { get; set; }
-    public List<Comment> comments { get; set; }
+    public DateTime ExpirationDate { get; set; }
+    public List<Comment> Comments { get; set; }
     public int TaskId { get; private set; }
 
     public Task()
     {
-        comments = new List<Comment>();
+        Comments = new List<Comment>();
         taskCounter++;
         TaskId = taskCounter;
     }
@@ -26,8 +27,8 @@ public class Task : IPaperBinItem
 
     public bool ChangePriority(Priority _priority)
     {
-        priority = _priority;
-        return priority == _priority;
+        Precedence = _priority;
+        return Precedence == _priority;
     }
 
     public void MarkCommentAsResolved(User user, Comment comment)
@@ -44,7 +45,7 @@ public class Task : IPaperBinItem
         try
         {
             Comment commentToAdd = new Comment(user, content);
-            comments.Add(commentToAdd);
+            Comments.Add(commentToAdd);
             success = true;
         }
         catch (Exception e)

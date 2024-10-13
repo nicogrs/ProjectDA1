@@ -1,0 +1,134 @@
+﻿@page "/users/delete"
+@using Dominio
+@using Dominio.Data
+@inject IUserDatabase UDatabase
+@inject IUserService UService
+@inject TeamService TmService
+@inject Session Session
+@inject NavigationManager Navigation
+
+<PageTitle>DeleteUser</PageTitle>
+<h3>Eliminar Usuario</h3>
+@if (!string.IsNullOrEmpty(messageSuccess))
+{
+    <div class="alert alert-success" role="alert">
+        @messageSuccess
+    </div>
+}
+@if (!string.IsNullOrEmpty(messageNotSuccess))
+{
+    <div class="alert alert-danger" role="alert">
+        @messageNotSuccess
+    </div>
+}
+
+<EditForm Model="modelDeleteUser" OnValidSubmit="ShowConfirmation">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="releaseYear">Usuario</label>
+        <InputSelect @bind-Value="selectedUser" @onchange="OnChangeUser">
+            <option value="0" disabled>Ninguna seleccionada</option>
+            @foreach (var user in Users)
+            {
+                <option value="@user.Email">@user.Email</option>
+            }
+        </InputSelect>
+    </div>
+    
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit">Borrar Usuario</button>
+    </div>
+    <div class="col-4">
+        <button class="btn btn-primary" type="button" @onclick="GoBack">Volver</button>
+    </div>
+</EditForm>
+
+@if (showConfirmation)
+{
+    <div class="alert alert-warning" role="alert">
+        <p>¿Seguro que quieres eliminar a @modelDeleteUser.Email?</p>
+        <div class="mt-2">
+            <button class="btn btn-primary" type="button" @onclick="ConfirmDelete">Confirmar</button>
+            <button class="btn btn-primary" type="button" @onclick="CancelDelete">Cancelar</button>
+        </div>
+    </div>
+}
+
+@code {
+    User modelDeleteUser = new User();
+    private List<User> Users;
+    private string messageSuccess;
+    private string messageNotSuccess;
+    private string selectedUser = "";
+    private bool showConfirmation = false;
+    private bool actualUser = false;
+    string userEmail;
+
+    protected override void OnInitialized()
+    {
+        if (!Session.IsAdmin)
+        {
+            Navigation.NavigateTo("/error");
+        }
+        Users = UDatabase.GetUsers();
+    }
+
+    private void OnChangeUser(ChangeEventArgs e)
+    {
+        userEmail = e.Value.ToString();
+        modelDeleteUser = UService.GetUserByEmail(userEmail);
+    }
+
+    private void ShowConfirmation()
+    {
+        showConfirmation = true;
+    }
+
+    private void ConfirmDelete()
+    {
+        HandleDelete();
+        showConfirmation = false;
+    }
+
+    private void HandleDelete()
+    {
+        User deleteUser = UService.GetUserByEmail(modelDeleteUser.Email);
+        actualUser = (deleteUser == Session.CurrentUser);
+        if (deleteUser != null)
+        {
+            
+            if (actualUser)
+            {
+                Session.Logout();
+                TmService.RemoveUserFromAllTeams(modelDeleteUser.Email);
+                UService.DeleteUser(modelDeleteUser.Email);
+                Navigation.NavigateTo("/index");
+            }
+            else
+            {
+                TmService.RemoveUserFromAllTeams(modelDeleteUser.Email);
+                UDatabase.DeleteUser(modelDeleteUser.Email);
+                messageNotSuccess = "";
+                messageSuccess = "Usuario eliminado.";
+            }
+        }
+        else
+        {
+            messageSuccess = "";
+            messageNotSuccess = "No se seleccionó ningun usuario.";
+        }
+
+        modelDeleteUser = new User();
+        Users = UDatabase.GetUsers();
+    }
+
+    private void CancelDelete()
+    {
+        showConfirmation = false;
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/users");
+    }
+}

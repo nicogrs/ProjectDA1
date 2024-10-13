@@ -1,0 +1,50 @@
+@inject NavigationManager Navigation
+@inject Session Session
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">@Title</h4>
+        <p class="card-text">@Description</p>
+    </div>
+    <div class="card-footer">
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit" @onclick="GoToPanel">Ir</button>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit" @onclick="ChangePanel">Modificar</button>
+        </div>
+        @if (Session.IsAdmin)
+        {
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit" @onclick="DeletePanel">Eliminar</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public string Description { get; set; }
+    
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public int panelId { get; set; }
+    
+    private void GoToPanel()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
+    }
+    
+    private void ChangePanel()
+    {
+        Navigation.NavigateTo("/auxiliar");
+    }
+    
+    private void DeletePanel()
+    {
+        Navigation.NavigateTo("/auxiliar");
+    }
+}

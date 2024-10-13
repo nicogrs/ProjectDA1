@@ -1,0 +1,67 @@
+@page "/{teamName}/panel"
+@using Dominio
+@using Dominio.Data
+@inject TeamDataBase TDatabase
+@inject TeamService TmService
+@inject NavigationManager Navigation
+@inject Session Session
+
+<PageTitle>ViewPanels</PageTitle>
+
+<h3>@teamName</h3>
+<div class="row">
+    <div class="d-flex justify-content-between">
+        <button class="btn btn-primary" type="submit" @onclick="DeleteTeam">Eliminar Equipo</button>
+    </div>
+    <div class="d-flex justify-content-between">
+        <button class="btn btn-primary" type="submit" @onclick="ModifyTeam">Modificar Equipo</button>
+    </div>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" type="submit" @onclick="CreatePanel">Crear Nuevo Panel</button>
+    </div>
+    @if (Panels.Count != 0)
+    {
+        foreach (var panel in Panels)
+        {
+            <PanelCard Title="@panel.Name" 
+                       Description="@panel.Description"
+                       teamName="@teamName"
+                       panelId="@panel.PanelId"/>
+        }
+    }
+    else
+    {
+        <p>Equipo sin paneles.</p>
+    }
+</div>
+
+
+@code {
+    [Parameter]
+    public string teamName { get; set; }
+    private List<Panel> Panels;
+    
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+
+        Panels = TDatabase.GetTeamByName(teamName).Panels;
+    }
+    
+    private void CreatePanel()
+    {
+        Navigation.NavigateTo($"/{teamName}/panels/create");
+    }
+    public void DeleteTeam()
+    {
+        TDatabase.RemoveTeamFromDatabase(teamName);
+    }
+
+    public void ModifyTeam()
+    {
+        Navigation.NavigateTo($"/{teamName}/modify");
+    }
+}

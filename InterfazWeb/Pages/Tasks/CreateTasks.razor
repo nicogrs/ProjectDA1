@@ -1,0 +1,83 @@
+@page "/{teamName}/{panelId}/create"
+@using Dominio
+@using Dominio.Data
+@using Task = Dominio.Task
+@inject PanelService PlService
+@inject NavigationManager Navigation
+@inject Session Session
+
+<PageTitle>Create Team</PageTitle>
+<h3>Crear Equipo</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success" role="alert">
+        @message
+    </div>
+}
+<EditForm Model="modelCreateTask" OnValidSubmit="HandleCreate">
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+        <label id="name">Nombre</label>
+        <InputText class="form-control" @bind-Value="@modelCreateTask.Title" id="name"></InputText>
+        <ValidationMessage For="@(() => modelCreateTask.Title)"/>
+    </div>
+    <div class="form-group">
+        <label id="userAmount">Prioridad</label>
+        <InputNumber class="form-control" @bind-Value="@modelCreateTask.Precedence" id="userAmount"></InputNumber>
+        <ValidationMessage For="@(() => modelCreateTask.Precedence)"/>
+    </div>
+    <div class="form-group">
+        <label for="lastName">Descripcion</label>
+        <InputText class="form-control" @bind-Value="@modelCreateTask.Description" id="lastName"></InputText>
+        <ValidationMessage For="@(() => modelCreateTask.Description)"/>
+    </div>
+
+    <div class="form-group">
+        <label for="birthDate">Fecha de expriracion</label>
+        <InputDate class="form-control" id="birthDate" @bind-Value="@modelCreateTask.ExpirationDate" min="1900-01-01"></InputDate>
+        <ValidationMessage For="@(() => modelCreateTask.ExpirationDate)"/>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit">Crear Grupo</button>
+    </div>
+    <div class="col-4">
+        <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public int panelId { get; set; }
+    
+    Task modelCreateTask = new Task();
+    private string message;
+    
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+    }
+    
+    
+    private void HandleCreate()
+    {
+        Task t = new Task
+        {
+            Title = modelCreateTask.Title,
+            Precedence = modelCreateTask.Precedence,
+            Description = modelCreateTask.Description,
+            ExpirationDate = modelCreateTask.ExpirationDate,
+            Comments = null
+        };
+        PlService.GetPanelById(teamName, panelId).AddTask(t);
+        message="Tarea creado con éxito";
+    } 
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
+    }
+}

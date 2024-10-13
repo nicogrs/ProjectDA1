@@ -20,7 +20,6 @@ public class User
         return Name != null && Name.Length > 2 && Name.Length < 100;
     }
 
-    
     public bool IsSurnameValid()
     {
         return Surname != null && Surname.Length > 2 && Surname.Length < 100;
@@ -44,5 +43,5 @@ public class User
     {
         return Admin;
     }
-    
+
 }

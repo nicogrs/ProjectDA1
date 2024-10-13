@@ -138,7 +138,7 @@ public class TaskImport
         
         string strDate = strList[2];
         
-        task.expDate = StringToDate(strDate);
+        task.ExpirationDate = StringToDate(strDate);
 
         return task;
     }
@@ -197,9 +197,5 @@ public class TaskImport
         
         return isDayValid && isMonthValid && isYearValid;
     }
-    
-    
-    
 
-    
 }

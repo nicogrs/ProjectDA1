@@ -1,13 +1,11 @@
-﻿using System.Collections;
-
-namespace Dominio;
+﻿namespace Dominio;
 
 public class TeamService : ITeamService
 {
-    private readonly ITeamDatabase _teamDatabase;
+    private readonly ITeamDataBase _teamDatabase;
     private readonly IUserService _userService;
 
-    public TeamService(ITeamDatabase teamDatabase, IUserService userService)
+    public TeamService(ITeamDataBase teamDatabase, IUserService userService)
     {
         _teamDatabase = teamDatabase;
         _userService = userService;
@@ -74,8 +72,6 @@ public class TeamService : ITeamService
         return false;
     }
     
-
-
     public bool RemoveUserFromTeam(string teamName, string userEmail)
     {
         var user = _userService.GetUserByEmail(userEmail);

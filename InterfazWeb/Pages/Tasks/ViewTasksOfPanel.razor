@@ -1,0 +1,70 @@
+@page "/{teamName}/{panelId}/tasks"
+@using Dominio
+@using Dominio.Data
+@inject PanelService PnService
+@inject TeamDataBase TmDatabase
+@inject Session Session
+@inject NavigationManager Navigation
+<PageTitle>Task</PageTitle>
+
+<h3>Tareas</h3>
+<div class="row">
+    <div class="col-6">
+        <button class="btn btn-primary" type="submit" @onclick="CreateTask">Crear Nuevo Tarea</button>
+    </div>
+    <div class="col-6">
+        <button class="btn btn-primary" type="submit" @onclick="DeletePanel">Borrar Panel</button>
+    </div>
+</div>
+<div class="row">
+    @if (Tasks.Count != 0)
+    {
+        foreach (var task in Tasks)
+        {
+            if (task.ExpirationDate > DateTime.Today)
+            {
+                <TaskCard Title="@task.Title" 
+                          Description="@task.Description" 
+                          Precedence="@task.Precedence" 
+                          EndDate="@task.ExpirationDate" 
+                          Comments="@task.Comments" 
+                          teamName="@teamName"
+                          panelId="@panelId"/>
+            }
+        }
+    }
+    else
+    {
+        <p>Panel sin tareas.</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public int panelId { get; set; }
+    
+    private List<Dominio.Task> Tasks;
+    
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+
+        Tasks = PnService.GetPanelById(teamName, panelId).Tasks;
+    }
+    
+    private void CreateTask()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/create");
+    }
+
+    private void DeletePanel()
+    {
+        PnService.RemovePanel(teamName, panelId);
+    }
+    
+}

@@ -16,15 +16,14 @@ public class UserDataBase : IUserDatabase
             Admin = true,
         });
     }
+    public List<User> GetUsers()
+    {
+        return new List<User>(Users); 
+    }
     
     public User GetUserByEmail(string email)
     {
-
        var user = Users.Find(u => u.Email == email);
-       if (user == null)
-       {
-           throw new NullReferenceException();
-       }
        return user;
     }
     

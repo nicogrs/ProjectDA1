@@ -1,0 +1,45 @@
+@page "/account/teams"
+@using Dominio
+@inject ITeamService TmService
+@inject Session Session
+@inject NavigationManager Navigation
+
+<PageTitle>Equipos</PageTitle>
+<h3>Equipos</h3>
+<div class="row">
+    @if (Teams.Count != 0)
+    {
+        foreach (var team in Teams)
+        {
+            <div class="col-3 mb-4">
+            <TeamCard Title="@team.Name" Date="@team.CreatedOn" 
+                      CantMembers="@team.MembersCount" MaxMembers="@team.MaxUsers" Description="@team.TasksDescription"/>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No tienes equipos asignados.</p>
+    }
+</div>
+
+@code {
+    
+    private List<Team> Teams;
+    
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+        if (Session.IsAdmin)
+        {
+            Teams = TmService.GetAllTeams();
+        }
+        else
+        {
+            Teams = TmService.GetTeamsByUserEmail(Session.CurrentUser.Email);
+        }
+    }
+}

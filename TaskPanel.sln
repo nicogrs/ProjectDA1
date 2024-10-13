@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterfazWeb", "InterfazWeb\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{687A33A1-9721-481E-AFE1-E4EB33DE1FC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOs", "DTOs\DTOs.csproj", "{657F7EEC-EF83-4A08-96FF-F761C4EFB86F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOs", "DTOs\DTOs.csproj", "{F488C689-DC94-4856-82BA-CA752B0C5221}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,9 +26,9 @@ Global
 		{687A33A1-9721-481E-AFE1-E4EB33DE1FC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{687A33A1-9721-481E-AFE1-E4EB33DE1FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{687A33A1-9721-481E-AFE1-E4EB33DE1FC4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{657F7EEC-EF83-4A08-96FF-F761C4EFB86F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{657F7EEC-EF83-4A08-96FF-F761C4EFB86F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{657F7EEC-EF83-4A08-96FF-F761C4EFB86F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{657F7EEC-EF83-4A08-96FF-F761C4EFB86F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F488C689-DC94-4856-82BA-CA752B0C5221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F488C689-DC94-4856-82BA-CA752B0C5221}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F488C689-DC94-4856-82BA-CA752B0C5221}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F488C689-DC94-4856-82BA-CA752B0C5221}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

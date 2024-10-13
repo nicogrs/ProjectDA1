@@ -1,0 +1,65 @@
+@page "/{teamName}/{panelId}/{taskId}/createComment"
+@using Dominio
+@using Dominio.Data
+@inject PanelService PnService
+@inject NavigationManager Navigation
+@inject Session Session
+
+<PageTitle>AddComment</PageTitle>
+<h3>Agregar Comentario</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success" role="alert">
+        @message
+    </div>
+}
+<EditForm Model="modelAddComment" OnValidSubmit="HandleCreate">
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+        <label id="content">Comentario</label>
+        <InputText class="form-control" @bind-Value="@modelAddComment.Content" id="content"></InputText>
+        <ValidationMessage For="@(() => modelAddComment.Content)"/>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit">Agregar Comentario</button>
+    </div>
+</EditForm>
+<div class="col-4">
+    <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
+</div>
+
+@code{
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public int panelId { get; set; }
+    [Parameter]
+    public int taskId { get; set; }
+    
+    private Comment modelAddComment;
+    private List<User> users;
+    private string message;
+    
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser==null)
+        {
+        Navigation.NavigateTo("/error");
+        }
+        modelAddComment = new Comment(Session.CurrentUser, string.Empty);
+    }
+
+    private void HandleCreate()
+    {
+
+        Comment addComment = new Comment(Session.CurrentUser, modelAddComment.Content);
+        PnService.GetPanelById(teamName, panelId).Tasks.Find(t => t.TaskId == taskId).AddComment(Session.CurrentUser, modelAddComment.Content);
+        message = "Comentario agregado con éxito";
+        modelAddComment = new Comment(Session.CurrentUser, string.Empty);
+    }
+    
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
+    }
+}

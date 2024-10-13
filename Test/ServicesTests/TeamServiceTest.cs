@@ -9,14 +9,14 @@ public class TeamServiceTest
     private Team team;
     private TeamService _teamService;
     Mock<IUserService> _mockUserService;
-    Mock<ITeamDatabase> _mockTeamDatabase;
+    Mock<ITeamDataBase> _mockTeamDataBase;
     
     [TestInitialize]
     public void Setup()
     {
-        _mockTeamDatabase = new Mock<ITeamDatabase>();
+        _mockTeamDataBase = new Mock<ITeamDataBase>();
         _mockUserService = new Mock<IUserService>();
-        _teamService = new TeamService(_mockTeamDatabase.Object, _mockUserService.Object);
+        _teamService = new TeamService(_mockTeamDataBase.Object, _mockUserService.Object);
         team = new Team
         {
             Name = "Team Example",
@@ -30,7 +30,7 @@ public class TeamServiceTest
     [TestMethod]
     public void CreateTeamTest()
     {
-        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns( new List<Team>());
+        _mockTeamDataBase.Setup(x => x.GetTeams()).Returns( new List<Team>());
         var isTeamCreated = _teamService.CreateTeam(team);
         Assert.IsTrue(isTeamCreated);
     }
@@ -38,7 +38,7 @@ public class TeamServiceTest
     [TestMethod]
     public void CreateTeamAlreadyExists()
     {
-        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(new List<Team>() {team});
+        _mockTeamDataBase.Setup(x => x.GetTeams()).Returns(new List<Team>() {team});
         var isTeamCreated = _teamService.CreateTeam(team);
         Assert.IsFalse(isTeamCreated);
     }
@@ -50,8 +50,8 @@ public class TeamServiceTest
     {
         var userEmail = "user@email.com";
         var user = new User { Email = userEmail };
-        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team });
-        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name)).Returns(team);
+        _mockTeamDataBase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team });
+        _mockTeamDataBase.Setup(x => x.GetTeamByName(team.Name)).Returns(team);
         _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns(user);
         var isUserAdded = _teamService.AddUserToTeam(team.Name, userEmail);
         Assert.IsTrue(isUserAdded);
@@ -63,8 +63,8 @@ public class TeamServiceTest
         var userEmail = "user@email.com";
         var user = new User { Email = userEmail };
         team.TeamMembers.Add(user);
-        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team });
-        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
+        _mockTeamDataBase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team });
+        _mockTeamDataBase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns(user);
         var isUserAdded = _teamService.AddUserToTeam(team.Name, userEmail);
         Assert.IsFalse(isUserAdded);
@@ -75,8 +75,8 @@ public class TeamServiceTest
         var userEmail = "user@email.com";
         var user = new User { Email = userEmail };
         team.TeamMembers.Add(user);
-        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(new List<Team> { team });
-        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
+        _mockTeamDataBase.Setup(x => x.GetTeams()).Returns(new List<Team> { team });
+        _mockTeamDataBase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns(user);
         var isUserDeleted = _teamService.RemoveUserFromTeam(team.Name, userEmail);
         Assert.IsTrue(isUserDeleted);
@@ -86,8 +86,8 @@ public class TeamServiceTest
     public void RemoveUserThatNotExists()
     {
         var userEmail = "user@email.com";
-        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(new List<Team> { team });
-        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
+        _mockTeamDataBase.Setup(x => x.GetTeams()).Returns(new List<Team> { team });
+        _mockTeamDataBase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns((User)null);
         var isUserDeleted = _teamService.RemoveUserFromTeam(team.Name, userEmail);
         Assert.IsFalse(isUserDeleted);
@@ -96,7 +96,7 @@ public class TeamServiceTest
     [TestMethod]
     public void UpdateTeamTest()
     {
-        _mockTeamDatabase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
+        _mockTeamDataBase.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         var teamTest = new Team
         {
             Name = "New name",
@@ -113,7 +113,7 @@ public class TeamServiceTest
         var userEmail = "user@email.com";
         var user = new User { Email = userEmail };
         team.TeamMembers.Add(user);
-        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team });
+        _mockTeamDataBase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team });
         _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns(user);
         var isUserRemoved = _teamService.RemoveUserFromAllTeams(userEmail);
          Assert.IsTrue(isUserRemoved);
@@ -126,7 +126,7 @@ public class TeamServiceTest
     {
         Team team1 = new Team { Name = "Team 1" };
         Team team2 = new Team { Name = "Team 2" };
-        _mockTeamDatabase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team, team1, team2 });
+        _mockTeamDataBase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team, team1, team2 });
         var allTeams = _teamService.GetAllTeams();
         CollectionAssert.AreEquivalent(allTeams, new List<Team> { team, team1, team2 });
     }
@@ -140,7 +140,7 @@ public class TeamServiceTest
         var user = new User { Email = "user@email.com" };
         team1.TeamMembers.Add(user);
         team2.TeamMembers.Add(user);
-        _mockTeamDatabase.Setup(x => x.GetTeamsByUserEmail(user.Email)).Returns(new List<Team> { team1, team2 });
+        _mockTeamDataBase.Setup(x => x.GetTeamsByUserEmail(user.Email)).Returns(new List<Team> { team1, team2 });
         var teamsByUserEmail = _teamService.GetTeamsByUserEmail(user.Email);
         CollectionAssert.AreEquivalent(teamsByUserEmail, new List<Team> { team1, team2 });
     }

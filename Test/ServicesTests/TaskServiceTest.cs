@@ -31,7 +31,7 @@ public class TaskServiceTest
     public void GetExpiredTasksFromPanels()
     {
         var panel1 = new Panel{Name = "Panel 1"};
-        var task1 = new Task{Title = "Task 1", expDate = DateTime.Now.AddHours(-1)};
+        var task1 = new Task{Title = "Task 1", ExpirationDate = DateTime.Now.AddHours(-1)};
         panel1.Tasks.Add(task1);
         team.Panels.Add(panel1);
         _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
@@ -43,13 +43,13 @@ public class TaskServiceTest
 
     public void GetNonExpiredTasksFromPanel()
     {
-        var panel1 = new Panel{Name = "Panel 1",Id = 1};
-        var task1 = new Task{Title = "Task 1", expDate = DateTime.Now.AddHours(+1)};
+        var panel1 = new Panel{Name = "Panel 1",PanelId = 1};
+        var task1 = new Task{Title = "Task 1", ExpirationDate = DateTime.Now.AddHours(+1)};
         panel1.Tasks.Add(task1);
         team.Panels.Add(panel1);
         _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
-        _mockPanelService.Setup(x => x.GetPanelById(team.Name, panel1.Id)).Returns(panel1);
-        var nonExpiredTasks = taskService.GetNonExpiredTasks(team.Name, panel1.Id);
+        _mockPanelService.Setup(x => x.GetPanelById(team.Name, panel1.PanelId)).Returns(panel1);
+        var nonExpiredTasks = taskService.GetNonExpiredTasks(team.Name, panel1.PanelId);
         CollectionAssert.AreEquivalent(nonExpiredTasks, new List<Task>{task1});
     }
 }

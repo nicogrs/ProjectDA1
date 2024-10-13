@@ -1,0 +1,175 @@
+﻿@page "/{teamName}/modifyUsers"
+@using Dominio
+@using Dominio.Data
+@inject IUserDatabase UDatabase
+@inject ITeamService TmService
+@inject Session Session
+@inject NavigationManager Navigation
+<PageTitle>ModifyTeamUsers</PageTitle>
+<h3>Modificar usuarios del equipo</h3>
+
+<div class="row">
+    <div class="col-4">
+        <button class="btn btn-primary" type="submit" @onclick="Add">Agregar Usuarios</button>
+    </div>
+    <div class="col-4">
+        <button class="btn btn-primary" type="submit" @onclick="Delete">Eliminar Usuarios</button>
+    </div>
+    <div class="col-4">
+        <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success" role="alert">
+        @message
+    </div>
+}
+
+@if (addUsers)
+{
+    <h3>Agregar Usuario a Equipo</h3>
+    <EditForm Model="modelModifyUsersInTeam" OnValidSubmit="HandleAdd">
+        <DataAnnotationsValidator/>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" 
+                    id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Selecciona Usuarios
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
+                @foreach (var user in usersNotInTeam)
+                {
+                    <li class="dropdown-item">
+                        <input type="checkbox" @onchange="(e) => 
+                        AddUserSelection(user.Email, e.Value)" /> @user.Email
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Añadir Usuario</button>
+        </div>
+        
+    </EditForm>
+}
+else if(deleteUsers)
+{
+    <h3>Eliminar Usuario de Equipo</h3>
+    <EditForm Model="modelModifyUsersInTeam" OnValidSubmit="HandleDelete">
+        <DataAnnotationsValidator/>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" 
+                    id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Selecciona Usuarios
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
+                @foreach (var user in usersInTeam)
+                {
+                    <li class="dropdown-item">
+                        <input type="checkbox" @onchange="(e) => 
+                        DeleteUserSelection(user.Email, e.Value)" /> @user.Email
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Eliminar Usuario</button>
+        </div>
+        
+    </EditForm>
+}
+
+
+@code {
+
+    [Parameter]
+    public string teamName { get; set; }
+    
+    private bool deleteUsers = false;
+    private bool addUsers = false;
+    
+    private List<User> u;
+    private List<User> usersInTeam;
+    private List<User> usersNotInTeam;
+    public List<User> SelectedUsersAdd;
+    public List<User> SelectedUsersDelete;
+
+    User modelModifyUsersInTeam = new User();
+    private string message;
+    
+
+    protected override void OnInitialized()
+    {
+        if (!Session.IsAdmin)
+        {
+            Navigation.NavigateTo("/error");
+        }
+        u = UDatabase.GetUsers();
+        foreach (var user in u)
+        {
+            if (TmService.UserExistsInTeam(user.Email, teamName))
+            {
+                usersInTeam.Add(user);
+            }
+            else
+            {
+                usersNotInTeam.Add(user);
+            }
+        }
+        SelectedUsersAdd = new List<User>();
+        SelectedUsersDelete = new List<User>();
+    }
+
+    private void Delete()
+    {
+        deleteUsers = true;
+        addUsers = false;
+    }
+
+    private void Add()
+    {
+        deleteUsers = false;
+        addUsers = true;
+    }
+
+    private void GoBack()
+    {
+        
+    }
+    
+    private void AddUserSelection(string email, object isSelected)
+    {
+        if ((bool)isSelected)
+        {
+            SelectedUsersAdd.Add(UDatabase.GetUserByEmail(email));
+        }
+    }
+    private void DeleteUserSelection(string email, object isSelected)
+    {
+        if ((bool)isSelected)
+        {
+            SelectedUsersDelete.Add(UDatabase.GetUserByEmail(email));
+        }
+    }
+
+    private void HandleAdd()
+    {
+        foreach (var user in SelectedUsersAdd)
+        {
+            TmService.AddUserToTeam(teamName, user.Email);
+            usersInTeam.Add(user);
+        }
+
+        message = "Usuario/s Agregado/s";
+    }
+    private void HandleDelete()
+    {
+        foreach (var user in SelectedUsersDelete)
+        {
+            TmService.RemoveUserFromTeam(teamName, user.Email);
+            usersNotInTeam.Add(user);
+        }
+        message = "Usuario/s Eliminado/s";
+    }
+}

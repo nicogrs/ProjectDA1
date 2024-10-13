@@ -33,19 +33,19 @@ public class TaskImportTest
             {
                 Title = "Tarea Valida 1",
                 Description = "Datos validos.",
-                expDate = new DateTime(2000, 01, 01)
+                ExpirationDate = new DateTime(2000, 01, 01)
             },
             new Task()
             {
                 Title = "Tarea Valida 2",
                 Description = "Datos validos.",
-                expDate = new DateTime(2024, 12, 12)
+                ExpirationDate = new DateTime(2024, 12, 12)
             },
             new Task()
             {
             Title = "Tarea Valida 3",
             Description = "Datos validos - final.",
-            expDate = new DateTime(2020, 06, 06)
+            ExpirationDate = new DateTime(2020, 06, 06)
         }
         };
         taskImport = new TaskImport();
@@ -71,7 +71,7 @@ public class TaskImportTest
         {
             Assert.AreEqual(taskList[i].Title, referenceTasks[i].Title);
             Assert.AreEqual(taskList[i].Description, referenceTasks[i].Description);
-            Assert.AreEqual(taskList[i].expDate, referenceTasks[i].expDate);
+            Assert.AreEqual(taskList[i].ExpirationDate, referenceTasks[i].ExpirationDate);
         }
     }
 
@@ -87,7 +87,7 @@ public class TaskImportTest
         {
             Assert.AreEqual(taskList[i].Title, referenceTasks[i].Title);
             Assert.AreEqual(taskList[i].Description, referenceTasks[i].Description);
-            Assert.AreEqual(taskList[i].expDate, referenceTasks[i].expDate);
+            Assert.AreEqual(taskList[i].ExpirationDate, referenceTasks[i].ExpirationDate);
         }
     }
     
@@ -103,7 +103,7 @@ public class TaskImportTest
         {
             Assert.AreEqual(taskList[i].Title, referenceTasks[i].Title);
             Assert.AreEqual(taskList[i].Description, referenceTasks[i].Description);
-            Assert.AreEqual(taskList[i].expDate, referenceTasks[i].expDate);
+            Assert.AreEqual(taskList[i].ExpirationDate, referenceTasks[i].ExpirationDate);
         }
     }
 

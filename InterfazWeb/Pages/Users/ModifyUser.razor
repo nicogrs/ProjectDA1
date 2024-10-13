@@ -1,0 +1,154 @@
+﻿@page "/users/modify/{unEmail}"
+@using Dominio
+@using Dominio.Data
+@using DTOs
+@inject IUserDatabase UDatabase
+@inject IUserService UService
+@inject PasswordService PService  
+@inject Session Session
+@inject NavigationManager Navigation
+
+<PageTitle>ModifyUser</PageTitle>
+<h3 class="mb-3">Modificar Usuario</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success" role="alert">
+        @message
+    </div>
+}
+@if (unUser != null)
+{
+    <EditForm Model="modelChangeInformation" OnValidSubmit="HandleUpdate">
+        <DataAnnotationsValidator/>
+        <div class="d-flex justify-content-center align-items-center">
+            <div class="w-50">
+            <div class="form-group">
+                <label for="name">Nombre</label>
+                <InputText class="form-control mb-3" @bind-Value="modelChangeInformation.Name" id="name"></InputText>
+                <ValidationMessage For="@(() => modelChangeInformation.Name)"/>
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Apellido</label>
+                <InputText class="form-control mb-3" @bind-Value="modelChangeInformation.Surname" id="lastName"></InputText>
+                <ValidationMessage For="@(() => modelChangeInformation.Surname)"/>
+            </div>
+
+            <div class="form-group">
+                <label for="birthDate">Fecha de Nacimiento</label>
+                <InputDate class="form-control mb-3" @bind-Value="modelChangeInformation.BirthDate" id="birthDate"></InputDate>
+                <ValidationMessage For="@(() => modelChangeInformation.BirthDate)"/>
+            </div>
+
+            @if (Session != null && Session.IsAdmin)
+            {
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <button class="sm-btn btn-primary  mb-3" type="button" @onclick="GeneratePassword">Generar contraseña</button>
+                    <InputText class="form-control mb-3" id="password" @bind-Value="modelChangeInformation.Password"/>
+                </div>
+            }
+
+            <div class="form-group">
+                <button class="btn btn-primary mb-3" type="submit">Guardar Cambios</button>
+            </div>
+            </div>
+        </div>
+    </EditForm>
+    <button class="btn btn-secondary" @onclick="GoBack">Atras</button>
+}
+else
+{
+<p>Usuario no encontrado</p>
+}
+
+@code {
+
+    [Parameter] 
+    public string unEmail { get; set; }
+    UserModifyDTO modelChangeInformation = new UserModifyDTO();
+    private string message;
+    private string selectedUser = "";
+    private bool showConfirmation = false;
+    private string newPassword;
+    private string userEmail;
+    private User unUser;
+    
+    protected override void OnInitialized()
+    {
+        if (Session.IsAdmin)
+        {
+            unUser = UDatabase.GetUserByEmail(unEmail);
+            if (unUser != null)
+            {
+                modelChangeInformation.Email = unUser.Email;
+                modelChangeInformation.Password = unUser.Password;
+                modelChangeInformation.BirthDate = unUser.BirthDate;
+                modelChangeInformation.Name = unUser.Name;
+                modelChangeInformation.Surname = unUser.Surname;
+            }
+            else
+            {
+                message = "Usuario no encontrado";
+            }
+        }
+        else
+        {
+            Navigation.NavigateTo("/error");
+        }
+    }
+    
+    private void GeneratePassword()
+    {
+        newPassword = PService.GenerateRandomPassword();
+        modelChangeInformation.Password = newPassword;
+    }
+
+    private void ShowModify()
+    {
+        showConfirmation = true;
+    }
+
+    private void HandleUpdate()
+    {
+        UserModifyDTO u = new UserModifyDTO();
+        
+        if (modelChangeInformation.Name != null)
+        {
+            u.Name = modelChangeInformation.Name;
+        }
+    
+        if (modelChangeInformation.Surname != null)
+        {
+            u.Surname = modelChangeInformation.Surname;
+        }
+
+        if (modelChangeInformation.BirthDate != default(DateTime))
+        {
+            u.BirthDate = modelChangeInformation.BirthDate;
+        }
+        
+        if (modelChangeInformation.Password != null)
+        {
+            u.Password = modelChangeInformation.Password;
+        }
+
+        u.Email = modelChangeInformation.Email;
+        
+        Console.WriteLine(u.Email);
+        Console.WriteLine(u.Password);
+        Console.WriteLine(u.Name);
+        Console.WriteLine(u.Surname);
+        UService.UpdateUser(u.ToEntity());
+        
+        showConfirmation = false;
+        message = "Usuario modificado.";
+        
+    }
+    
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/users");
+    }
+}

@@ -53,7 +53,7 @@ public class TaskImportTest
     [TestMethod]
     public void LoadFileTest1()
     {
-        taskImport.LoadFile(filesToTest[0]);
+        taskImport.LoadFileFromPath(filesToTest[0]);
 
         Assert.AreEqual(filesToTest[0], taskImport.fileName);
     }
@@ -61,7 +61,7 @@ public class TaskImportTest
     [TestMethod]
     public void ReadTasksFromFileTest1()
     {
-        taskImport.LoadFile(filesToTest[0]);
+        taskImport.LoadFileFromPath(filesToTest[0]);
 
         List<Task> taskList = taskImport.ReadTasksFromFile(new User(){Name = "Testuser 1"});
 
@@ -77,7 +77,7 @@ public class TaskImportTest
     [TestMethod]
     public void ReadTasksValidDateTests()
     {
-        taskImport.LoadFile(filesToTest[2]);
+        taskImport.LoadFileFromPath(filesToTest[2]);
 
         List<Task> taskList = taskImport.ReadTasksFromFile(new User(){Name = "Testuser 2"});
         
@@ -93,7 +93,7 @@ public class TaskImportTest
     [TestMethod]
     public void TasksValidLineTests()
     {
-        taskImport.LoadFile(filesToTest[3]);
+        taskImport.LoadFileFromPath(filesToTest[3]);
 
         List<Task> taskList = taskImport.ReadTasksFromFile(new User(){Name = "Testuser 3"});
         
@@ -104,5 +104,17 @@ public class TaskImportTest
             Assert.AreEqual(taskList[i].Description, referenceTasks[i].Description);
             Assert.AreEqual(taskList[i].expDate, referenceTasks[i].expDate);
         }
+    }
+
+    [TestMethod]
+    public void ReadTasksFromContentTest()
+    {
+        string content = $"{referenceTasks[0].Title},{referenceTasks[0].Description},{referenceTasks[0].expDate},1\n" +
+                         $"{referenceTasks[1].Title},{referenceTasks[1].Description},{referenceTasks[1].expDate},1\n" +
+                         $"{referenceTasks[2].Title},{referenceTasks[2].Description},{referenceTasks[2].expDate},1\n";
+        
+        List<Task> tasks = taskImport.ReadTasksFromContent(content);
+
+        CollectionAssert.AreEqual(referenceTasks, tasks);
     }
 }

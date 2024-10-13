@@ -8,7 +8,7 @@ public class TaskImport
     private List<Task> tasks;
     private List<string> errors;
 
-    public void LoadFile(string _fileName)
+    public void LoadFileFromPath(string _fileName)
     {
         fileName = _fileName;
         reader = new StreamReader(fileName);
@@ -49,6 +49,11 @@ public class TaskImport
         writer.Close();
     }
 
+    public List<Task> ReadTasksFromContent(string content)
+    {
+        return null;
+    }
+    
     private void ProcessError(string line)
     {
         List<string> separatedLine = SplitString(line);

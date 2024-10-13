@@ -46,7 +46,15 @@ public class TaskImport
 
     private void MakeErrorFile(string errorFileName)
     {
-        writer = new StreamWriter(errorFileName);
+        string directory = Directory.GetCurrentDirectory();
+        string filePath = Path.Combine(directory, errorFileName);
+        
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+        
+        writer = new StreamWriter(filePath);
         foreach (string line in errors)
         {
             writer.WriteLine(line);
@@ -58,12 +66,11 @@ public class TaskImport
     {
         tasks = new List<Task>();
         errors = new List<string>();
-        
         List<string> linesOfContent = content.Split('\n').ToList();
-        
-        processLines(linesOfContent);
 
-        MakeErrorFile($"../../../Data/Out/ErroresImport-{user.Name}.txt");
+        processLines(linesOfContent);
+        
+        //MakeErrorFile($"../../../Data/Out/ErroresImport-{user.Name}.txt");
         return tasks;
     }
     

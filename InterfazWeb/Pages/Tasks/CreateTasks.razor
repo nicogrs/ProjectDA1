@@ -1,8 +1,8 @@
-@page "/{teamName}/{panelName}/create"
+@page "/{teamName}/{panelId}/create"
+@using Dominio
 @using Dominio.Data
 @using Task = Dominio.Task
-@inject TaskDatabase TDatabase
-@inject PanelDatabase PDatabase
+@inject PanelService PlService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -49,7 +49,7 @@
     [Parameter]
     public string teamName { get; set; }
     [Parameter]
-    public string panelName { get; set; }
+    public int panelId { get; set; }
     
     Task modelCreateTask = new Task();
     private string message;
@@ -73,12 +73,11 @@
             ExpirationDate = modelCreateTask.ExpirationDate,
             Comments = null
         };
-        TDatabase.Tasks.Add(t);
-        PDatabase.GetPanelByName(panelName).Tasks.Add(t);
+        PlService.GetPanelById(teamName, panelId).AddTask(t);
         message="Tarea creado con éxito";
     } 
     private void GoBack()
     {
-        Navigation.NavigateTo($"/{teamName}/{panelName}/tasks");
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
     }
 }

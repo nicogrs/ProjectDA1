@@ -1,6 +1,8 @@
 @page "/users/register"
+@using Dominio
 @using Dominio.Data
 @using DTOs
+@inject UserService UService
 @inject UserDataBase UDatabase
 @inject NavigationManager Navigation
 @inject Session Session
@@ -8,10 +10,16 @@
 <PageTitle>Register</PageTitle>
 
 <h3>Registro de usuarios</h3>
-@if (!string.IsNullOrEmpty(message))
+@if (!string.IsNullOrEmpty(messageSuccess))
+{
+    <div class="alert alert-success" role="alert">
+        @messageSuccess
+    </div>
+}
+@if (!string.IsNullOrEmpty(messageNotSuccess))
 {
     <div class="alert alert-danger" role="alert">
-        @message
+        @messageNotSuccess
     </div>
 }
 
@@ -57,9 +65,11 @@
 
 @code {
     UserRegisterDTO modelRegister = new UserRegisterDTO();
-    private string message;
+    private string messageSuccess;
+    private string messageNotSuccess;
     private bool showPassword = false;
     private string passwordInputType => showPassword ? "text" : "password";
+    private bool add;
     
     protected override void OnInitialized()
     {
@@ -79,9 +89,16 @@
             Email = modelRegister.Email,
             Password = modelRegister.Password
         };
-
-        UDatabase.AddUser(u.ToEntity());
-        message = "Usuario Registrado con exito";
+        add = UService.CreateUser(u.ToEntity());
+        if (add)
+        {
+            messageSuccess = "Usuario Registrado con exito";
+        }
+        else
+        {
+            messageNotSuccess= "No se pudo crear el usuario";
+        }
+        
     }
 
     private void GoBack()

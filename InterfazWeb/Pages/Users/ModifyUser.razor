@@ -17,7 +17,7 @@
     </div>
 }
 
-<EditForm Model="modelModifyUser" OnValidSubmit="ShowModify">
+<EditForm Model="modelSelectUser" OnValidSubmit="ShowModify">
     <DataAnnotationsValidator />
     <div class="form-group">
         <label for="releaseYear">Usuario</label>
@@ -79,13 +79,14 @@
 }
 
 @code {
-    User modelModifyUser = new User();
+    User modelSelectUser = new User();
     UserModifyDTO modelChangeInformation = new UserModifyDTO();
     private List<User> Users;
     private string message;
     private string selectedUser = "";
     private bool showConfirmation = false;
     private string newPassword;
+    private string userEmail;
 
 
     protected override void OnInitialized()
@@ -95,8 +96,8 @@
     
     private void OnChangeUser(ChangeEventArgs e)
     {
-        string userEmail = e.Value.ToString();
-        modelModifyUser = UDatabase.GetUsers().FirstOrDefault(u => u.Email.Equals(userEmail));
+        userEmail = e.Value.ToString();
+        modelSelectUser = UService.GetUserByEmail(userEmail);
     }
     private void GeneratePassword()
     {
@@ -111,7 +112,7 @@
 
     private void HandleUpdate()
     {
-        User modifyUser = UDatabase.GetUserByEmail(modelModifyUser.Email);
+        User modifyUser = UService.GetUserByEmail(modelSelectUser.Email);
         
         UserModifyDTO u = new UserModifyDTO
         {
@@ -119,7 +120,7 @@
             Surname = modifyUser.Surname,
             BirthDate = modifyUser.BirthDate,
             Password = modifyUser.Password,
-            Email = modelModifyUser.Email
+            Email = modelSelectUser.Email
         };
         
         if (modelChangeInformation.Name != null)

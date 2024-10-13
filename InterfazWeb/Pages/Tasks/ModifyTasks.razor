@@ -1,9 +1,7 @@
 ﻿@page "/{teamName}/{panelId}/{taskTitle}"
 @using Dominio
-@using Dominio.Data
 @using Task = Dominio.Task
-@inject PanelService PnService
-@inject TaskDatabase TkDatabase
+@inject PanelService PlService
 @inject NavigationManager Navigation
 
 <PageTitle>ModifyTask</PageTitle>
@@ -54,7 +52,7 @@
 
     protected override void OnInitialized()
     {
-        panel = PnService.GetPanelById(teamName, panelId);
+        panel = PlService.GetPanelById(teamName, panelId);
         toModify = panel.Tasks.FirstOrDefault(t => t.Title == taskTitle);
     }
 

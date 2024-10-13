@@ -1,7 +1,6 @@
-@page "/{teamName}/{panelId}/{taskTitle}/createComment"
+@page "/{teamName}/{panelId}/{taskId}/createComment"
 @using Dominio
 @using Dominio.Data
-@inject CommentDatabase CDatabase
 @inject PanelService PnService
 @inject NavigationManager Navigation
 @inject Session Session
@@ -35,7 +34,7 @@
     [Parameter]
     public int panelId { get; set; }
     [Parameter]
-    public string taskTitle { get; set; }
+    public int taskId { get; set; }
     
     private Comment modelAddComment;
     private List<User> users;
@@ -52,8 +51,9 @@
 
     private void HandleCreate()
     {
-        CDatabase.Comments.Add(modelAddComment);
-        PnService.GetPanelById(teamName, panelId).Tasks.Find(t => t.Title == taskTitle).AddComment(Session.CurrentUser, modelAddComment.Content);
+
+        Comment addComment = new Comment(Session.CurrentUser, modelAddComment.Content);
+        PnService.GetPanelById(teamName, panelId).Tasks.Find(t => t.TaskId == taskId).AddComment(Session.CurrentUser, modelAddComment.Content);
         message = "Comentario agregado con éxito";
         modelAddComment = new Comment(Session.CurrentUser, string.Empty);
     }

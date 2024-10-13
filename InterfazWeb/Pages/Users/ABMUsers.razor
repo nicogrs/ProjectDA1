@@ -20,7 +20,7 @@
 @code {
     protected override void OnInitialized()
     {
-        if (!Session.IsAdmin || Session.CurrentUser == null)
+        if (!Session.IsAdmin)
         {
             Navigation.NavigateTo("/error");
         }

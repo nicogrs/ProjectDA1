@@ -2,7 +2,7 @@
 @using Dominio
 @using Dominio.Data
 @using Task = Dominio.Task
-@inject TaskDatabase TDatabase
+@inject PanelService PlService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -51,14 +51,14 @@
     [Parameter]
     public string teamName { get; set; }
     [Parameter]
-    public string panelId { get; set; }
+    public int panelId { get; set; }
     
     private List<Comment> Comments;
     
 
     protected override void OnInitialized()
     {
-        Comments = TDatabase.Tasks.FirstOrDefault(t => t.Title.Equals(Title)).Comments;
+        Comments = PlService.GetPanelById(teamName, panelId).Tasks.FirstOrDefault(t => t.Title.Equals(Title)).Comments;
     }
 
     private void AddComment()
@@ -72,6 +72,6 @@
 
     private void CompleteComment(Comment comment)
     {
-        TDatabase.Tasks.FirstOrDefault(t => t.Title == Title).MarkCommentAsResolved(Session.CurrentUser, comment);
+        PlService.GetPanelById(teamName, panelId).Tasks.FirstOrDefault(t => t.Title.Equals(Title)).MarkCommentAsResolved(Session.CurrentUser, comment);
     }
 }

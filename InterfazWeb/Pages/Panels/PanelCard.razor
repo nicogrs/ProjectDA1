@@ -1,6 +1,4 @@
-@using Dominio.Data
 @inject NavigationManager Navigation
-@inject PanelDatabase PDatabase
 @inject Session Session
 
 <div class="card">
@@ -30,24 +28,14 @@
     [Parameter]
     public string Description { get; set; }
     
-    private string teamName;
-    
-    protected override void OnParametersSet()
-    {
-        var panel = PDatabase.GetPanelByName(Title);
-        if (panel != null && panel.Team != null)
-        {
-            teamName = panel.Team;
-        }
-        if (Session.CurrentUser == null)
-        {
-            Navigation.NavigateTo("/error");
-        }
-    }
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public int panelId { get; set; }
     
     private void GoToPanel()
     {
-        Navigation.NavigateTo($"/{teamName}/{Title}/tasks");
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
     }
     
     private void ChangePanel()

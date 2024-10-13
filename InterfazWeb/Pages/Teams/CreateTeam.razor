@@ -1,7 +1,6 @@
 @page "/teams/create"
 @using Dominio
 @using Dominio.Data
-@inject TeamDataBase TDatabase
 @inject UserDataBase UDatabase
 @inject TeamService TmService
 @inject UserService UService
@@ -11,10 +10,16 @@
 
 <PageTitle>CreateTeam</PageTitle>
 <h3>Agregar Equipo</h3>
-@if (!string.IsNullOrEmpty(message))
+@if (!string.IsNullOrEmpty(messageSuccess))
 {
     <div class="alert alert-success" role="alert">
-        @message
+        @messageSuccess
+    </div>
+}
+@if (!string.IsNullOrEmpty(messageNotSuccess))
+{
+    <div class="alert alert-danger" role="alert">
+        @messageNotSuccess
     </div>
 }
 <EditForm Model="modelCreateTeam" OnValidSubmit="HandleCreate">
@@ -37,7 +42,7 @@
             @foreach (var user in users)
             {
                 <li class="dropdown-item">
-                    <input type="checkbox" @onchange="(e) => ToggleUserSelection(user.Email, e.Value)" /> @user.Name @user.Surname
+                    <input type="checkbox" @onchange="(e) => ToggleUserSelection(user.Email, e.Value)" /> @user.Email
                 </li>
             }
         </ul>
@@ -53,11 +58,12 @@
 @code{
     Team modelCreateTeam = new Team();
     private List<User> users;
-    private string message;
+    private string messageSuccess;
+    private string messageNotSuccess;
     public List<User> SelectedUser;
     private Panel p;
     public List<Panel> panels;
-    private int teamCount = 0;
+    private bool created;
     
     protected override void OnInitialized()
     {
@@ -67,7 +73,6 @@
         }
         users = UDatabase.GetUsers();
         SelectedUser = new List<User> { Session.CurrentUser };
-        
     }
     private void ToggleUserSelection(string email, object isSelected)
     {
@@ -75,7 +80,6 @@
         {
             SelectedUser.Add(UService.GetUserByEmail(email));
         }
-
     }
     
     private void HandleCreate()
@@ -90,9 +94,20 @@
             Panels = new List<Panel>(),  
             MaxUsers = modelCreateTeam.MaxUsers
         };
-        TmService.CreateTeam(t);
-        teamCount = TDatabase.Teams.Count();
-        message="Equipo creado con éxito";
+        created = TmService.CreateTeam(t);
+        if (created)
+        {
+            messageSuccess = "Equipo creado con éxito.";
+        }
+        else
+        {
+            if (TmService.TeamExists(t.Name))
+            {
+                messageNotSuccess="El equipo no fue creado, ya existe uno con el mismo nombre.";
+            }
+            
+        }
+
     }
     private void GoBack()
     {

@@ -62,6 +62,7 @@
     private string selectedUser = "";
     private bool showConfirmation = false;
     private bool actualUser = false;
+    string userEmail;
 
     protected override void OnInitialized()
     {
@@ -74,8 +75,8 @@
 
     private void OnChangeUser(ChangeEventArgs e)
     {
-        string userEmail = e.Value.ToString();
-        modelDeleteUser = UDatabase.GetUsers().FirstOrDefault(u => u.Email.Equals(userEmail));
+        userEmail = e.Value.ToString();
+        modelDeleteUser = UService.GetUserByEmail(userEmail);
     }
 
     private void ShowConfirmation()
@@ -91,7 +92,7 @@
 
     private void HandleDelete()
     {
-        User deleteUser = UDatabase.GetUserByEmail(modelDeleteUser.Email);
+        User deleteUser = UService.GetUserByEmail(modelDeleteUser.Email);
         actualUser = (deleteUser == Session.CurrentUser);
         if (deleteUser != null)
         {

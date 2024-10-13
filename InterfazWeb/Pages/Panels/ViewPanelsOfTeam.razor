@@ -23,7 +23,10 @@
     {
         foreach (var panel in Panels)
         {
-            <PanelCard Title="@panel.Name" Description="@panel.Description"/>
+            <PanelCard Title="@panel.Name" 
+                       Description="@panel.Description"
+                       teamName="@teamName"
+                       panelId="@panel.PanelId"/>
         }
     }
     else

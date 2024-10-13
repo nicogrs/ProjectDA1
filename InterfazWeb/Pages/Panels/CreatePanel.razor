@@ -1,9 +1,7 @@
 @page "/{teamName}/panels/create"
 @using Dominio
-@using Dominio.Data
 @inject Session Session
-@inject PanelDatabase PDatabase
-@inject TeamDataBase TDatabase
+@inject TeamService TmService
 @inject NavigationManager Navigation
 
 <PageTitle>Create Panel</PageTitle>
@@ -42,7 +40,6 @@
     Panel modelCreatePanel = new Panel();
     private List<User> users;
     private string message;
-    private int teamCount = 0;
     
     protected override void OnInitialized()
     {
@@ -50,7 +47,6 @@
         {
             Navigation.NavigateTo("/error");
         }
-        teamCount = TDatabase.Teams.Count();
     }
     
     private void HandleCreate()
@@ -58,12 +54,11 @@
         Panel p = new Panel
         {
             Name = modelCreatePanel.Name,
-            Team = TDatabase.GetTeamByName(teamName).Name,
+            Team = TmService.GetTeamByName(teamName).Name,
             Description = modelCreatePanel.Description,
             CreatedBy = Session.CurrentUser
         };
-        PDatabase.Panels.Add(p);
-        TDatabase.GetTeamByName(teamName).Panels.Add(p);
+        TmService.GetTeamByName(teamName).Panels.Add(p);
         message="Panel agregado con éxito";
     }
     

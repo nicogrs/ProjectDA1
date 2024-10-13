@@ -10,7 +10,17 @@
 
 <PageTitle>ModifyTeam</PageTitle>
 <h3>Modificar Equipo</h3>
-
+<div class="row">
+    <div class="col-4">
+        <button class="btn btn-primary" type="button" @onclick="ModifyUsers">Modificar Usuarios</button>
+    </div>
+    <div class="col-4">
+        <button class="btn btn-primary" type="button" @onclick="DeleteTeam">Eliminar Equipo</button>
+    </div>
+    <div class="col-4">
+        <button class="btn btn-primary" type="button" @onclick="GoBack">Volver</button>
+    </div>
+</div>
 
 <EditForm Model="modelChangeTeam" OnValidSubmit="HandleModify">
     <DataAnnotationsValidator/>
@@ -29,12 +39,6 @@
     <div class="mt-2">
         <div class="form-group">
             <button class="btn btn-primary" type="submit">Modificar Equipo</button>
-        </div>
-        <div class="col-4">
-            <button class="btn btn-primary" type="button" @onclick="ModifyUsers">Modificar Usuarios</button>
-        </div>
-        <div class="col-4">
-            <button class="btn btn-primary" type="button" @onclick="GoBack">Volver</button>
         </div>
     </div>
         
@@ -122,6 +126,11 @@
         
     }
 
+    private void DeleteTeam()
+    {
+        
+    }
+
     private void ModifyUsers()
     {
         Navigation.NavigateTo($"/{teamName}/modifyUsers");
@@ -129,6 +138,6 @@
 
     private void GoBack()
     {
-        Navigation.NavigateTo($"/{teamName}/panel");
+        Navigation.NavigateTo($"/account/teams");
     }
 }

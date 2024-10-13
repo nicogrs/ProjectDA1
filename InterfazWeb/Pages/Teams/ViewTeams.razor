@@ -1,9 +1,6 @@
 @page "/account/teams"
-
-
 @using Dominio
-@using Dominio.Data
-@inject TeamDataBase TDatabase
+@inject TeamService TmService
 @inject Session Session
 @inject NavigationManager Navigation
 
@@ -26,7 +23,6 @@
 @code {
     
     private List<Team> Teams;
-    private List<Team> TeamsAdmin;
     
     protected override void OnInitialized()
     {
@@ -36,11 +32,11 @@
         }
         if (Session.IsAdmin)
         {
-            Teams = TDatabase.GetTeams();
+            Teams = TmService.GetAllTeams();
         }
         else
         {
-            Teams = TDatabase.GetTeamsByUserEmail(Session.CurrentUser.Email);
+            Teams = TmService.GetTeamsByUserEmail(Session.CurrentUser.Email);
         }
     }
 }

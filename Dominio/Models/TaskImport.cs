@@ -27,7 +27,7 @@ public class TaskImport
         return tasks;
     }
 
-    private void processLines(List<string> linesOfLoadedFile)
+    public void processLines(List<string> linesOfLoadedFile)
     {
         foreach (string line in linesOfLoadedFile)
         {
@@ -61,19 +61,7 @@ public class TaskImport
         
         List<string> linesOfContent = content.Split('\n').ToList();
         
-        foreach (string line in linesOfContent)
-        {
-            if (IsLineValid(line))
-            {
-                List<string> splitLine = SplitString(line);
-                Task newTask = TaskFromStringList(splitLine);
-                tasks.Add(newTask);
-            }
-            else
-            {
-                ProcessError(line);
-            }
-        }
+        processLines(linesOfContent);
 
         MakeErrorFile($"../../../Data/Out/ErroresImport-{user.Name}.txt");
         return tasks;

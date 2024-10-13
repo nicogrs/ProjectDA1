@@ -49,9 +49,29 @@ public class TaskImport
         writer.Close();
     }
 
-    public List<Task> ReadTasksFromContent(string content)
+    public List<Task> ReadTasksFromContent(string content, User user)
     {
-        return null;
+        tasks = new List<Task>();
+        errors = new List<string>();
+        
+        List<string> linesOfContent = content.Split('\n').ToList();
+        
+        foreach (string line in linesOfContent)
+        {
+            if (IsLineValid(line))
+            {
+                List<string> splitLine = SplitString(line);
+                Task newTask = TaskFromStringList(splitLine);
+                tasks.Add(newTask);
+            }
+            else
+            {
+                ProcessError(line);
+            }
+        }
+
+        MakeErrorFile($"../../../Data/Out/ErroresImport-{user.Name}.txt");
+        return tasks;
     }
     
     private void ProcessError(string line)

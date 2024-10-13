@@ -109,12 +109,18 @@ public class TaskImportTest
     [TestMethod]
     public void ReadTasksFromContentTest()
     {
-        string content = $"{referenceTasks[0].Title},{referenceTasks[0].Description},{referenceTasks[0].expDate},1\n" +
-                         $"{referenceTasks[1].Title},{referenceTasks[1].Description},{referenceTasks[1].expDate},1\n" +
-                         $"{referenceTasks[2].Title},{referenceTasks[2].Description},{referenceTasks[2].expDate},1\n";
+        string content = $"{referenceTasks[0].Title},{referenceTasks[0].Description},{referenceTasks[0].expDate.ToShortDateString()},1\n" +
+                         $"{referenceTasks[1].Title},{referenceTasks[1].Description},{referenceTasks[1].expDate.ToShortDateString()},1\n" +
+                         $"{referenceTasks[2].Title},{referenceTasks[2].Description},{referenceTasks[2].expDate.ToShortDateString()},1";
         
-        List<Task> tasks = taskImport.ReadTasksFromContent(content);
+        List<Task> tasks = taskImport.ReadTasksFromContent(content,new User(){Name = "User 1"});
 
-        CollectionAssert.AreEqual(referenceTasks, tasks);
+        int taskListElementCount = tasks.Count;
+        for (int i = 0; i < taskListElementCount; i++)
+        {
+            Assert.AreEqual(tasks[i].Title, referenceTasks[i].Title);
+            Assert.AreEqual(tasks[i].Description, referenceTasks[i].Description);
+            Assert.AreEqual(tasks[i].expDate, referenceTasks[i].expDate);
+        }
     }
 }

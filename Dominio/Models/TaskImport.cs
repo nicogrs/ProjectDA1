@@ -35,7 +35,7 @@ public class TaskImport
             }
         }
 
-        MakeErrorFile($"../../../OutData/ErroresImport-{user.Name}.txt");
+        MakeErrorFile($"../../../Data/Out/ErroresImport-{user.Name}.txt");
         return tasks;
     }
 

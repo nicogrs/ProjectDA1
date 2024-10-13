@@ -20,9 +20,12 @@ public class Program
         builder.Services.AddSingleton<TeamDataBase>();
         builder.Services.AddSingleton<ITeamDataBase, TeamDataBase>();
         builder.Services.AddSingleton<TeamService>();
+        builder.Services.AddSingleton<ITeamService, TeamService>();
         builder.Services.AddSingleton<PanelService>();
+        builder.Services.AddSingleton<IPanelService, PanelService>();
         builder.Services.AddSingleton<TaskService>();
         builder.Services.AddSingleton<Session>();
+        
         
         var app = builder.Build();
 

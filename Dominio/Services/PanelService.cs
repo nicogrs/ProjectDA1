@@ -1,6 +1,6 @@
 namespace Dominio;
 
-public class PanelService
+public class PanelService : IPanelService
 {
     private readonly ITeamService _teamService;
 

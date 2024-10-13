@@ -27,8 +27,6 @@ public class UserRegisterDTO
     
     public bool Admin { get; set; }
     
-    public List<Team> Teams { get; set; }
-    
     public User ToEntity()
     {
         return new User()
@@ -38,7 +36,7 @@ public class UserRegisterDTO
             BirthDate = this.BirthDate,
             Email = this.Email,
             Password = this.Password,
-            Admin = this.Admin
+            Admin = this.Admin,
         };
     }
     

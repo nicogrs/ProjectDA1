@@ -2,8 +2,8 @@
 @using Dominio
 @using Dominio.Data
 @using DTOs
-@inject UserService UService
-@inject UserDataBase UDatabase
+@inject IUserService UService
+@inject IUserDatabase UDatabase
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -25,46 +25,50 @@
 
 <EditForm Model="modelRegister" OnValidSubmit="HandleRegister">
     <DataAnnotationsValidator/>
-    <div class="form-group">
-        <label id="name">Nombre</label>
-        <InputText class="form-control" @bind-Value="@modelRegister.Name" id="name"></InputText>
-        <ValidationMessage For="@(() => modelRegister.Name)"/>
-    </div>
-    
-    <div class="form-group">
-        <label for="lastName">Apellido</label>
-        <InputText class="form-control" @bind-Value="@modelRegister.Surname" id="lastName"></InputText>
-        <ValidationMessage For="@(() => modelRegister.Surname)"/>
-    </div>
-   
-    <div class="form-group">
-        <label for="birthDate">Fecha de nacimiento</label>
-        <InputDate class="form-control" id="birthDate" @bind-Value="@modelRegister.BirthDate" min="1900-01-01"></InputDate>
-        <ValidationMessage For="@(() => modelRegister.BirthDate)"/>
-    </div>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="w-50">
+            <div class="form-group mb-3">
+                <label id="name">Nombre</label>
+                <InputText class="form-control" @bind-Value="@modelRegister.Name" id="name"></InputText>
+                <ValidationMessage For="@(() => modelRegister.Name)"/>
+            </div>
 
-    <div class="form-group">
-        <label for="email">Email</label>
-        <InputText class="form-control" id="email" @bind-Value="@modelRegister.Email"></InputText>
-        <ValidationMessage For="@(() => modelRegister.Email)"/>
-    </div>
+            <div class="form-group mb-3">
+                <label for="lastName">Apellido</label>
+                <InputText class="form-control" @bind-Value="@modelRegister.Surname" id="lastName"></InputText>
+                <ValidationMessage For="@(() => modelRegister.Surname)"/>
+            </div>
 
-    <div class="form-group">
-        <label for="password">Contraseña</label>
-        <InputText class="form-control" id="password" @bind-Value="@modelRegister.Password" type="@passwordInputType"></InputText>
-        <ValidationMessage For="@(() => modelRegister.Password)"/>
-    </div>
-    
-    <div class="form-group">
-        <button class="btn btn-primary" type="submit">Registrarse</button>
+            <div class="form-group mb-3">
+                <label for="birthDate">Fecha de nacimiento</label>
+                <InputDate class="form-control" id="birthDate" @bind-Value="@modelRegister.BirthDate" min="1900-01-01"></InputDate>
+                <ValidationMessage For="@(() => modelRegister.BirthDate)"/>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="email">Email</label>
+                <InputText class="form-control" id="email" @bind-Value="@modelRegister.Email"></InputText>
+                <ValidationMessage For="@(() => modelRegister.Email)"/>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="password">Contraseña</label>
+                <InputText class="form-control" id="password" @bind-Value="@modelRegister.Password" type="@passwordInputType"></InputText>
+                <ValidationMessage For="@(() => modelRegister.Password)"/>
+            </div>
+
+            <div class="form-group mb-3">
+                <button class="btn btn-primary" type="submit">Registrar Usuario</button>
+            </div>
+        </div>
     </div>
 </EditForm>
 <div class="col-4">
-    <button class="btn btn-primary" type="button" @onclick="GoBack">Volver</button>
+    <button class="btn btn-secondary" type="button" @onclick="GoBack">Volver</button>
 </div>
 
 @code {
-    UserRegisterDTO modelRegister = new UserRegisterDTO();
+    UserRegisterDTO modelRegister = new UserRegisterDTO{BirthDate = DateTime.Today.AddMonths(-1)};
     private string messageSuccess;
     private string messageNotSuccess;
     private bool showPassword = false;

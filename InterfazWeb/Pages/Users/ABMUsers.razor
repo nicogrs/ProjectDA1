@@ -8,15 +8,16 @@
 
 <PageTitle>ABMUsers</PageTitle>
 <h3 class="mb-4">Alta Baja Modificacion de usuarios</h3>
-<div class="form-group row d-flex justify-content-center align-items-center">
-    <div class="col-12 col-md-4 mb-2">
+<div class="form-group row">
+    <div class="col-2 col-md-4 mb-3">
         <button class="btn btn-primary" type="submit" @onclick="AddUsers">Agregar Usuarios</button>
     </div>
-    <div class="col-12 col-md-4 mb-2">
-        <button class="btn btn-primary" type="submit" @onclick="DeleteUsers">Eliminar Usuarios</button>
+    @if (!string.IsNullOrEmpty(messageNotSuccess))
+    {
+    <div class="alert alert-danger" role="alert">
+        @messageNotSuccess
     </div>
-    <div class="col-12 col-md-4 mb-2">
-    </div>
+    }
 </div>
 
 <table class="table table-striped table-bordered">
@@ -39,15 +40,42 @@
                 <td>@user.BirthDate</td>
                 <td>
                     <button class="btn btn-warning btn-sm" @onclick="() => ModifyUsers(user.Email)">Modificar</button>
-                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                    <button class="btn btn-danger btn-sm" @onclick="() =>ShowModal(user)">Eliminar</button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
+@if (isModalVisible)
+{
+    <div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Eliminación</h5>
+                    <button type="button" class="close" @onclick="CloseModal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas eliminar el usuario <strong>@selectedUser.Email</strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
+    private bool isModalVisible = false;
+    private string messageNotSuccess;
+    private User selectedUser;
     private List<User> users;
+    
     protected override void OnInitialized()
     {
         if (!Session.IsAdmin)
@@ -56,14 +84,38 @@
         }
         users = UserDB.GetUsers();
     }
+    
+    private void ShowModal(User user)
+    {
+        selectedUser = user;
+        isModalVisible = true;
+    }
+
+    private void CloseModal()
+    {
+        isModalVisible = false;
+    }
+
+    private void ConfirmDelete()
+    {
+        if (Session.CurrentUser.Email != selectedUser.Email)
+        {
+            UService.DeleteUser(selectedUser.Email);
+        }
+        else
+        {
+            messageNotSuccess = "No puede eliminarse a si mismo.";
+        }
+        users = UserDB.GetUsers();
+        CloseModal();
+    }
+    
+    
     private void AddUsers()
     {
         Navigation.NavigateTo("/users/register");
     }
-    private void DeleteUsers()
-    {
-        Navigation.NavigateTo("/users/delete");
-    }
+    
     private void ModifyUsers(string userEmail)
     {
         Navigation.NavigateTo($"/users/modify/{userEmail}");

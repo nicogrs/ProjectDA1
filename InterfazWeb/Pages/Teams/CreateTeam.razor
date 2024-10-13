@@ -1,9 +1,9 @@
 @page "/teams/create"
 @using Dominio
 @using Dominio.Data
-@inject UserDataBase UDatabase
-@inject TeamService TmService
-@inject UserService UService
+@inject IUserDatabase UDatabase
+@inject ITeamService TmService
+@inject IUserService UService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -24,40 +24,48 @@
 }
 <EditForm Model="modelCreateTeam" OnValidSubmit="HandleCreate">
     <DataAnnotationsValidator/>
-    <div class="form-group">
-        <label id="name">Nombre</label>
-        <InputText class="form-control" @bind-Value="@modelCreateTeam.Name" id="name"></InputText>
-        <ValidationMessage For="@(() => modelCreateTeam.Name)"/>
-    </div>
-    <div class="form-group">
-        <label id="userAmount">Cantidad de Usuarios</label>
-        <InputNumber class="form-control" @bind-Value="@modelCreateTeam.MaxUsers" id="userAmount"></InputNumber>
-        <ValidationMessage For="@(() => modelCreateTeam.MaxUsers)"/>
-    </div>
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            Selecciona Usuarios
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
-            @foreach (var user in users)
-            {
-                <li class="dropdown-item">
-                    <input type="checkbox" @onchange="(e) => ToggleUserSelection(user.Email, e.Value)" /> @user.Email
-                </li>
-            }
-        </ul>
-    </div>
-    <div class="form-group">
-        <button class="btn btn-primary" type="submit">Crear Grupo</button>
-    </div>
-    <div class="col-4">
-        <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="w-50">
+            <div class="form-group mb-3">
+                <label id="name">Nombre</label>
+                <InputText class="form-control" @bind-Value="@modelCreateTeam.Name" id="name"></InputText>
+                <ValidationMessage For="@(() => modelCreateTeam.Name)"/>
+            </div>
+            <div class="form-group mb-3">
+                <label id="userAmount">Cantidad de Usuarios</label>
+                <InputNumber class="form-control" @bind-Value="@modelCreateTeam.MaxUsers" id="userAmount"></InputNumber>
+                <ValidationMessage For="@(() => modelCreateTeam.MaxUsers)"/>
+            </div>
+            <div class="dropdown mb-3">
+                <button class="btn btn-secondary dropdown-toggle" type="button"
+                        id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Selecciona Usuarios
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
+                    @foreach (var user in users)
+                    {
+                        <li class="dropdown-item mb-3">
+                            <input type="checkbox" @onchange="(e) => ToggleUserSelection(user.Email, e.Value)"/> @user.Email
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="form-group mb-3">
+                <button class="btn btn-primary" type="submit">Crear Equipo</button>
+            </div>
+        </div>
     </div>
 </EditForm>
 
+<div class="col-4 mb-3">
+    <button class="btn btn-secondary" type="submit" @onclick="GoBack">Volver</button>
+</div>
 @code{
     Team modelCreateTeam = new Team();
     private List<User> users;
+    private string searchTerm = "";
+    private List<User> filteredUsers = new List<User>();
+
     private string messageSuccess;
     private string messageNotSuccess;
     public List<User> SelectedUser;
@@ -74,6 +82,27 @@
         users = UDatabase.GetUsers();
         SelectedUser = new List<User> { Session.CurrentUser };
     }
+    
+    private void OnSearchInput(ChangeEventArgs e)
+    {
+        searchTerm = e.Value.ToString();
+        FilterUsers();
+    }
+    
+    private void FilterUsers()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            filteredUsers.Clear();
+            return;
+        }
+        
+        filteredUsers = users
+            .Where(user => user.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
+                           user.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+    
     private void ToggleUserSelection(string email, object isSelected)
     {
         if ((bool)isSelected)
@@ -90,6 +119,7 @@
             Name = modelCreateTeam.Name,
             CreatedOn = DateTime.Now,
             TeamMembers = SelectedUser,
+            MembersCount = 1,
             TasksDescription = " ",
             Panels = new List<Panel>(),  
             MaxUsers = modelCreateTeam.MaxUsers

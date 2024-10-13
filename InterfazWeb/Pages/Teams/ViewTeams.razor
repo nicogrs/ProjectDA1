@@ -1,6 +1,6 @@
 @page "/account/teams"
 @using Dominio
-@inject TeamService TmService
+@inject ITeamService TmService
 @inject Session Session
 @inject NavigationManager Navigation
 
@@ -11,7 +11,10 @@
     {
         foreach (var team in Teams)
         {
-            <TeamCard Title="@team.Name"/>
+            <div class="col-3 mb-4">
+            <TeamCard Title="@team.Name" Date="@team.CreatedOn" 
+                      CantMembers="@team.MembersCount" MaxMembers="@team.MaxUsers" Description="@team.TasksDescription"/>
+            </div>
         }
     }
     else

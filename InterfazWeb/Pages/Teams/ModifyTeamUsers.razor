@@ -1,8 +1,8 @@
 ﻿@page "/{teamName}/modifyUsers"
 @using Dominio
 @using Dominio.Data
-@inject UserDataBase UDatabase
-@inject TeamService TmService
+@inject IUserDatabase UDatabase
+@inject ITeamService TmService
 @inject Session Session
 @inject NavigationManager Navigation
 <PageTitle>ModifyTeamUsers</PageTitle>
@@ -33,14 +33,16 @@
     <EditForm Model="modelModifyUsersInTeam" OnValidSubmit="HandleAdd">
         <DataAnnotationsValidator/>
         <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-secondary dropdown-toggle" type="button" 
+                    id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 Selecciona Usuarios
             </button>
             <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
                 @foreach (var user in usersNotInTeam)
                 {
                     <li class="dropdown-item">
-                        <input type="checkbox" @onchange="(e) => AddUserSelection(user.Email, e.Value)" /> @user.Email
+                        <input type="checkbox" @onchange="(e) => 
+                        AddUserSelection(user.Email, e.Value)" /> @user.Email
                     </li>
                 }
             </ul>
@@ -57,14 +59,16 @@ else if(deleteUsers)
     <EditForm Model="modelModifyUsersInTeam" OnValidSubmit="HandleDelete">
         <DataAnnotationsValidator/>
         <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-secondary dropdown-toggle" type="button" 
+                    id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 Selecciona Usuarios
             </button>
             <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
                 @foreach (var user in usersInTeam)
                 {
                     <li class="dropdown-item">
-                        <input type="checkbox" @onchange="(e) => DeleteUserSelection(user.Email, e.Value)" /> @user.Email
+                        <input type="checkbox" @onchange="(e) => 
+                        DeleteUserSelection(user.Email, e.Value)" /> @user.Email
                     </li>
                 }
             </ul>

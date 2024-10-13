@@ -13,7 +13,6 @@ public class TeamService : ITeamService
     
     public bool CreateTeam(Team team)
     {
-        Console.WriteLine($"Creating team {team.Name}");
         if(team.TeamValidation() && !TeamExists(team.Name))
         {
             _teamDatabase.AddTeamToDatabase(team);
@@ -73,8 +72,6 @@ public class TeamService : ITeamService
         return false;
     }
     
-
-
     public bool RemoveUserFromTeam(string teamName, string userEmail)
     {
         var user = _userService.GetUserByEmail(userEmail);

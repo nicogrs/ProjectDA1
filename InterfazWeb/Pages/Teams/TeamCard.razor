@@ -3,27 +3,43 @@
 <div class="card">
     <div class="card-body">
         <h4 class="card-title">@Title</h4>
+        <p class="card-text">
+            <strong>Fecha de creación:</strong> @Date 
+        </p>
+        <p class="card-text">
+            <strong>Miembros:</strong> @CantMembers/ @MaxMembers
+        </p>
+        <p class="card-text">
+            <strong>Descripción de tareas:</strong> @Description
+        </p>
     </div>
     <div class="card-footer">
         <div class="row">
-            <div class="col4">
-                <button class="btn btn-primary" type="submit" @onclick="GoToTeam">Ir</button>
+            <div class="col-4">
+                <button class="btn btn-primary w-100" @onclick="GoToTeam">Ir</button>
             </div>
-            <div class="col4">
-                <button class="btn btn-primary" type="submit" @onclick="DeleteTeam">Borrar</button>
+            <div class="col-4">
+                <button class="btn btn-danger w-100" @onclick="DeleteTeam">Borrar</button>
             </div>
-            <div class="col4">
-                <button class="btn btn-primary" type="submit" @onclick="ModifyTeam">Modificar</button>
+            <div class="col-4">
+                <button class="btn btn-secondary w-100" @onclick="ModifyTeam">Modificar</button>
             </div>
         </div>
     </div>
-
 </div>
 
 
 @code {
     [Parameter]
     public string Title { get; set; }
+    [Parameter]
+    public string Description { get; set; }
+    [Parameter]
+    public int CantMembers { get; set; }
+    [Parameter]
+    public int MaxMembers { get; set; }    
+    [Parameter]
+    public DateTime Date { get; set; }
     
     private void GoToTeam()
     {

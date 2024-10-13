@@ -1,29 +1,60 @@
 @page "/users"
-
+@using Dominio
+@using Dominio.Data
 @inject NavigationManager Navigation
 @inject Session Session
+@inject IUserService UService
+@inject IUserDatabase UserDB
 
 <PageTitle>ABMUsers</PageTitle>
-<h3>Alta Baja Modificacion de usuarios</h3>
-<div class="form-group">
-    <div class="col-4">
+<h3 class="mb-4">Alta Baja Modificacion de usuarios</h3>
+<div class="form-group row d-flex justify-content-center align-items-center">
+    <div class="col-12 col-md-4 mb-2">
         <button class="btn btn-primary" type="submit" @onclick="AddUsers">Agregar Usuarios</button>
     </div>
-    <div class="col-4">
+    <div class="col-12 col-md-4 mb-2">
         <button class="btn btn-primary" type="submit" @onclick="DeleteUsers">Eliminar Usuarios</button>
     </div>
-    <div class="col-4">
-        <button class="btn btn-primary" type="submit" @onclick="ModifyUsers">Modificar Usuarios</button>
+    <div class="col-12 col-md-4 mb-2">
     </div>
 </div>
 
+<table class="table table-striped table-bordered">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Email</th>
+        <th>Fecha de Nacimiento</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in users)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td>@user.Surname</td>
+                <td>@user.Email</td>
+                <td>@user.BirthDate</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" @onclick="() => ModifyUsers(user.Email)">Modificar</button>
+                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
 @code {
+    private List<User> users;
     protected override void OnInitialized()
     {
         if (!Session.IsAdmin)
         {
             Navigation.NavigateTo("/error");
         }
+        users = UserDB.GetUsers();
     }
     private void AddUsers()
     {
@@ -33,8 +64,8 @@
     {
         Navigation.NavigateTo("/users/delete");
     }
-    private void ModifyUsers()
+    private void ModifyUsers(string userEmail)
     {
-        Navigation.NavigateTo("/users/modify");
+        Navigation.NavigateTo($"/users/modify/{userEmail}");
     }
 }

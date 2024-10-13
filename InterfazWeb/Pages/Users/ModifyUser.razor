@@ -1,104 +1,103 @@
-﻿@page "/users/modify"
+﻿@page "/users/modify/{unEmail}"
 @using Dominio
 @using Dominio.Data
 @using DTOs
-@inject UserDataBase UDatabase
-@inject UserService UService
+@inject IUserDatabase UDatabase
+@inject IUserService UService
 @inject PasswordService PService  
 @inject Session Session
 @inject NavigationManager Navigation
 
 <PageTitle>ModifyUser</PageTitle>
-<h3>Modificar Usuario</h3>
+<h3 class="mb-3">Modificar Usuario</h3>
 @if (!string.IsNullOrEmpty(message))
 {
     <div class="alert alert-success" role="alert">
         @message
     </div>
 }
-
-<EditForm Model="modelSelectUser" OnValidSubmit="ShowModify">
-    <DataAnnotationsValidator />
-    <div class="form-group">
-        <label for="releaseYear">Usuario</label>
-        <InputSelect @bind-Value="selectedUser" @onchange="OnChangeUser">
-            <option value="0" disabled>Ninguna seleccionada</option>
-            @foreach (var user in Users)
-            {
-                <option value="@user.Email">@user.Email</option>
-            }
-        </InputSelect>
-    </div>
-    
-    <div class="form-group">
-        <button class="btn btn-primary" type="submit">Modificar Usuario</button>
-    </div>
-    <div class="col-4">
-        <button class="btn btn-primary" type="button" @onclick="GoBack">Volver</button>
-    </div>
-</EditForm>
-
-@if (showConfirmation)
+@if (unUser != null)
 {
     <EditForm Model="modelChangeInformation" OnValidSubmit="HandleUpdate">
         <DataAnnotationsValidator/>
-        <div class="form-group">
-            <label id="name">Nombre</label>
-            <InputText class="form-control" @bind-Value="@modelChangeInformation.Name" id="name"></InputText>
-            <ValidationMessage For="@(() => modelChangeInformation.Name)"/>
-        </div>
-    
-        <div class="form-group">
-            <label for="lastName">Apellido</label>
-            <InputText class="form-control" @bind-Value="@modelChangeInformation.Surname" id="lastName"></InputText>
-            <ValidationMessage For="@(() => modelChangeInformation.Surname)"/>
-        </div>
-   
-        <div class="form-group">
-            <label for="birthDate">Fecha de nacimiento</label>
-            <InputDate class="form-control" id="birthDate" @bind-Value="@modelChangeInformation.BirthDate" min="1900-01-01"></InputDate>
-            <ValidationMessage For="@(() => modelChangeInformation.BirthDate)"/>
-        </div>
-        @if (Session.IsAdmin)
-        {
+        <div class="d-flex justify-content-center align-items-center">
+            <div class="w-50">
             <div class="form-group">
-                <label for="password">Contraseña</label>
-                <button class="btn btn-primary" type="button" @onclick="GeneratePassword">Generar contraseña</button>
-                <InputText class="form-control" id="password" type="text" @bind-Value="@modelChangeInformation.Password" readonly="true" />
+                <label for="name">Nombre</label>
+                <InputText class="form-control mb-3" @bind-Value="modelChangeInformation.Name" id="name"></InputText>
+                <ValidationMessage For="@(() => modelChangeInformation.Name)"/>
             </div>
-        }
-        <div class="mt-2">
-            <div class="form-group">
-                <button class="btn btn-primary" type="submit">Confirmar</button>
-            </div>
-            <button class="btn btn-primary" type="button" @onclick="CancelUpdate">Cancelar</button>
-        </div>
-        
-    </EditForm>
 
+            <div class="form-group">
+                <label for="lastName">Apellido</label>
+                <InputText class="form-control mb-3" @bind-Value="modelChangeInformation.Surname" id="lastName"></InputText>
+                <ValidationMessage For="@(() => modelChangeInformation.Surname)"/>
+            </div>
+
+            <div class="form-group">
+                <label for="birthDate">Fecha de Nacimiento</label>
+                <InputDate class="form-control mb-3" @bind-Value="modelChangeInformation.BirthDate" id="birthDate"></InputDate>
+                <ValidationMessage For="@(() => modelChangeInformation.BirthDate)"/>
+            </div>
+
+            @if (Session != null && Session.IsAdmin)
+            {
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <button class="sm-btn btn-primary  mb-3" type="button" @onclick="GeneratePassword">Generar contraseña</button>
+                    <InputText class="form-control mb-3" id="password" @bind-Value="modelChangeInformation.Password"/>
+                </div>
+            }
+
+            <div class="form-group">
+                <button class="btn btn-primary mb-3" type="submit">Guardar Cambios</button>
+            </div>
+            </div>
+        </div>
+    </EditForm>
+    <button class="btn btn-secondary" @onclick="GoBack">Atras</button>
+}
+else
+{
+<p>Usuario no encontrado</p>
 }
 
 @code {
-    User modelSelectUser = new User();
+
+    [Parameter] 
+    public string unEmail { get; set; }
     UserModifyDTO modelChangeInformation = new UserModifyDTO();
-    private List<User> Users;
     private string message;
     private string selectedUser = "";
     private bool showConfirmation = false;
     private string newPassword;
     private string userEmail;
-
-
+    private User unUser;
+    
     protected override void OnInitialized()
     {
-        Users = UDatabase.GetUsers();
+        if (Session.IsAdmin)
+        {
+            unUser = UDatabase.GetUserByEmail(unEmail);
+            if (unUser != null)
+            {
+                modelChangeInformation.Email = unUser.Email;
+                modelChangeInformation.Password = unUser.Password;
+                modelChangeInformation.BirthDate = unUser.BirthDate;
+                modelChangeInformation.Name = unUser.Name;
+                modelChangeInformation.Surname = unUser.Surname;
+            }
+            else
+            {
+                message = "Usuario no encontrado";
+            }
+        }
+        else
+        {
+            Navigation.NavigateTo("/error");
+        }
     }
     
-    private void OnChangeUser(ChangeEventArgs e)
-    {
-        userEmail = e.Value.ToString();
-        modelSelectUser = UService.GetUserByEmail(userEmail);
-    }
     private void GeneratePassword()
     {
         newPassword = PService.GenerateRandomPassword();
@@ -112,16 +111,7 @@
 
     private void HandleUpdate()
     {
-        User modifyUser = UService.GetUserByEmail(modelSelectUser.Email);
-        
-        UserModifyDTO u = new UserModifyDTO
-        {
-            Name = modifyUser.Name,
-            Surname = modifyUser.Surname,
-            BirthDate = modifyUser.BirthDate,
-            Password = modifyUser.Password,
-            Email = modelSelectUser.Email
-        };
+        UserModifyDTO u = new UserModifyDTO();
         
         if (modelChangeInformation.Name != null)
         {
@@ -142,17 +132,20 @@
         {
             u.Password = modelChangeInformation.Password;
         }
+
+        u.Email = modelChangeInformation.Email;
         
+        Console.WriteLine(u.Email);
+        Console.WriteLine(u.Password);
+        Console.WriteLine(u.Name);
+        Console.WriteLine(u.Surname);
         UService.UpdateUser(u.ToEntity());
+        
         showConfirmation = false;
         message = "Usuario modificado.";
         
     }
-
-    private void CancelUpdate()
-    {
-        showConfirmation = false;
-    }
+    
 
     private void GoBack()
     {

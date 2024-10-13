@@ -1,5 +1,6 @@
 using Dominio.Data;
 using Dominio;
+using IUserDatabase = Dominio.IUserDatabase;
 
 namespace InterfazWeb;
 
@@ -11,10 +12,8 @@ public class Program
         // Add services to the container.
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor();
-
-        builder.Services.AddSingleton<UserDataBase>();
+        
         builder.Services.AddSingleton<IUserDatabase, UserDataBase>();
-        builder.Services.AddSingleton<UserService>();
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddSingleton<PasswordService>();
         builder.Services.AddSingleton<TeamDataBase>();

@@ -55,13 +55,12 @@
     
     private void HandleCreate()
     {
-        Panel p = new Panel("panel", teamCount)
+        Panel p = new Panel
         {
             Name = modelCreatePanel.Name,
             Team = TDatabase.GetTeamByName(teamName).Name,
             Description = modelCreatePanel.Description,
-            CreatedBy = Session.CurrentUser,
-            Tasks = null
+            CreatedBy = Session.CurrentUser
         };
         PDatabase.Panels.Add(p);
         TDatabase.GetTeamByName(teamName).Panels.Add(p);

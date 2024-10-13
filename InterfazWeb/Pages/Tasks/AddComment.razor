@@ -2,7 +2,7 @@
 @using Dominio
 @using Dominio.Data
 @inject CommentDatabase CDatabase
-@inject TeamService TmService
+@inject PanelService PnService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -33,7 +33,7 @@
     [Parameter]
     public string teamName { get; set; }
     [Parameter]
-    public string panelId { get; set; }
+    public int panelId { get; set; }
     [Parameter]
     public string taskTitle { get; set; }
     
@@ -53,7 +53,7 @@
     private void HandleCreate()
     {
         CDatabase.Comments.Add(modelAddComment);
-        TmService.GetPanelById(teamName, panelId).Tasks.Find(t => t.Title == taskTitle).AddComment(Session.CurrentUser, modelAddComment.Content);
+        PnService.GetPanelById(teamName, panelId).Tasks.Find(t => t.Title == taskTitle).AddComment(Session.CurrentUser, modelAddComment.Content);
         message = "Comentario agregado con éxito";
         modelAddComment = new Comment(Session.CurrentUser, string.Empty);
     }

@@ -1,0 +1,9 @@
+Título,Descripción,Fecha de vencimiento,ID de panel
+Tarea Valida 1,Datos validos.,01/01/2000,1
+Tarea Valida 2,Datos validos.,12/12/2024,1
+Tarea Invalida 1,Fecha invalida 1,32/10/2024,1
+Tarea Invalida 2,Fecha invalida 2,01/13/2024,1
+Tarea Invalida 3,Fecha invalida 3,01/10/-2024,1
+Tarea Invalida 4,Fecha invalida 4,01/10/20/24,1
+Tarea Invalida 5,Fecha invalida 5,01/asd/24,1
+Tarea Valida 3,Datos validos - final.,06/06/2020,1

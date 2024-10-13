@@ -1,7 +1,7 @@
 @page "/{teamName}/{panelId}/tasks"
 @using Dominio
 @using Dominio.Data
-@inject TeamService TmService
+@inject PanelService PnService
 @inject TeamDataBase TmDatabase
 @inject Session Session
 @inject NavigationManager Navigation
@@ -29,7 +29,7 @@
                           EndDate="@task.ExpirationDate" 
                           Comments="@task.Comments" 
                           teamName="@teamName"
-                          panelId="@panelId"/>
+                          panelId="@panelId.ToString()"/>
             }
         }
     }
@@ -43,7 +43,7 @@
     [Parameter]
     public string teamName { get; set; }
     [Parameter]
-    public string panelId { get; set; }
+    public int panelId { get; set; }
     
     private List<Dominio.Task> Tasks;
     
@@ -54,7 +54,7 @@
             Navigation.NavigateTo("/error");
         }
 
-        Tasks = TmService.GetPanelById(teamName, panelId).Tasks;
+        Tasks = PnService.GetPanelById(teamName, panelId).Tasks;
     }
     
     private void CreateTask()
@@ -64,7 +64,7 @@
 
     private void DeletePanel()
     {
-        Panel delete = TmService.GetPanelById(teamName, panelId);
+        Panel delete = PnService.GetPanelById(teamName, panelId);
         TmDatabase.GetTeamByName(teamName).Panels.Remove(delete);
     }
     

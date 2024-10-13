@@ -87,15 +87,12 @@ public class TaskTest
     [TestMethod]
     public void AddCommentTest()
     {
-        //Arrange
         int initialCommentCount = t1.Comments.Count;
         string content = "Comentario de AddComentTest";
         Comment lastAddedComment;
         
-        //Act
         t1.AddComment(u1,content);
         
-        //Assert
         lastAddedComment = t1.Comments.Last();
         Assert.AreEqual(t1.Comments.Count, initialCommentCount + 1);
         Assert.AreEqual(t1.Comments.Last().Content, content);

@@ -1,0 +1,8 @@
+Título,Descripción,Fecha de vencimiento,ID de panel
+Tarea Valida 1,Datos validos.,01/01/2000,1
+Tarea Valida 2,Datos validos.,12/12/2024,1
+Tarea Invalida 1,Id panel invalido.,10/09/2024,Manzana
+Tarea Invalida 2,Formato Fecha invalido.,fecha: 10/09/2024,1
+Tarea Invalida 3,Orden de columnas invalido.,1,10/09/2024
+Tarea Invalida 4,Cantidad de columnas invalida.,10/09/2024
+Tarea Valida 3,Datos validos - final.,06/06/2020,1

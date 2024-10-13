@@ -2,7 +2,7 @@
 @using Dominio
 @using Dominio.Data
 @using Task = Dominio.Task
-@inject TeamService TmService
+@inject PanelService PnService
 @inject TaskDatabase TkDatabase
 @inject NavigationManager Navigation
 
@@ -43,7 +43,7 @@
     [Parameter]
     public string teamName { get; set; }
     [Parameter]
-    public string panelId { get; set; }
+    public int panelId { get; set; }
     [Parameter]
     public string taskTitle { get; set; }
 
@@ -54,7 +54,7 @@
 
     protected override void OnInitialized()
     {
-        panel = TmService.GetPanelById(teamName, panelId);
+        panel = PnService.GetPanelById(teamName, panelId);
         toModify = panel.Tasks.FirstOrDefault(t => t.Title == taskTitle);
     }
 

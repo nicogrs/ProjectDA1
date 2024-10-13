@@ -1,13 +1,22 @@
 ﻿namespace Dominio;
 
-public class Task
+public class Task : IPaperBinItem
 {
+    public static int taskCounter = 0;
+    
     public string Title { get; set; }
     public Priority Precedence { get; set; }
     public string Description { get; set; }
     public DateTime ExpirationDate { get; set; }
     public List<Comment> Comments { get; set; }
+    public int TaskId { get; private set; }
 
+    public Task()
+    {
+        Comments = new List<Comment>();
+        taskCounter++;
+        TaskId = taskCounter;
+    }
 
     public enum Priority
     {
@@ -48,8 +57,4 @@ public class Task
         return success;
     }
     
-    public bool IsExpired()
-    {
-        return DateTime.Now > ExpirationDate;
-    }
 }

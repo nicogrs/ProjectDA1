@@ -92,15 +92,6 @@
         };
         TmService.CreateTeam(t);
         teamCount = TDatabase.Teams.Count();
-        Panel p = new Panel("expiredTasks", teamCount)
-        {
-            Name = $"{t.Name}_ExpiratedTasks",
-            Team = t.Name, 
-            Tasks = new List<Dominio.Task>(),
-            CreatedBy = Session.CurrentUser,
-            Description = "Panel de tareas expiradas"
-        };
-        TmService.AddPanel(modelCreateTeam.Name, p);
         message="Equipo creado con éxito";
     }
     private void GoBack()

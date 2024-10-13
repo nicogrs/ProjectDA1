@@ -11,6 +11,14 @@
 </div>
 
 @code {
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/account/login");
+        }
+    }
+
     private void CloseSession()
     {
         Session.Logout();

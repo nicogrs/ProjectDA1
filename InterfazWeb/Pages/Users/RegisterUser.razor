@@ -10,9 +10,9 @@
 <h3>Registro de usuarios</h3>
 @if (!string.IsNullOrEmpty(message))
 {
-<div class="alert alert-danger" role="alert">
-    @message
-</div>
+    <div class="alert alert-danger" role="alert">
+        @message
+    </div>
 }
 
 <EditForm Model="modelRegister" OnValidSubmit="HandleRegister">

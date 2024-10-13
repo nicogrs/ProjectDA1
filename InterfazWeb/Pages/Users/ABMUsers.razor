@@ -16,12 +16,11 @@
         <button class="btn btn-primary" type="submit" @onclick="ModifyUsers">Modificar Usuarios</button>
     </div>
 </div>
-<p class="text">Pagina en construccion</p>
 
 @code {
     protected override void OnInitialized()
     {
-        if (!Session.IsAdmin)
+        if (!Session.IsAdmin || Session.CurrentUser == null)
         {
             Navigation.NavigateTo("/error");
         }

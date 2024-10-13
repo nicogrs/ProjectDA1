@@ -1,11 +1,21 @@
 @page "/error"
+@inject Session Session
 @inject NavigationManager Navigation
+<PageTitle>ErrorPage</PageTitle>
 <h3>Error</h3>
 <p>No tienes acceso a esta pagina.</p>
 <button class="btn btn-primary" type="button" @onclick="GoBack">Volver</button>
 @code {
     private void GoBack()
     {
-        Navigation.NavigateTo("/index/user");
+        if (Session.CurrentUser != null)
+        {
+            Navigation.NavigateTo("/index/user");
+        }
+        else
+        {
+            Navigation.NavigateTo("/account/login");
+        }
+        
     }
 }

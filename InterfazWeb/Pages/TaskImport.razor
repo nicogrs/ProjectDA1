@@ -17,6 +17,16 @@
     private IBrowserFile? selectedFile;
     private string? fileContent;
 
+    private List<Task> tasks; @* = new List<Task>()
+    {
+        new Task()
+        {
+            Title = "titulo 1",
+            Description = "Descripcion 1",
+            expDate = new DateTime(2024,12,12)
+        }
+    };*@
+
     private async System.Threading.Tasks.Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         selectedFile = e.File;
@@ -34,6 +44,35 @@
     private void ProcessCsvFile(string content)
     {
         Dominio.TaskImport taskImport = new Dominio.TaskImport();
-        List<Task> tasks = taskImport.ReadTasksFromContent(content,new User(){Name = "TestUser"});
+        tasks = taskImport.ReadTasksFromContent(content,new User(){Name = "TestUser"});
+        Console.WriteLine(tasks[0].Title);
+        Console.WriteLine(tasks[1].Title);
+        Console.WriteLine(tasks[2].Title);
+        StateHasChanged();
     }
+    
+    
+}
+
+@if (tasks != null && tasks.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Expiration Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (Task task in tasks)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@task.Description</td>
+                <td>@task.expDate.ToString("yyyy/mm/dd")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
 }

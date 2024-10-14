@@ -41,7 +41,7 @@
     [Parameter]
     public string teamName { get; set; }
     [Parameter]
-    public int panelId { get; set; }
+    public string panelId { get; set; }
     [Parameter]
     public string taskTitle { get; set; }
     Task modelChangeTask = new Task();
@@ -51,7 +51,7 @@
 
     protected override void OnInitialized()
     {
-        panel = PlService.GetPanelById(teamName, panelId);
+        panel = PlService.GetPanelById(teamName, int.Parse(panelId));
         toModify = panel.Tasks.FirstOrDefault(t => t.Title == taskTitle);
     }
 

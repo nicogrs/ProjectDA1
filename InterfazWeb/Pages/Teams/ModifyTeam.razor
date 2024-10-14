@@ -1,48 +1,63 @@
 ﻿@page "/{teamName}/modify"
+@using System.Reflection.Metadata
 @using Dominio
 @using Dominio.Data
-@inject ITeamDataBase TDatabase
-@inject IUserDatabase UDatabase
 @inject ITeamService TmService
-@inject PasswordService Pdservice
 @inject NavigationManager Navigation
 @inject Session Session
 
 <PageTitle>ModifyTeam</PageTitle>
-<h3>Modificar Equipo</h3>
+<h3 class="mb-4">Modificar Equipo</h3>
+@if (selectedTeam != null)
+{
 <div class="row">
-    <div class="col-4">
+    <div class="col-4 mb-4">
         <button class="btn btn-primary" type="button" @onclick="ModifyUsers">Modificar Usuarios</button>
-    </div>
-    <div class="col-4">
-        <button class="btn btn-primary" type="button" @onclick="DeleteTeam">Eliminar Equipo</button>
-    </div>
-    <div class="col-4">
-        <button class="btn btn-primary" type="button" @onclick="GoBack">Volver</button>
     </div>
 </div>
 
 <EditForm Model="modelChangeTeam" OnValidSubmit="HandleModify">
     <DataAnnotationsValidator/>
-    <div class="form-group">
-        <label id="name">Descripcion de tareas</label>
-        <InputText class="form-control" @bind-Value="@modelChangeTeam.TasksDescription" id="name"></InputText>
-        <ValidationMessage For="@(() => modelChangeTeam.TasksDescription)"/>
-    </div>
-    
-    <div class="form-group">
-        <label for="lastName">Cantidad maxima de usuarios</label>
-        <InputNumber class="form-control" @bind-Value="@modelChangeTeam.MaxUsers" id="lastName"></InputNumber>
-        <ValidationMessage For="@(() => modelChangeTeam.MaxUsers)"/>
-    </div>
-        
-    <div class="mt-2">
-        <div class="form-group">
-            <button class="btn btn-primary" type="submit">Modificar Equipo</button>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="w-50">
+        <div class="form-group mb-4">
+            <label id="name">Descripcion de tareas</label>
+            <InputText class="form-control" @bind-Value="@modelChangeTeam.TasksDescription" id="name"></InputText>
+            <ValidationMessage For="@(() => modelChangeTeam.TasksDescription)"/>
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="lastName">Cantidad maxima de usuarios</label>
+            <InputNumber class="form-control" @bind-Value="@modelChangeTeam.MaxUsers" id="lastName"></InputNumber>
+            <ValidationMessage For="@(() => modelChangeTeam.MaxUsers)"/>
+        </div>
+
+        <div class="mt-2 mb-4">
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Modificar Equipo</button>
+            </div>
+        </div>
+
+        <div class="col-4">
+            <button class="btn btn-secondary" type="button" @onclick="GoBack">Volver</button>
+        </div>
         </div>
     </div>
-        
 </EditForm>
+}
+
+@if (!string.IsNullOrEmpty(modifyMessageSucess))
+    {
+        <div class="alert alert-success mt-4" role="alert">
+            @modifyMessageSucess
+        </div>
+    }
+@if (!string.IsNullOrEmpty(modifyMessageError))
+{
+<div class="alert alert-danger mt-4" role="alert">
+    @modifyMessageError
+</div>
+}
 
 
 @code {
@@ -50,9 +65,10 @@
     public string teamName { get; set; }
     
     Team modelChangeTeam = new Team();
-    private List<User> Users;
+    Team selectedTeam;
     
-    private string modifyMessage;
+    private string modifyMessageSucess;
+    private string modifyMessageError;
     private string selectedUser = "";
     private bool showConfirmation = false;
     private string newPassword;
@@ -63,67 +79,36 @@
         {
             Navigation.NavigateTo("/error");
         }
-        Users = UDatabase.GetUsers();
+        selectedTeam = TmService.GetTeamByName(teamName);
+        if (selectedTeam == null)
+        {
+            modifyMessageError = "Equipo no encontrado";
+        }
+
+        modelChangeTeam.MaxUsers = selectedTeam.MaxUsers;
+        modelChangeTeam.TasksDescription = selectedTeam.TasksDescription;
     }
     
-    /*private void OnChangeUser(ChangeEventArgs e)
-    {
-        string userEmail = e.Value.ToString();
-        modelModifyUser = UDatabase.GetUsers().FirstOrDefault(u => u.Email.Equals(userEmail));
-    }
-    private void GeneratePassword()
-    {
-        newPassword = passwordService.GenerateRandomPassword();
-        modelChangeTeam.Password = newPassword;
-    }
-
-    private void ShowModify()
-    {
-        showConfirmation = true;
-    }
-
-    private void HandleUpdate()
-    {
-        User modifyUser = UDatabase.GetUserByEmail(modelModifyUser.Email);
-
-        UserModifyDTO u = new UserModifyDTO
-        {
-            Name = modifyUser.Name,
-            Surname = modifyUser.Surname,
-            BirthDate = modifyUser.BirthDate,
-            Password = modifyUser.Password,
-            Email = modelModifyUser.Email
-        };
-
-        if (modelChangeTeam.Name != null)
-        {
-            u.Name = modelChangeTeam.Name;
-        }
-
-        if (modelChangeTeam.Surname != null)
-        {
-            u.Surname = modelChangeTeam.Surname;
-        }
-
-        if (modelChangeTeam.BirthDate != default(DateTime))
-        {
-            u.BirthDate = modelChangeTeam.BirthDate;
-        }
-
-        if (modelChangeTeam.Password != null)
-        {
-            u.Password = modelChangeTeam.Password;
-        }
-
-        UDatabase.UpdateUser(u.ToEntity());
-        showConfirmation = false;
-        modifyMessage = "Usuario modificado.";
-
-    }*/
-
     private void HandleModify()
     {
-        
+        Team newTeam = new Team
+        {
+            TasksDescription = modelChangeTeam.TasksDescription,
+            MaxUsers = modelChangeTeam.MaxUsers
+        };
+        var modified = TmService.UpdateTeam(selectedTeam.Name, newTeam);
+        Console.WriteLine(modified);
+        if (modified)
+        {
+            modifyMessageSucess = "Equipo creado correctamente";
+            modifyMessageError = null;
+        }
+        else
+        {
+            modifyMessageError = "El equipo no pudo ser modificado";
+            modifyMessageSucess = null;
+        }
+
     }
 
     private void DeleteTeam()

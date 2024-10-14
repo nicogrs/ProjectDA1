@@ -3,6 +3,7 @@
 @using Dominio.Data
 @using Task = Dominio.Task
 @inject PanelService PlService
+@inject TaskService TkService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -10,7 +11,7 @@
     <div class="card-body">
         <p class="card-title">@Title</p>
         <div class="d-flex justify-content-between">
-            <p class="card-text">@Precedence</p>
+            <p class="card-text">@Precedence.ToString()</p>
             <p class="card-text">@EndDate</p>
         </div>
         <p class="card-text">@Description</p>
@@ -47,18 +48,17 @@
     public DateTime EndDate { get; set; }
     [Parameter]
     public string Description { get; set; }
-    
     [Parameter]
     public string teamName { get; set; }
     [Parameter]
-    public int panelId { get; set; }
-    
-    private List<Comment> Comments;
+    public string panelId { get; set; }
+    [Parameter]
+    public List<Comment> Comments { get; set; }
     
 
     protected override void OnInitialized()
     {
-        Comments = PlService.GetPanelById(teamName, panelId).Tasks.FirstOrDefault(t => t.Title.Equals(Title)).Comments;
+        //Comments = PlService.GetPanelById(teamName, panelId).Tasks.FirstOrDefault(t => t.Title.Equals(Title)).Comments;
     }
 
     private void AddComment()
@@ -72,6 +72,6 @@
 
     private void CompleteComment(Comment comment)
     {
-        PlService.GetPanelById(teamName, panelId).Tasks.FirstOrDefault(t => t.Title.Equals(Title)).MarkCommentAsResolved(Session.CurrentUser, comment);
+        PlService.GetPanelById(teamName, int.Parse(panelId)).Tasks.FirstOrDefault(t => t.Title.Equals(Title)).MarkCommentAsResolved(Session.CurrentUser, comment);
     }
 }

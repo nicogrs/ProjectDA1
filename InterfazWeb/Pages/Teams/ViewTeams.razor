@@ -11,8 +11,8 @@
     {
         foreach (var team in Teams)
         {
-            <div class="col-3 mb-4">
-            <TeamCard Title="@team.Name" Date="@team.CreatedOn" 
+            <div class="col-lg-4 col-md-12 col-sm-12 mb-4">
+            <TeamCard OnTeamDeleted="RefreshTeams" Title="@team.Name" Date="@team.CreatedOn" 
                       CantMembers="@team.MembersCount" MaxMembers="@team.MaxUsers" Description="@team.TasksDescription"/>
             </div>
         }
@@ -23,11 +23,17 @@
     }
 </div>
 
+
+
 @code {
-    
     private List<Team> Teams;
     
     protected override void OnInitialized()
+    {
+        LoadTeams();
+    }
+
+    private void LoadTeams()
     {
         if (Session.CurrentUser == null)
         {
@@ -41,5 +47,10 @@
         {
             Teams = TmService.GetTeamsByUserEmail(Session.CurrentUser.Email);
         }
+    }
+
+    public void RefreshTeams()
+    {
+        LoadTeams();
     }
 }

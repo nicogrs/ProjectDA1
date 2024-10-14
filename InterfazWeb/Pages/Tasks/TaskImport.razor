@@ -1,13 +1,13 @@
-@page "/TaskImport"
+@page "/{teamName}/{panelId}/TaskImport"
 @using Dominio;
 @using Task = Dominio.Task
 @inject NavigationManager Navigation;
 @inject Session Session;
-@inject PanelService PlService
+@inject PanelService PlService;
 
-<PageTitle>Import Tasks from .csv</PageTitle>
+<PageTitle>Importar Tasks</PageTitle>
 
-<h4>Upload a CSV file</h4>
+<h4>Importar Tareas</h4>
 
 <InputFile OnChange="HandleFileSelected" accept=".csv" />
 
@@ -16,6 +16,12 @@
     <p>Archivo cargado.</p>
 }
 
+@if (!string.IsNullOrEmpty(message))
+{
+<div class="alert alert-success" role="alert">
+    @message
+</div>
+}
 
 @if (tasks != null && tasks.Any())
 {
@@ -43,18 +49,36 @@
     </tbody>
 </table>
 
+@if (SelectedTasks.Count > 0)
+{
+    <h4>Tareas seleccionadas: (@SelectedTasks.Count)</h4>
+    <ul>
+        @foreach (Task task in SelectedTasks)
+        {
+            <li>@task.Title (@task.Description)</li>
+        }
+    </ul>
+}
+
 <button class="btn btn-primary" @onclick="GetSelectedTasks">Agregar tareas a panel</button>
 }
 
+<div class="col-4 mb-4">
+    <button class="btn btn-primary" type="submit" @onclick="GoToPanel">Volver</button>
+</div>
 
 @code {
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public string panelId { get; set; }
+    
     private IBrowserFile? selectedFile;
-    
     private string? fileContent;
-
     private List<Task> tasks;
-    
     private HashSet<Task> SelectedTasks = new HashSet<Task>();
+    private Panel panel;
+    private string message;
     
     
     protected override void OnInitialized()
@@ -66,7 +90,6 @@
     }
     
     
-
     private async System.Threading.Tasks.Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         selectedFile = e.File;
@@ -110,8 +133,20 @@
     
     private void GetSelectedTasks()
     {
-        Console.WriteLine($"Selected {SelectedTasks.Count} tasks");
-        //TO DO
-        //AGREGAR TASKS A PANEL
+        panel = PlService.GetPanelById(teamName,int.Parse(panelId));
+
+        foreach (Task task in SelectedTasks)
+        {
+            panel.AddTask(task);
+        }
+        
+        message=$"{SelectedTasks.Count} Tareas agregadas exitosamente a {panel.Name}.";
+        fileContent = "";
+        tasks = null;
+    }
+
+    private void GoToPanel()
+    {
+        Navigation.NavigateTo($"/{teamName}/panel");
     }
 }

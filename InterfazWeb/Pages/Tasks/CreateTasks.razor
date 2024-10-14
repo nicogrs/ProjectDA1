@@ -67,6 +67,10 @@
         {
             Navigation.NavigateTo("/error");
         }
+        else
+        {
+            modelCreateTask.ExpirationDate = DateTime.Now;
+        }
     }
     
     
@@ -82,9 +86,19 @@
         };
         PlService.GetPanelById(teamName, int.Parse(panelId)).AddTask(t);
         message="Tarea creada con éxito";
+        ClearContents();
     } 
+    
     private void GoBack()
     {
         Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
+    }
+
+    private void ClearContents()
+    {
+        modelCreateTask.Title = "";
+        modelCreateTask.Precedence = Task.Priority.Low;
+        modelCreateTask.Description = "";
+        modelCreateTask.ExpirationDate = DateTime.Now;
     }
 }

@@ -1,5 +1,7 @@
 @page "/{teamName}/panels/create"
+@using System.Reflection.Metadata
 @using Dominio
+@using Microsoft.AspNetCore.Mvc.Localization
 @inject Session Session
 @inject ITeamService TmService
 @inject NavigationManager Navigation
@@ -64,10 +66,17 @@
         };
         TmService.GetTeamByName(teamName).Panels.Add(p);
         message="Panel agregado con éxito";
+        ClearContents();
     }
     
     private void GoBack()
     {
         Navigation.NavigateTo($"/{teamName}/panel");
+    }
+
+    private void ClearContents()
+    {
+        modelCreatePanel.Name = "";
+        modelCreatePanel.Description = "";
     }
 }

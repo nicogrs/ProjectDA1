@@ -27,8 +27,6 @@ public class UserRegisterDTO
     
     public bool Admin { get; set; }
     
-    public List<Team> Teams { get; set; }
-    
     public User ToEntity()
     {
         return new User(){

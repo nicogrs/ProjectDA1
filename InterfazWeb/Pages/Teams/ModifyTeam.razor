@@ -91,6 +91,13 @@
     
     private void HandleModify()
     {
+        if (selectedTeam.TeamMembers.Count > modelChangeTeam.MaxUsers)
+        {
+            modifyMessageError = "El equipo tiene mas miembros que la nueva cantidad maxima, " +
+                                 "elegir un numero mayor o quitar usuarios del equipo.";
+            return;
+        }
+        
         Team newTeam = new Team
         {
             TasksDescription = modelChangeTeam.TasksDescription,
@@ -100,13 +107,13 @@
         Console.WriteLine(modified);
         if (modified)
         {
-            modifyMessageSucess = "Equipo creado correctamente";
-            modifyMessageError = null;
+            modifyMessageSucess = "Equipo modificado correctamente";
+            modifyMessageError = "";
         }
         else
         {
             modifyMessageError = "El equipo no pudo ser modificado";
-            modifyMessageSucess = null;
+            modifyMessageSucess = "";
         }
 
     }

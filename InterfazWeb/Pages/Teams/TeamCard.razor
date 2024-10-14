@@ -19,14 +19,14 @@
     <div class="card-footer">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 mt-2 form-group">
-                <button class="btn btn-primary w-100" @onclick="GoToTeam">Ir</button>
+                <button class="btn btn-primary w-100" @onclick="GoToTeam">Ir a Paneles</button>
             </div>
             @if(Session.IsAdmin){
             <div class="col-lg-12 col-md-12 col-sm-12 mt-2 form-group">
-                <button class="btn btn-danger w-100" @onclick="ShowModal">Borrar</button>
+                <button class="btn btn-danger w-100" @onclick="ShowModal">Borrar Equipo</button>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 mt-2 form-group">
-                <button class="btn btn-secondary w-100" @onclick="ModifyTeam">Modificar</button>
+                <button class="btn btn-secondary w-100" @onclick="ModifyTeam">Modificar datos de Equipo</button>
             </div>
             }
         </div>

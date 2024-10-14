@@ -28,7 +28,7 @@
 
         <div class="form-group mb-4">
             <label for="lastName">Cantidad maxima de usuarios</label>
-            <InputNumber class="form-control" @bind-Value="@modelChangeTeam.MaxUsers" id="lastName"></InputNumber>
+            <InputNumber class="form-control" min="1" @bind-Value="@modelChangeTeam.MaxUsers" id="lastName"></InputNumber>
             <ValidationMessage For="@(() => modelChangeTeam.MaxUsers)"/>
         </div>
 

@@ -1,11 +1,12 @@
-@page "/{teamName}/{panelId}/{taskId}/createComment"
+@page "/{teamName}/{panelId}/{title}/createComment"
 @using Dominio
 @using Dominio.Data
 @inject PanelService PnService
+@inject TaskService TskService
 @inject NavigationManager Navigation
 @inject Session Session
 
-<PageTitle>AddComment</PageTitle>
+<PageTitle>Add Comment</PageTitle>
 <h3>Agregar Comentario</h3>
 @if (!string.IsNullOrEmpty(message))
 {
@@ -32,9 +33,9 @@
     [Parameter]
     public string teamName { get; set; }
     [Parameter]
-    public int panelId { get; set; }
+    public string panelId { get; set; }
     [Parameter]
-    public int taskId { get; set; }
+    public string title { get; set; }
     
     private Comment modelAddComment;
     private List<User> users;
@@ -51,11 +52,10 @@
 
     private void HandleCreate()
     {
-
-        Comment addComment = new Comment(Session.CurrentUser, modelAddComment.Content);
-        PnService.GetPanelById(teamName, panelId).Tasks.Find(t => t.TaskId == taskId).AddComment(Session.CurrentUser, modelAddComment.Content);
+        Dominio.Task taskToComment = TskService.GetNonExpiredTasks(teamName, int.Parse(panelId)).Find(t => t.Title == title);
+        taskToComment.AddComment(Session.CurrentUser, modelAddComment.Content);
         message = "Comentario agregado con éxito";
-        modelAddComment = new Comment(Session.CurrentUser, string.Empty);
+        modelAddComment.Content = "";
     }
     
     private void GoBack()

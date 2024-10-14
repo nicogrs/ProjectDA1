@@ -1,36 +1,42 @@
 @page "/{teamName}/panels/create"
+@using System.Reflection.Metadata
 @using Dominio
+@using Microsoft.AspNetCore.Mvc.Localization
 @inject Session Session
-@inject TeamService TmService
+@inject ITeamService TmService
 @inject NavigationManager Navigation
 
 <PageTitle>Create Panel</PageTitle>
 <h3>Crear Panel</h3>
 <EditForm Model="modelCreatePanel" OnValidSubmit="HandleCreate">
     <DataAnnotationsValidator/>
-    <div class="form-group">
-        <label id="name">Nombre</label>
-        <InputText class="form-control" @bind-Value="@modelCreatePanel.Name" id="name"></InputText>
-        <ValidationMessage For="@(() => modelCreatePanel.Name)"/>
-    </div>
-    <div class="form-group">
-        <label id="userAmount">Descripcion</label>
-        <InputNumber class="form-control" @bind-Value="@modelCreatePanel.Description" id="userAmount"></InputNumber>
-        <ValidationMessage For="@(() => modelCreatePanel.Description)"/>
-    </div>
-    
-    <div class="form-group">
-        <button class="btn btn-primary" type="submit">Crear Grupo</button>
-    </div>
-    <div class="col-4">
-        <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
-    </div>
-    @if (!string.IsNullOrEmpty(message))
-    {
-        <div class="alert alert-success" role="alert">
-            @message
+    <div class="d-flex justify-content-center align-items-center">
+        <div class=" w-50">
+            <div class="form-group">
+                <label id="name">Nombre</label>
+                <InputText class="form-control" @bind-Value="@modelCreatePanel.Name" id="name" required></InputText>
+                <ValidationMessage For="@(() => modelCreatePanel.Name)"/>
+            </div>
+            <div class="form-group">
+                <label id="userAmount">Descripcion</label>
+                <InputText class="form-control" @bind-Value="@modelCreatePanel.Description" id="userAmount"></InputText>
+                <ValidationMessage For="@(() => modelCreatePanel.Description)"/>
+            </div>
+
+            <div class="form-group mt-3">
+                <button class="btn btn-primary" type="submit">Confirmar Panel</button>
+            </div>
+            <div class="col-4 mt-3">
+                <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
+            </div>
+            @if (!string.IsNullOrEmpty(message))
+            {
+                <div class="alert alert-success mt-4" role="alert">
+                    @message
+                </div>
+            }
         </div>
-    }
+    </div>
 </EditForm>
 
 @code{
@@ -60,10 +66,17 @@
         };
         TmService.GetTeamByName(teamName).Panels.Add(p);
         message="Panel agregado con éxito";
+        ClearContents();
     }
     
     private void GoBack()
     {
         Navigation.NavigateTo($"/{teamName}/panel");
+    }
+
+    private void ClearContents()
+    {
+        modelCreatePanel.Name = "";
+        modelCreatePanel.Description = "";
     }
 }

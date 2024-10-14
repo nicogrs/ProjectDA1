@@ -2,7 +2,8 @@
 @using Dominio
 @using Dominio.Data
 @inject PanelService PnService
-@inject TeamDataBase TmDatabase
+@inject TaskService TkService
+@inject ITeamDataBase TmDatabase
 @inject Session Session
 @inject NavigationManager Navigation
 <PageTitle>Task</PageTitle>
@@ -10,10 +11,7 @@
 <h3>Tareas</h3>
 <div class="row">
     <div class="col-6">
-        <button class="btn btn-primary" type="submit" @onclick="CreateTask">Crear Nuevo Tarea</button>
-    </div>
-    <div class="col-6">
-        <button class="btn btn-primary" type="submit" @onclick="DeletePanel">Borrar Panel</button>
+        <button class="btn btn-primary" type="submit" @onclick="CreateTask">Crear Nueva Tarea</button>
     </div>
 </div>
 <div class="row">
@@ -21,15 +19,20 @@
     {
         foreach (var task in Tasks)
         {
+            Console.WriteLine("TaSK");
             if (task.ExpirationDate > DateTime.Today)
             {
-                <TaskCard Title="@task.Title" 
-                          Description="@task.Description" 
-                          Precedence="@task.Precedence" 
-                          EndDate="@task.ExpirationDate" 
-                          Comments="@task.Comments" 
-                          teamName="@teamName"
-                          panelId="@panelId"/>
+                <div>
+                    <div>
+                        <TaskCard Title="@task.Title"
+                                  Description="@task.Description"
+                                  Precedence="@task.Precedence"
+                                  EndDate="@task.ExpirationDate"
+                                  Comments="@task.Comments"
+                                  teamName="@teamName"
+                                  panelId="@panelId"/>
+                    </div>
+                </div>
             }
         }
     }
@@ -43,7 +46,7 @@
     [Parameter]
     public string teamName { get; set; }
     [Parameter]
-    public int panelId { get; set; }
+    public string panelId { get; set; }
     
     private List<Dominio.Task> Tasks;
     
@@ -54,7 +57,7 @@
             Navigation.NavigateTo("/error");
         }
 
-        Tasks = PnService.GetPanelById(teamName, panelId).Tasks;
+        Tasks = TkService.GetNonExpiredTasks(teamName, int.Parse(panelId));
     }
     
     private void CreateTask()
@@ -64,7 +67,7 @@
 
     private void DeletePanel()
     {
-        PnService.RemovePanel(teamName, panelId);
+        PnService.RemovePanel(teamName, int.Parse(panelId));
     }
     
 }

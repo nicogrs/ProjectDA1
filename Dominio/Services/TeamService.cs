@@ -16,7 +16,6 @@ public class TeamService : ITeamService
         if(team.TeamValidation() && !TeamExists(team.Name))
         {
             _teamDatabase.AddTeamToDatabase(team);
-            Console.WriteLine("Team has been created");
             return true;
         }
         return false;
@@ -57,15 +56,15 @@ public class TeamService : ITeamService
     public bool UpdateTeam(string teamName, Team team)
     {
         var teamToUpdate = _teamDatabase.GetTeamByName(teamName);
-        Console.WriteLine($"Team {teamToUpdate.Name} has been updated");
+        team.Name = teamToUpdate.Name;
         team.CreatedOn = teamToUpdate.CreatedOn;
         team.Panels = teamToUpdate.Panels;
         team.TeamMembers = teamToUpdate.TeamMembers;
         team.MembersCount = teamToUpdate.MembersCount;
-
         if (team.TeamValidation())
         {
             _teamDatabase.UpdateTeamInDatabase(team);
+            Console.WriteLine($"Team {teamToUpdate.Name} has been updated");
             return true;
         }
 

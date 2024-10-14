@@ -28,7 +28,7 @@
         <div class="w-50">
             <div class="form-group mb-3">
                 <label id="name">Nombre</label>
-                <InputText class="form-control" @bind-Value="@modelCreateTeam.Name" id="name"></InputText>
+                <InputText class="form-control" @bind-Value="@modelCreateTeam.Name" id="name" required></InputText>
                 <ValidationMessage For="@(() => modelCreateTeam.Name)"/>
             </div>
             <div class="form-group mb-3">
@@ -81,6 +81,7 @@
         }
         users = UDatabase.GetUsers();
         SelectedUser = new List<User> { Session.CurrentUser };
+        modelCreateTeam.MaxUsers = 1;
     }
     
     private void OnSearchInput(ChangeEventArgs e)
@@ -120,27 +121,33 @@
             CreatedOn = DateTime.Now,
             TeamMembers = SelectedUser,
             MembersCount = 1,
-            TasksDescription = " ",
-            Panels = new List<Panel>(),  
+            TasksDescription = "",
+            Panels = new List<Panel>(),
             MaxUsers = modelCreateTeam.MaxUsers
         };
         created = TmService.CreateTeam(t);
         if (created)
         {
             messageSuccess = "Equipo creado con éxito.";
+            ClearContents();
         }
         else
         {
             if (TmService.TeamExists(t.Name))
             {
-                messageNotSuccess="El equipo no fue creado, ya existe uno con el mismo nombre.";
+                messageNotSuccess = "El equipo no fue creado, ya existe uno con el mismo nombre.";
             }
-            
         }
 
     }
     private void GoBack()
     {
         Navigation.NavigateTo("/account/teams");
+    }
+
+    private void ClearContents()
+    {
+        modelCreateTeam.Name = "";
+        modelCreateTeam.MaxUsers = 1;
     }
 }

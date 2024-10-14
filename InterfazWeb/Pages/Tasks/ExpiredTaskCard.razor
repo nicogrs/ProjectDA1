@@ -1,0 +1,116 @@
+
+@using Dominio
+@using Dominio.Data
+@using Task = Dominio.Task
+@inject PanelService PlService
+@inject TaskService TkService
+@inject NavigationManager Navigation
+@inject Session Session
+
+<div class="card">
+    <div class="card-body">
+        <p class="card-title">@Title</p>
+        <div class="d-flex justify-content-between">
+            <p class="card-text">@Precedence.ToString()</p>
+            <p class="card-text">@EndDate</p>
+        </div>
+        <p class="card-text">@Description</p>
+        @if (Comments != null && Comments.Count > 0)
+        {
+            foreach (var comment in Comments)
+            {
+            <div class="card-text border-bottom mb-2 pb-2">
+                <p>@comment.Content</p>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit" @onclick="() => CompleteComment(comment)">Terminar</button>
+                </div>
+            </div>
+            }
+        }
+    </div>
+    <div class="card-footer">
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit" @onclick="ShowModal">Modificar</button>
+        </div>
+    </div>
+</div>
+@if (isModalVisible)
+{
+    <div class="modal fade" id="editTaskModal" tabindex="-1" role="dialog" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTaskModalLabel">Modificar Fecha de Tarea</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="CloseModal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                Edit
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="endDate">Nueva Fecha de Finalización</label>
+                        <InputDate class="form-control" @bind-Value="newEndDate" id="endDate" min="1900-01-01"></InputDate>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" @onclick="UpdateEndDate">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    
+[Parameter]
+public string Title { get; set; }
+[Parameter]
+public Task.Priority Precedence { get; set; }
+[Parameter]
+public DateTime EndDate { get; set; }
+[Parameter]
+public string Description { get; set; }
+[Parameter]
+public string teamName { get; set; }
+[Parameter]
+public List<Comment> Comments { get; set; }
+[Parameter] 
+    public Task Task { get; set; }
+
+    private Task taskToEdit;
+    private DateTime? newEndDate;
+    private bool isModalVisible;
+
+protected override void OnInitialized()
+{
+Comments = Task.Comments;
+}
+
+private void CompleteComment(Comment comment)
+{
+Task.MarkCommentAsResolved(Session.CurrentUser, comment);
+}
+
+private void ShowModal()
+{
+    newEndDate = Task.ExpirationDate;
+    isModalVisible = true;
+
+}
+
+private void CloseModal()
+{
+    isModalVisible = false;
+}
+
+private void UpdateEndDate()
+{
+    if (taskToEdit != null && newEndDate.HasValue && newEndDate.Value > DateTime.Today)
+    {
+        Task.ExpirationDate = newEndDate.Value;
+        CloseModal();
+    }
+}
+
+}

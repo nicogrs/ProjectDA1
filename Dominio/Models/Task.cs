@@ -58,5 +58,9 @@ public class Task : IPaperBinItem
         
         return success;
     }
-    
+
+    public override string ToString()
+    {
+        return $"Tipo: Task - ID: {TaskId.ToString()} - Nombre: {Title} - Prioridad: {Precedence}";
+    }
 }

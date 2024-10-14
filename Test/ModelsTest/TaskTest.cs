@@ -97,4 +97,11 @@ public class TaskTest
         Assert.AreEqual(t1.Comments.Count, initialCommentCount + 1);
         Assert.AreEqual(t1.Comments.Last().Content, content);
     }
+
+    [TestMethod]
+    public void ToStringTest()
+    {
+        var result = "Tipo: Task - ID: 1 - Nombre: Titulo 1 - Prioridad: Low" ;
+        Assert.AreEqual(t1.ToString(), result);
+    }
 }

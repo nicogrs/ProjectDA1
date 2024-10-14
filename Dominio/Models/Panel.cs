@@ -41,4 +41,9 @@ public class Panel : IPaperBinItem
             Tasks.Remove(task);
         }
     }
+
+    public override string ToString()
+    {
+        return $"Tipo: Panel - ID: {PanelId} - Nombre: {Name}";
+    }
 }

@@ -16,37 +16,41 @@
 }
 <EditForm Model="modelCreateTask" OnValidSubmit="HandleCreate">
     <DataAnnotationsValidator/>
-    <div class="form-group">
-        <label id="name">Nombre</label>
-        <InputText class="form-control" @bind-Value="@modelCreateTask.Title" id="name"></InputText>
-        <ValidationMessage For="@(() => modelCreateTask.Title)"/>
-    </div>
-    <div class="form-group">
-        <label id="userAmount">Prioridad</label>
-        <select class="form-control" Value="@selectedPriority" id="userAmount">
-            @foreach (var priority in Enum.GetValues(typeof(Task.Priority)))
-            {
-                <option value="@priority">@priority.ToString()</option>
-            }
-        </select>
-        <ValidationMessage For="@(() => modelCreateTask.Precedence)"/>
-    </div>
-    <div class="form-group">
-        <label for="lastName">Descripcion</label>
-        <InputText class="form-control" @bind-Value="@modelCreateTask.Description" id="lastName"></InputText>
-        <ValidationMessage For="@(() => modelCreateTask.Description)"/>
-    </div>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="w-50">
+        <div class="form-group mt-4">
+            <label id="name">Nombre</label>
+            <InputText class="form-control" @bind-Value="@modelCreateTask.Title" id="name"></InputText>
+            <ValidationMessage For="@(() => modelCreateTask.Title)"/>
+        </div>
+        <div class="form-group mt-4">
+            <label id="userAmount">Prioridad</label>
+            <select class="form-control" Value="@selectedPriority" id="userAmount">
+                @foreach (var priority in Enum.GetValues(typeof(Task.Priority)))
+                {
+                    <option value="@priority">@priority.ToString()</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => modelCreateTask.Precedence)"/>
+        </div>
+        <div class="form-group mt-4">
+            <label for="lastName">Descripcion</label>
+            <InputText class="form-control" @bind-Value="@modelCreateTask.Description" id="lastName"></InputText>
+            <ValidationMessage For="@(() => modelCreateTask.Description)"/>
+        </div>
 
-    <div class="form-group">
-        <label for="birthDate">Fecha de expiración</label>
-        <InputDate class="form-control" id="birthDate" @bind-Value="@modelCreateTask.ExpirationDate" min=@DateTime.Today.ToString()></InputDate>
-        <ValidationMessage For="@(() => modelCreateTask.ExpirationDate)"/>
-    </div>
-    <div class="form-group">
-        <button class="btn btn-primary" type="submit">Crear Tarea</button>
-    </div>
-    <div class="col-4">
-        <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
+        <div class="form-group mt-4">
+            <label for="birthDate">Fecha de expiración</label>
+            <InputDate class="form-control" id="birthDate" @bind-Value="@modelCreateTask.ExpirationDate" min=@DateTime.Today.ToString()></InputDate>
+            <ValidationMessage For="@(() => modelCreateTask.ExpirationDate)"/>
+        </div>
+        <div class="form-group mt-4">
+            <button class="btn btn-primary" type="submit">Crear Tarea</button>
+        </div>
+        <div class="col-4 mt-4">
+            <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
+        </div>
+        </div>
     </div>
 </EditForm>
 
@@ -76,6 +80,7 @@
     
     private void HandleCreate()
     {
+        if(!string.IsNullOrEmpty(modelCreateTask.Title) && modelCreateTask.ExpirationDate != null){
         Task t = new Task
         {
             Title = modelCreateTask.Title,
@@ -83,9 +88,11 @@
             Description = modelCreateTask.Description,
             ExpirationDate = modelCreateTask.ExpirationDate
         };
-        PlService.GetPanelById(teamName, int.Parse(panelId)).AddTask(t);
-        message="Tarea creada con éxito";
-        ClearContents();
+            PlService.GetPanelById(teamName, int.Parse(panelId)).AddTask(t);
+            message="Tarea creada con éxito";
+            ClearContents();
+        }
+
     } 
     
     private void GoBack()

@@ -1,6 +1,5 @@
 ﻿@page "/{teamName}/modifyUsers"
 @using Dominio
-@using Dominio.Data
 @inject IUserDatabase UDatabase
 @inject ITeamService TmService
 @inject Session Session
@@ -234,39 +233,4 @@
             }
         }
     }
-    
-    @*private void AddUserSelection(string email, object isSelected)
-    {
-        if ((bool)isSelected)
-        {
-            SelectedUsersAdd.Add(UDatabase.GetUserByEmail(email));
-        }
-    }
-    private void DeleteUserSelection(string email, object isSelected)
-    {
-        if ((bool)isSelected)
-        {
-            SelectedUsersDelete.Add(UDatabase.GetUserByEmail(email));
-        }
-    }
-
-    private void HandleAdd()
-    {
-        foreach (var user in SelectedUsersAdd)
-        {
-            TmService.AddUserToTeam(teamName, user.Email);
-            usersInTeam.Add(user);
-        }
-
-        message = "Usuario/s Agregado/s";
-    }
-    private void HandleDelete()
-    {
-        foreach (var user in SelectedUsersDelete)
-        {
-            TmService.RemoveUserFromTeam(teamName, user.Email);
-            usersNotInTeam.Add(user);
-        }
-        message = "Usuario/s Eliminado/s";
-    }*@
 }

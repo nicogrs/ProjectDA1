@@ -43,7 +43,7 @@
     {
         if (Session.CurrentUser==null)
         {
-        Navigation.NavigateTo("/error");
+            Navigation.NavigateTo("/error");
         }
         modelAddComment = new Comment(Session.CurrentUser, string.Empty);
     }

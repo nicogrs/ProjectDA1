@@ -1,15 +1,13 @@
 @page "/teams/create"
-@using System.Transactions
 @using Dominio
-@using Dominio.Data
 @inject IUserDatabase UDatabase
 @inject ITeamService TmService
 @inject IUserService UService
 @inject NavigationManager Navigation
 @inject Session Session
 
-
 <PageTitle>CreateTeam</PageTitle>
+
 <h3>Agregar Equipo</h3>
 @if (!string.IsNullOrEmpty(messageSuccess))
 {
@@ -37,21 +35,6 @@
                 <InputNumber class="form-control" @bind-Value="@modelCreateTeam.MaxUsers" id="userAmount"></InputNumber>
                 <ValidationMessage For="@(() => modelCreateTeam.MaxUsers)"/>
             </div>
-            @*<div class="dropdown mb-3">
-                <button class="btn btn-secondary dropdown-toggle" type="button"
-                        id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Selecciona Usuarios
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
-                    @foreach (var user in users)
-                    {
-                        <li class="dropdown-item mb-3">
-                            @*<input type="checkbox" @onchange="(e) => ToggleUserSelection(user.Email, e.Value)"/> @user.Email*@
-                            @*@user.Email
-                        </li>
-                    }
-                </ul>
-            </div>*@
 
             @if (users != null && users.Any() && users.Count > 1)
             {
@@ -87,12 +70,10 @@
                 <ul>
                     @foreach (User user in SelectedUsers)
                     {
-                    <li>@user.Name (@user.Email)</li>
+                        <li>@user.Name (@user.Email)</li>
                     }
                 </ul>
             }
-            
-            
             <div class="form-group mb-3">
                 <button class="btn btn-primary" type="submit">Crear Equipo</button>
             </div>
@@ -130,12 +111,6 @@
         modelCreateTeam.MaxUsers = 1;
     }
     
-    private void OnSearchInput(ChangeEventArgs e)
-    {
-        searchTerm = e.Value.ToString();
-        FilterUsers();
-    }
-    
     private void FilterUsers()
     {
         if (string.IsNullOrWhiteSpace(searchTerm))
@@ -148,14 +123,6 @@
             .Where(user => user.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
                            user.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
             .ToList();
-    }
-    
-    private void ToggleUserSelection(string email, object isSelected)
-    {
-        if ((bool)isSelected)
-        {
-            SelectedUsers.Add(UService.GetUserByEmail(email));
-        }
     }
     
     private void HandleCreate()
@@ -180,6 +147,7 @@
         if (created)
         {
             messageSuccess = "Equipo creado con éxito.";
+            ClearContents();
             GoBack();
         }
         else
@@ -204,8 +172,6 @@
             SelectedUsers.Remove(user);
         }
     }
-    
-    
     
     private void GoBack()
     {

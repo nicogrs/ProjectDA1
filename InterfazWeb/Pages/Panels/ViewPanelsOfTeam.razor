@@ -1,6 +1,5 @@
 @page "/{teamName}/panel"
 @using Dominio
-@using Dominio.Data
 @inject ITeamDataBase TDatabase
 @inject ITeamService TmService
 @inject NavigationManager Navigation
@@ -39,7 +38,6 @@
     }
 </div>
 
-
 @code {
     [Parameter]
     public string teamName { get; set; }
@@ -52,7 +50,7 @@
             Navigation.NavigateTo("/error");
         }
 
-       LoadPanels();
+        LoadPanels();
     }
 
     private void LoadPanels()

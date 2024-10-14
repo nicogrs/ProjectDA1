@@ -22,12 +22,12 @@
                 <button class="btn btn-primary w-100" @onclick="GoToTeam">Paneles</button>
             </div>
             @if(Session.IsAdmin){
-            <div class="col-lg-12 col-md-12 col-sm-12 mt-2 form-group">
-                <button class="btn btn-danger w-100" @onclick="ShowModal">Borrar</button>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 mt-2 form-group">
-                <button class="btn btn-secondary w-100" @onclick="ModifyTeam">Modificar datos</button>
-            </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mt-2 form-group">
+                    <button class="btn btn-danger w-100" @onclick="ShowModal">Borrar</button>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mt-2 form-group">
+                    <button class="btn btn-secondary w-100" @onclick="ModifyTeam">Modificar datos</button>
+                </div>
             }
         </div>
     </div>
@@ -36,25 +36,25 @@
 
 @if (isModalVisible)
 {
-<div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirmar Eliminación</h5>
-                <button type="button" class="close" @onclick="CloseModal">
-                    <span>&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>¿Estás seguro de que deseas eliminar el equipo <strong>@Title</strong>?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
-                <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Confirmar</button>
+    <div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Eliminación</h5>
+                    <button type="button" class="close" @onclick="CloseModal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas eliminar el equipo <strong>@Title</strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Confirmar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 }
 
 @code {

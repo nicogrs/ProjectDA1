@@ -12,8 +12,8 @@
         foreach (var team in Teams)
         {
             <div class="col-lg-4 col-md-12 col-sm-12 mb-4">
-            <TeamCard OnTeamDeleted="RefreshTeams" Title="@team.Name" Date="@team.CreatedOn" 
-                      CantMembers="@team.MembersCount" MaxMembers="@team.MaxUsers" Description="@team.TasksDescription"/>
+                <TeamCard OnTeamDeleted="RefreshTeams" Title="@team.Name" Date="@team.CreatedOn" 
+                          CantMembers="@team.MembersCount" MaxMembers="@team.MaxUsers" Description="@team.TasksDescription"/>
             </div>
         }
     }

@@ -11,26 +11,26 @@
 <div class="row">
     @if (Tasks.Count != 0)
     {
-    foreach (var task in Tasks)
-    {
-    <div class="d-flex justify-content-center align-items-center">
-        <div class="w-75">
-            <ExpiredTaskCard Title="@task.Title"
-                      Description="@task.Description"
-                      Precedence="@task.Precedence"
-                      EndDate="@task.ExpirationDate"
-                      Comments="@task.Comments"
-                      teamName="@teamName"
-                      Task="@task"/>
-        </div>
-    </div>
-    }
+        foreach (var task in Tasks)
+        {
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="w-75">
+                    <ExpiredTaskCard Title="@task.Title"
+                                     Description="@task.Description"
+                                     Precedence="@task.Precedence"
+                                     EndDate="@task.ExpirationDate"
+                                     Comments="@task.Comments"
+                                     teamName="@teamName"
+                                     Task="@task"/>
+                </div>
+            </div>
+        }
     }
     else
     {
-    <p>Panel sin tareas.</p>
+        <p>Panel sin tareas.</p>
     }
-    </div>
+</div>
 
 @code {
     [Parameter]

@@ -32,22 +32,28 @@
     </tr>
     </thead>
     <tbody>
-        @foreach (var user in users)
-        {
-            <tr>
-                <td>@user.Name</td>
-                <td>@user.Surname</td>
-                <td>@user.Email</td>
-                <td>@user.BirthDate</td>
-                <td>@user.Admin</td>
-                <td>
-                    <button class="btn btn-warning btn-sm" @onclick="() => ModifyUsers(user.Email)">Modificar</button>
-                    <button class="btn btn-danger btn-sm" @onclick="() =>ShowModal(user)">Eliminar</button>
-                </td>
-            </tr>
-        }
+    @foreach (var user in users)
+    {
+        <tr>
+            <td>@user.Name</td>
+            <td>@user.Surname</td>
+            <td>@user.Email</td>
+            <td>@user.BirthDate</td>
+            <td>@user.Admin</td>
+            <td>
+                <button class="btn btn-warning btn-sm" @onclick="() => ModifyUsers(user.Email)">Modificar</button>
+                <button class="btn btn-danger btn-sm" @onclick="() =>ShowModal(user)">Eliminar</button>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
+
+<div class="form-group row">
+    <div class="col-2 col-md-4 mb-3">
+        <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
+    </div>
+</div>
 
 @if (isModalVisible)
 {
@@ -121,5 +127,10 @@
     private void ModifyUsers(string userEmail)
     {
         Navigation.NavigateTo($"/users/modify/{userEmail}");
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
     }
 }

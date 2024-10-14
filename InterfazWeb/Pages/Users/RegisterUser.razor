@@ -104,6 +104,7 @@
         if (add)
         {
             messageSuccess = "Usuario Registrado con exito";
+            ClearContents();
         }
         else
         {
@@ -112,8 +113,18 @@
         
     }
 
+    private void ClearContents()
+    {
+        modelRegister.Name = "";
+        modelRegister.Surname = "";
+        modelRegister.BirthDate = DateTime.Now;
+        modelRegister.Email = "";
+        modelRegister.Password = "";
+        modelRegister.Admin = false;
+    }
+
     private void GoBack()
     {
-        Navigation.NavigateTo("/");
+        Navigation.NavigateTo("/users");
     }
 }

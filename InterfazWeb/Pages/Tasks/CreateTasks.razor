@@ -80,6 +80,7 @@
     
     private void HandleCreate()
     {
+        if(!string.IsNullOrEmpty(modelCreateTask.Title) && modelCreateTask.ExpirationDate != null){
         Task t = new Task
         {
             Title = modelCreateTask.Title,
@@ -87,9 +88,11 @@
             Description = modelCreateTask.Description,
             ExpirationDate = modelCreateTask.ExpirationDate
         };
-        PlService.GetPanelById(teamName, int.Parse(panelId)).AddTask(t);
-        message="Tarea creada con éxito";
-        ClearContents();
+            PlService.GetPanelById(teamName, int.Parse(panelId)).AddTask(t);
+            message="Tarea creada con éxito";
+            ClearContents();
+        }
+
     } 
     
     private void GoBack()

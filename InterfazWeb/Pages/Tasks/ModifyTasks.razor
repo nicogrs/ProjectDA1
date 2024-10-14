@@ -3,6 +3,7 @@
 @using Task = Dominio.Task
 @inject PanelService PlService
 @inject NavigationManager Navigation
+@inject Session Session
 
 <PageTitle>ModifyTask</PageTitle>
 <h3>Modificar Tareas</h3>
@@ -28,7 +29,7 @@
                 <InputText class="form-control" @bind-Value="@modelChangeTask.Description" id="description"></InputText>
                 <ValidationMessage For="@(() => modelChangeTask.Description)"/>
             </div>
-
+        @if(Session.IsAdmin){
             <div class="form-group mt-4">
                 <label for="birthDate">Fecha de expiración</label>
                 <InputDate class="form-control" id="birthDate" @bind-Value="@modelChangeTask.ExpirationDate" min=@DateTime.Today.ToString()></InputDate>
@@ -45,7 +46,7 @@
                 </InputSelect>
                 <ValidationMessage For="@(() => modelChangeTask.Precedence)"/>
             </div>
-
+        }
             <div class="mt-2">
                 <div class="form-group mt-4">
                     <button class="btn btn-primary" type="submit">Modificar Tarea</button>
@@ -73,6 +74,10 @@
 
     protected override void OnInitialized()
     {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo($"/error");
+        }
         panel = PlService.GetPanelById(teamName, int.Parse(panelId));
         toModify = panel.Tasks.FirstOrDefault(t => t.Title == taskTitle);
         modelChangeTask.Description = toModify.Description;

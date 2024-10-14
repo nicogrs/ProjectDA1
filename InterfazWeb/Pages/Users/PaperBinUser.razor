@@ -1,0 +1,45 @@
+@page "/account/paperbin"
+@using Dominio
+@inject IUserService UService
+@inject Session Session
+@inject NavigationManager Navigation
+
+<h3>Papelera del usuario @selectedUser.Email</h3>
+
+@if (PaperBinItems != null && PaperBinItems.Count > 0)
+{
+    <ul class="list-group">
+        @foreach (var item in PaperBinItems)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <strong>@item.ToString()</strong> 
+                <button class="btn btn-danger btn-sm"
+                        @onclick="() => DeleteElement(item)">Eliminar Permanentemente</button>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No hay elementos en la papelera.</p>
+}
+
+@code {
+    public User selectedUser { get; set; }
+    public List<IPaperBinItem> PaperBinItems { get; set; }
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+       selectedUser = UService.GetUserByEmail(Session.CurrentUser.Email);
+       PaperBinItems = selectedUser.PaperBin.Paperbin;
+    }
+
+    public void DeleteElement(IPaperBinItem item)
+    {
+        selectedUser.PaperBin.DeleteElementFromPaperbin(item);
+        PaperBinItems = selectedUser.PaperBin.Paperbin;
+    }
+}

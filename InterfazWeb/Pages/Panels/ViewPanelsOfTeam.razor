@@ -27,7 +27,8 @@
                     <PanelCard Title="@panel.Name"
                                Description="@panel.Description"
                                teamName="@teamName"
-                               panelId="@panel.PanelId"/>
+                               panelId="@panel.PanelId.ToString()"
+                               OnPanelDeleted="LoadPanels"/>
                 </div>
             </div>
         }
@@ -51,6 +52,11 @@
             Navigation.NavigateTo("/error");
         }
 
+       LoadPanels();
+    }
+
+    private void LoadPanels()
+    {
         Panels = TDatabase.GetTeamByName(teamName).Panels;
     }
     

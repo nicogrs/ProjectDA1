@@ -52,4 +52,32 @@ public class TaskServiceTest
         var nonExpiredTasks = taskService.GetNonExpiredTasks(team.Name, panel1.PanelId);
         CollectionAssert.AreEquivalent(nonExpiredTasks, new List<Task>{task1});
     }
+    
+    [TestMethod]
+    public void GetTaskByIdTest()
+    {
+        var panel1 = new Panel{Name = "Panel 1",PanelId = 1};
+        var task1 = new Task{Title = "Task 1", ExpirationDate = DateTime.Now.AddHours(+1)};
+        panel1.Tasks.Add(task1);
+        team.Panels.Add(panel1);
+        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
+        _mockPanelService.Setup(x => x.GetPanelById(team.Name, panel1.PanelId)).Returns(panel1);
+        var task = taskService.GetTaskById(team.Name, panel1.PanelId, task1.TaskId);
+        Assert.AreSame(task1, task);
+    }
+
+    [TestMethod]
+
+    public void GetPanelIdByTaskTest()
+    {
+        var panel1 = new Panel{Name = "Panel 1",PanelId = 1};
+        var task1 = new Task{Title = "Task 1", ExpirationDate = DateTime.Now.AddHours(+1)};
+        panel1.Tasks.Add(task1);
+        team.Panels.Add(panel1);
+        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
+        _mockPanelService.Setup(x => x.GetPanelById(team.Name, panel1.PanelId)).Returns(panel1);
+        _mockPanelService.Setup(x => x.GetAllPanelsFromTeam(team.Name)).Returns(team.Panels);
+        var id = taskService.GetPanelIdByTask(team.Name, task1.TaskId);
+        Assert.AreEqual(id, panel1.PanelId);
+    }
 }

@@ -7,9 +7,9 @@
 <h3>Modificar Panel</h3>
 @if (!string.IsNullOrEmpty(message))
 {
-    <div class="alert alert-success" role="alert">
-        @message
-    </div>
+<div class="alert alert-success" role="alert">
+    @message
+</div>
 }
 
 <EditForm Model="modelChangePanel" OnValidSubmit="HandleModify">
@@ -17,7 +17,7 @@
     <div class="d-flex justify-content-center align-items-center">
         <div class="w-50">
             <div class="form-group mt-4">
-                <label id="name">Nombre</label>
+                <label id="name">Nombreo</label>
                 <InputText class="form-control" @bind-Value="@modelChangePanel.Name" id="name"></InputText>
                 <ValidationMessage For="@(() => modelChangePanel.Name)"/>
             </div>
@@ -66,6 +66,7 @@
         {
             toModify.Description = modelChangePanel.Description;
         }
+
         message = "Panel modificado";
     }
 

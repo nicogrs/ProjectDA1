@@ -18,49 +18,49 @@
 
 @if (!string.IsNullOrEmpty(message))
 {
-    <div class="alert alert-success" role="alert">
-        @message
-    </div>
+<div class="alert alert-success" role="alert">
+    @message
+</div>
 }
 
 @if (tasks != null && tasks.Any())
 {
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>Agregar Tarea?</th>
-            <th>Titulo</th>
-            <th>Descripcion</th>
-            <th>Fecha de vencimiento</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (Task task in tasks)
-        {
-            <tr>
-                <td>
-                    <input type="checkbox" @onchange="e => ToggleSelection(task, e.Value)"/>
-                </td>
-                <td>@task.Title</td>
-                <td>@task.Description</td>
-                <td>@expDateToString(task.ExpirationDate)</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-
-    @if (SelectedTasks.Count > 0)
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Agregar Tarea?</th>
+        <th>Titulo</th>
+        <th>Descripcion</th>
+        <th>Fecha de vencimiento</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (Task task in tasks)
     {
-        <h4>Tareas seleccionadas: (@SelectedTasks.Count)</h4>
-        <ul>
-            @foreach (Task task in SelectedTasks)
-            {
-                <li>@task.Title (@task.Description)</li>
-            }
-        </ul>
+    <tr>
+        <td>
+            <input type="checkbox" @onchange="e => ToggleSelection(task, e.Value)"/>
+        </td>
+        <td>@task.Title</td>
+        <td>@task.Description</td>
+        <td>@expDateToString(task.ExpirationDate)</td>
+    </tr>
     }
+    </tbody>
+</table>
 
-    <button class="btn btn-primary" @onclick="GetSelectedTasks">Agregar tareas a panel</button>
+@if (SelectedTasks.Count > 0)
+{
+    <h4>Tareas seleccionadas: (@SelectedTasks.Count)</h4>
+    <ul>
+        @foreach (Task task in SelectedTasks)
+        {
+            <li>@task.Title (@task.Description)</li>
+        }
+    </ul>
+}
+
+<button class="btn btn-primary" @onclick="GetSelectedTasks">Agregar tareas a panel</button>
 }
 
 <div class="col-4 mb-4">
@@ -88,6 +88,7 @@
             Navigation.NavigateTo("/error");
         }
     }
+    
     
     private async System.Threading.Tasks.Task HandleFileSelected(InputFileChangeEventArgs e)
     {

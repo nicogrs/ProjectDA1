@@ -29,24 +29,24 @@
                 <InputText class="form-control" @bind-Value="@modelChangeTask.Description" id="description"></InputText>
                 <ValidationMessage For="@(() => modelChangeTask.Description)"/>
             </div>
-            @if(Session.IsAdmin){
-                <div class="form-group mt-4">
-                    <label for="birthDate">Fecha de expiración</label>
-                    <InputDate class="form-control" id="birthDate" @bind-Value="@modelChangeTask.ExpirationDate" min=@DateTime.Today.ToString()></InputDate>
-                    <ValidationMessage For="@(() => modelChangeTask.ExpirationDate)"/>
-                </div>
+        @if(Session.IsAdmin){
+            <div class="form-group mt-4">
+                <label for="birthDate">Fecha de expiración</label>
+                <InputDate class="form-control" id="birthDate" @bind-Value="@modelChangeTask.ExpirationDate" min=@DateTime.Today.ToString()></InputDate>
+                <ValidationMessage For="@(() => modelChangeTask.ExpirationDate)"/>
+            </div>
 
-                <div class="form-group mt-4">
-                    <label id="userAmount">Prioridad</label>
-                    <InputSelect class="form-control" @bind-Value="modelChangeTask.Precedence" id="userAmount">
-                        @foreach (var priority in Enum.GetValues(typeof(Task.Priority)))
-                        {
-                            <option value="@priority">@priority.ToString()</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => modelChangeTask.Precedence)"/>
-                </div>
-            }
+            <div class="form-group mt-4">
+                <label id="userAmount">Prioridad</label>
+                <InputSelect class="form-control" @bind-Value="modelChangeTask.Precedence" id="userAmount">
+                    @foreach (var priority in Enum.GetValues(typeof(Task.Priority)))
+                    {
+                    <option value="@priority">@priority.ToString()</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => modelChangeTask.Precedence)"/>
+            </div>
+        }
             <div class="mt-2">
                 <div class="form-group mt-4">
                     <button class="btn btn-primary" type="submit">Modificar Tarea</button>

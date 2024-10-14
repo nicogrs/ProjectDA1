@@ -39,20 +39,14 @@
                     <ValidationMessage For="@(() => modelChangeInformation.BirthDate)"/>
                 </div>
 
-                @if (Session != null && Session.IsAdmin)
-                {
-                    <div class="form-group">
-                        <label for="password">Contraseña</label>
-                        <button class="sm-btn btn-primary  mb-3" type="button" @onclick="GeneratePassword">Generar contraseña</button>
-                        <InputText class="form-control mb-3" id="password" @bind-Value="modelChangeInformation.Password"/>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="admin">Es Administrador</label>
-                        <InputCheckbox Class="mt-2" @bind-Value="@modelChangeInformation.Admin" id="admin"/>
-                        <ValidationMessage For="@(() => modelChangeInformation.Admin)"/>
-                    </div>
-                }
+            @if (Session != null && Session.IsAdmin)
+            {
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <button class="sm-btn btn-primary  mb-3" type="button" @onclick="GeneratePassword">Generar contraseña</button>
+                    <InputText class="form-control mb-3" id="password" @bind-Value="modelChangeInformation.Password"/>
+                </div>
+            }
 
                 <div class="form-group">
                     <button class="btn btn-primary mb-3" type="submit">Guardar Cambios</button>
@@ -91,7 +85,6 @@ else
                 modelChangeInformation.BirthDate = unUser.BirthDate;
                 modelChangeInformation.Name = unUser.Name;
                 modelChangeInformation.Surname = unUser.Surname;
-                modelChangeInformation.Admin = unUser.Admin;
             }
             else
             {
@@ -138,10 +131,8 @@ else
         {
             u.Password = modelChangeInformation.Password;
         }
-        
+
         u.Email = modelChangeInformation.Email;
-        
-        u.Admin = modelChangeInformation.Admin;
         
         UService.UpdateUser(u.ToEntity());
         

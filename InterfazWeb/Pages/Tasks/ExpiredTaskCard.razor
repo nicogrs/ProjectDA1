@@ -1,4 +1,6 @@
+
 @using Dominio
+@using Dominio.Data
 @using Task = Dominio.Task
 @inject PanelService PlService
 @inject TaskService TkService
@@ -9,21 +11,21 @@
     <div>
         @if (Precedence == Task.Priority.Urgent)
         {
-            <div class="bg-danger card-header ">
-                <p class="card-title text-white w-100">@Title</p>
-            </div>
+        <div class="bg-danger card-header ">
+            <p class="card-title text-white w-100">@Title</p>
+        </div>
         }
         else if (Precedence == Task.Priority.Medium)
         {
-            <div class="bg-info card-header">
-                <p class="card-title bg-info text-white">@Title</p>
-            </div>
+        <div class="bg-info card-header">
+            <p class="card-title bg-info text-white">@Title</p>
+        </div>
         }
         else
         {
-            <div class="bg-black card-header">
-                <p class="card-title bg-black text-white">@Title</p>
-            </div>
+        <div class="bg-black card-header">
+            <p class="card-title bg-black text-white">@Title</p>
+        </div>
         }
     </div>
     <div class="card-body">
@@ -48,37 +50,38 @@
 
 @code {
     
-    [Parameter]
-    public string Title { get; set; }
-    [Parameter]
-    public Task.Priority Precedence { get; set; }
-    [Parameter]
-    public DateTime EndDate { get; set; }
-    [Parameter]
-    public string Description { get; set; }
-    [Parameter]
-    public string teamName { get; set; }
-    [Parameter]
-    public List<Comment> Comments { get; set; }
-    [Parameter] 
+[Parameter]
+public string Title { get; set; }
+[Parameter]
+public Task.Priority Precedence { get; set; }
+[Parameter]
+public DateTime EndDate { get; set; }
+[Parameter]
+public string Description { get; set; }
+[Parameter]
+public string teamName { get; set; }
+[Parameter]
+public List<Comment> Comments { get; set; }
+[Parameter] 
     public Task Task { get; set; }
 
     string panelId { get; set; }
 
-    protected override void OnInitialized()
-    {
-        Comments = Task.Comments;
-        panelId = TkService.GetPanelIdByTask(teamName, Task.TaskId).ToString();
-    }
+protected override void OnInitialized()
+{
+Comments = Task.Comments;
+panelId = TkService.GetPanelIdByTask(teamName, Task.TaskId).ToString();
+}
 
-    private void CompleteComment(Comment comment)
-    {
-        Task.MarkCommentAsResolved(Session.CurrentUser, comment);
-    }
+private void CompleteComment(Comment comment)
+{
+Task.MarkCommentAsResolved(Session.CurrentUser, comment);
+}
 
-    private void ChangeTask()
-    {
-        Navigation.NavigateTo($"/{teamName}/{panelId}/{Title}");
-    }
+private void ChangeTask()
+{
+    Navigation.NavigateTo($"/{teamName}/{panelId}/{Title}");
+}
+
 
 }

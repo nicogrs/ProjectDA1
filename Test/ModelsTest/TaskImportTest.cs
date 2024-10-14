@@ -1,4 +1,5 @@
 using System.IO.Enumeration;
+using Dominio;
 using Microsoft.VisualBasic;
 
 namespace Test;
@@ -53,7 +54,7 @@ public class TaskImportTest
     [TestMethod]
     public void LoadFileTest1()
     {
-        taskImport.LoadFile(filesToTest[0]);
+        taskImport.LoadFileFromPath(filesToTest[0]);
 
         Assert.AreEqual(filesToTest[0], taskImport.fileName);
     }
@@ -61,7 +62,7 @@ public class TaskImportTest
     [TestMethod]
     public void ReadTasksFromFileTest1()
     {
-        taskImport.LoadFile(filesToTest[0]);
+        taskImport.LoadFileFromPath(filesToTest[0]);
 
         List<Task> taskList = taskImport.ReadTasksFromFile(new User(){Name = "Testuser 1"});
 
@@ -77,7 +78,7 @@ public class TaskImportTest
     [TestMethod]
     public void ReadTasksValidDateTests()
     {
-        taskImport.LoadFile(filesToTest[2]);
+        taskImport.LoadFileFromPath(filesToTest[2]);
 
         List<Task> taskList = taskImport.ReadTasksFromFile(new User(){Name = "Testuser 2"});
         
@@ -93,7 +94,7 @@ public class TaskImportTest
     [TestMethod]
     public void TasksValidLineTests()
     {
-        taskImport.LoadFile(filesToTest[3]);
+        taskImport.LoadFileFromPath(filesToTest[3]);
 
         List<Task> taskList = taskImport.ReadTasksFromFile(new User(){Name = "Testuser 3"});
         
@@ -103,6 +104,24 @@ public class TaskImportTest
             Assert.AreEqual(taskList[i].Title, referenceTasks[i].Title);
             Assert.AreEqual(taskList[i].Description, referenceTasks[i].Description);
             Assert.AreEqual(taskList[i].ExpirationDate, referenceTasks[i].ExpirationDate);
+        }
+    }
+
+    [TestMethod]
+    public void ReadTasksFromContentTest()
+    {
+        string content = $"{referenceTasks[0].Title},{referenceTasks[0].Description},{referenceTasks[0].ExpirationDate.ToShortDateString()},1\n" +
+                         $"{referenceTasks[1].Title},{referenceTasks[1].Description},{referenceTasks[1].ExpirationDate.ToShortDateString()},1\n" +
+                         $"{referenceTasks[2].Title},{referenceTasks[2].Description},{referenceTasks[2].ExpirationDate.ToShortDateString()},1";
+        
+        List<Task> tasks = taskImport.ReadTasksFromContent(content,new User(){Name = "User 1"});
+
+        int taskListElementCount = tasks.Count;
+        for (int i = 0; i < taskListElementCount; i++)
+        {
+            Assert.AreEqual(tasks[i].Title, referenceTasks[i].Title);
+            Assert.AreEqual(tasks[i].Description, referenceTasks[i].Description);
+            Assert.AreEqual(tasks[i].ExpirationDate, referenceTasks[i].ExpirationDate);
         }
     }
 }

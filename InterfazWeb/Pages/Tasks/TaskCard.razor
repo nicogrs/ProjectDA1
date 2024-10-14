@@ -42,7 +42,16 @@
             foreach (var comment in Comments)
             {
                 <div class="card-text border-bottom mb-2 pb-2">
-                    <p>@comment.Content</p>
+                    
+                    @if (comment.Resolved)
+                    {
+                        <s>@comment.Content - Resuelto por @comment.ResolvedBy.Email el @comment.ResolvedTime.ToString()</s>
+                    }
+                    else
+                    {
+                        <p>@comment.Content</p>
+                    }
+                    
                     <div class="form-group">
                         <button class="btn btn-primary" type="submit" @onclick="() => CompleteComment(comment)">Terminar</button>
                     </div>
@@ -151,6 +160,7 @@
 
     private void CompleteComment(Comment comment)
     {
-        PlService.GetPanelById(teamName, int.Parse(panelId)).Tasks.FirstOrDefault(t => t.Title.Equals(Title)).MarkCommentAsResolved(Session.CurrentUser, comment);
+        Panel panel = PlService.GetPanelById(teamName, int.Parse(panelId));
+        panel.Tasks.Find(t => t.Title.Equals(Title)).MarkCommentAsResolved(Session.CurrentUser, comment);
     }
 }

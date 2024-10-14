@@ -9,16 +9,27 @@
 <PageTitle>Task</PageTitle>
 
 <h3>Tareas</h3>
-<div class="row mb-4">
-    <div class="col-6 mb-4">
+<div class="row">
+    <div class="col-4">
         <button class="btn btn-primary" type="submit" @onclick="CreateTask">Crear Nueva Tarea</button>
     </div>
 </div>
-<div class="row mt-4">
+<div class="row">
+    <div class="col-4">
+        <button class="btn btn-primary" type="submit" @onclick="GoToImport">Importar tareas desde .csv</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-4">
+        <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver a Panel</button>
+    </div>
+</div>
+<div class="row">
     @if (Tasks.Count != 0)
     {
         foreach (var task in Tasks)
         {
+            Console.WriteLine("TaSK");
             if (task.ExpirationDate > DateTime.Today)
             {
                 <div>
@@ -68,6 +79,16 @@
     private void CreateTask()
     {
         Navigation.NavigateTo($"/{teamName}/{panelId}/create");
+    }
+
+    private void GoToImport()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/TaskImport");
+    }
+    
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/panel");
     }
 
     private void DeletePanel()

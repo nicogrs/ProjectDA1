@@ -16,7 +16,6 @@ public class TeamService : ITeamService
         if(team.TeamValidation() && !TeamExists(team.Name))
         {
             _teamDatabase.AddTeamToDatabase(team);
-            Console.WriteLine("Team has been created");
             return true;
         }
         return false;

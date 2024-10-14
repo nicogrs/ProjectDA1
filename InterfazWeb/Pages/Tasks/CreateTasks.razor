@@ -85,8 +85,7 @@
             Title = modelCreateTask.Title,
             Precedence = selectedPriority,
             Description = modelCreateTask.Description,
-            ExpirationDate = modelCreateTask.ExpirationDate,
-            Comments = null
+            ExpirationDate = modelCreateTask.ExpirationDate
         };
         PlService.GetPanelById(teamName, int.Parse(panelId)).AddTask(t);
         message="Tarea creada con éxito";

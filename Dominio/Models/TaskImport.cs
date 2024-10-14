@@ -8,7 +8,7 @@ public class TaskImport
     private List<Task> tasks;
     private List<string> errors;
 
-    public void LoadFile(string _fileName)
+    public void LoadFileFromPath(string _fileName)
     {
         fileName = _fileName;
         reader = new StreamReader(fileName);
@@ -21,6 +21,14 @@ public class TaskImport
         
         List<string> linesOfLoadedFile = ListLinesOfLoadedFile();
         
+        processLines(linesOfLoadedFile);
+
+        MakeErrorFile($"../../../Data/Out/ErroresImport-{user.Name}.txt");
+        return tasks;
+    }
+
+    public void processLines(List<string> linesOfLoadedFile)
+    {
         foreach (string line in linesOfLoadedFile)
         {
             if (IsLineValid(line))
@@ -34,14 +42,19 @@ public class TaskImport
                 ProcessError(line);
             }
         }
-
-        MakeErrorFile($"../../../Data/Out/ErroresImport-{user.Name}.txt");
-        return tasks;
     }
 
     private void MakeErrorFile(string errorFileName)
     {
-        writer = new StreamWriter(errorFileName);
+        string directory = Directory.GetCurrentDirectory();
+        string filePath = Path.Combine(directory, errorFileName);
+        
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+        
+        writer = new StreamWriter(filePath);
         foreach (string line in errors)
         {
             writer.WriteLine(line);
@@ -49,6 +62,18 @@ public class TaskImport
         writer.Close();
     }
 
+    public List<Task> ReadTasksFromContent(string content, User user)
+    {
+        tasks = new List<Task>();
+        errors = new List<string>();
+        List<string> linesOfContent = content.Split('\n').ToList();
+
+        processLines(linesOfContent);
+        
+        //MakeErrorFile($"../../../Data/Out/ErroresImport-{user.Name}.txt");
+        return tasks;
+    }
+    
     private void ProcessError(string line)
     {
         List<string> separatedLine = SplitString(line);

@@ -101,7 +101,13 @@ public class TaskTest
     [TestMethod]
     public void ToStringTest()
     {
-        var result = "Tipo: Task - ID: 1 - Nombre: Titulo 1 - Prioridad: Low" ;
+        var result = $"Tipo: Task - ID: {t1.TaskId} - Nombre: Titulo 1 - Prioridad: Low" ;
         Assert.AreEqual(t1.ToString(), result);
+    }
+
+    [TestMethod]
+    public void AddCommentExceptionTest()
+    {
+        
     }
 }

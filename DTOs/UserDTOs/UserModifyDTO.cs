@@ -17,6 +17,7 @@ public class UserModifyDTO
     public string Email { get; set; }
     
     public string Password { get; set; }
+    public bool Admin { get; set; }
     
     public User ToEntity()
         {
@@ -27,6 +28,7 @@ public class UserModifyDTO
                 BirthDate = this.BirthDate,
                 Email = this.Email,
                 Password = this.Password,
+                Admin = this.Admin
             };
         }
 }

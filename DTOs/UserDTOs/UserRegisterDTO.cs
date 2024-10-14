@@ -17,6 +17,7 @@ public class UserRegisterDTO
     public string Email { get; set; }
     
     [Required (ErrorMessage = "La fecha de nacimiento es requerido")]
+    [Range(typeof(DateTime), "01/01/1900", "12/12/2023", ErrorMessage = "La fecha de nacimiento debe ser menor al año actual.")]
     [DataType(DataType.Date)]
     public DateTime BirthDate { get; set; }
     

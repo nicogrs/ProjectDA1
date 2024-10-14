@@ -43,18 +43,10 @@ public class Task : IPaperBinItem
     public bool AddComment(User user, string content)
     {
         bool success = false;
-
-        try
-        {
-            Comment commentToAdd = new Comment(user, content);
-            Comments.Add(commentToAdd);
-            success = true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        
+        Comment commentToAdd = new Comment(user, content);
+        Comments.Add(commentToAdd);
+        success = true;
         
         return success;
     }

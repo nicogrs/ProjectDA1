@@ -39,6 +39,7 @@ public class UserDataBase : IUserDatabase
        actualUser.Surname = user.Surname;
        actualUser.BirthDate = user.BirthDate;
        actualUser.Password = user.Password;
+       actualUser.Admin =user.Admin;
     }
 
     public bool DeleteUser(string email)

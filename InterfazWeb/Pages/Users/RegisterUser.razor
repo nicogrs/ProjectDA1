@@ -58,6 +58,12 @@
             </div>
 
             <div class="form-group mb-3">
+                <label for="admin">Administrador</label>
+                <InputCheckbox Class="mt-2" @bind-Value="@modelRegister.Admin" />
+                <ValidationMessage For="@(() => modelRegister.Admin)"/>
+            </div>
+
+            <div class="form-group mb-3">
                 <button class="btn btn-primary" type="submit">Registrar Usuario</button>
             </div>
         </div>
@@ -91,7 +97,8 @@
             Surname = modelRegister.Surname,
             BirthDate = modelRegister.BirthDate,
             Email = modelRegister.Email,
-            Password = modelRegister.Password
+            Password = modelRegister.Password,
+            Admin = modelRegister.Admin
         };
         add = UService.CreateUser(u.ToEntity());
         if (add)

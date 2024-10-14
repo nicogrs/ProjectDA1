@@ -7,7 +7,7 @@
 @inject IUserDatabase UserDB
 
 <PageTitle>ABMUsers</PageTitle>
-<h3 class="mb-4">Alta Baja Modificacion de usuarios</h3>
+<h3 class="mb-4">Alta/Baja/Modificacion de usuarios</h3>
 <div class="form-group row">
     <div class="col-2 col-md-4 mb-3">
         <button class="btn btn-primary" type="submit" @onclick="AddUsers">Agregar Usuarios</button>
@@ -27,6 +27,7 @@
         <th>Apellido</th>
         <th>Email</th>
         <th>Fecha de Nacimiento</th>
+        <th>Administrador</th>
         <th>Acciones</th>
     </tr>
     </thead>
@@ -38,6 +39,7 @@
                 <td>@user.Surname</td>
                 <td>@user.Email</td>
                 <td>@user.BirthDate</td>
+                <td>@user.Admin</td>
                 <td>
                     <button class="btn btn-warning btn-sm" @onclick="() => ModifyUsers(user.Email)">Modificar</button>
                     <button class="btn btn-danger btn-sm" @onclick="() =>ShowModal(user)">Eliminar</button>

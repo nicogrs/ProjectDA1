@@ -1,4 +1,6 @@
-﻿namespace Dominio;
+﻿using Microsoft.VisualBasic;
+
+namespace Dominio;
 
 public class Task : IPaperBinItem
 {

@@ -80,4 +80,10 @@ public class PanelTest
         CollectionAssert.DoesNotContain(panel.Tasks, taskTest);
     }
 
+    [TestMethod]
+    public void ToStringTest()
+    {
+        var result = "Tipo: Panel - ID: 0 - Nombre: Panel numero 1";
+        Assert.AreEqual(panel.ToString(), result);
+    }
 }

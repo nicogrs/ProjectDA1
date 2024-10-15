@@ -5,32 +5,28 @@
 @inject ITeamService TmService
 @inject Session Session
 @inject NavigationManager Navigation
-<PageTitle>ModifyTeamUsers</PageTitle>
+<PageTitle>Modificar Usuarios del Equipo</PageTitle>
 <h3>Modificar usuarios del equipo</h3>
 
-<div class="row">
-    <div class="col-4">
-        <button class="btn btn-primary" type="submit" @onclick="Add">Agregar Usuarios</button>
-    </div>
-    <div class="col-4">
-        <button class="btn btn-primary" type="submit" @onclick="Delete">Eliminar Usuarios</button>
-    </div>
-    <div class="col-4">
-        <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
+<div class="row w-100">
+    <div class="d-flex justify-content-between align-items-center">
+        @if(deleteUsers){
+            <div class="col-4 mb-3">
+                <button class="btn btn-primary" type="submit" @onclick="Add">Agregar Usuarios</button>
+            </div>
+        }
+        @if (addUsers)
+        {
+            <div class="col-4 mb-3">
+                <button class="btn btn-primary" type="submit" @onclick="Delete">Eliminar Usuarios</button>
+            </div>
+        }
+        <div class="col-4 mb-3 d-flex justify-content-end">
+            <button class="btn btn-secondary" type="submit" @onclick="GoBack">Volver</button>
+        </div>
     </div>
 </div>
 
-@if (!string.IsNullOrEmpty(message))
-{
-    <div class="alert alert-info" role="alert">
-        @message
-    </div>
-}
-@if (!string.IsNullOrEmpty(warningMessage)){
-    <div class="alert alert-info" role="alert">
-        @warningMessage
-    </div>
-}
 
 @if (addUsers || deleteUsers)
 {
@@ -45,8 +41,9 @@
         thead = "Borrar Usuario";
         userList = usersInTeam;
     }
-    
-    <table class="table table-bordered">
+
+    <div class="d-flex justify-content-center align-items-center">
+    <table class="table table-bordered w-75">
         <thead>
         <tr>
             <th>@thead</th>
@@ -74,7 +71,7 @@
         }
         </tbody>
     </table>
-    
+    </div>
     @if (SelectedUsersAdd.Count > 0 && addUsers)
     {
         <h4>Usuarios a agregar al equipo: (@SelectedUsersAdd.Count)</h4>
@@ -85,7 +82,7 @@
             }
         </ul>
         
-        <button class="btn btn-primary" @onclick="AddSelectedUsers">Agregar usuarios</button>
+        <button class="btn btn-success" @onclick="AddSelectedUsers">Agregar usuarios</button>
     }
     
     @if (SelectedUsersDelete.Count > 0 && deleteUsers)
@@ -109,7 +106,7 @@
     public string teamName { get; set; }
     
     private bool deleteUsers = false;
-    private bool addUsers = false;
+    private bool addUsers = true;
     
     private List<User> allUsers;
     private List<User> userList;
@@ -162,6 +159,7 @@
         deleteUsers = true;
         addUsers = false;
         message = "Borrando usuarios.";
+        UpdateUserLists();
     }
 
     private void Add()
@@ -169,6 +167,7 @@
         deleteUsers = false;
         addUsers = true;
         message = "Agregando usuarios.";
+        UpdateUserLists();
     }
 
     private void GoBack()
@@ -194,7 +193,6 @@
         }
         
         message=$"{SelectedUsersAdd.Count} Usuarios agregados exitosamente a {team.Name}.";
-        addUsers = false;
         UpdateUserLists();
     }
     
@@ -209,7 +207,6 @@
         }
         
         message=$"{SelectedUsersDelete.Count} Usuarios borrados exitosamente de {team.Name}.";
-        deleteUsers = false;
         UpdateUserLists();
     }
 

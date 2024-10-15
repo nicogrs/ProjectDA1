@@ -1,6 +1,5 @@
 ﻿@page "/{teamName}/modifyUsers"
 @using Dominio
-@using Dominio.Data
 @inject IUserDatabase UDatabase
 @inject ITeamService TmService
 @inject Session Session
@@ -10,12 +9,12 @@
 
 <div class="row w-100">
     <div class="d-flex justify-content-between align-items-center">
-        @if(deleteUsers){
+        @if(deletingUsers){
             <div class="col-4 mb-3">
                 <button class="btn btn-primary" type="submit" @onclick="Add">Agregar Usuarios</button>
             </div>
         }
-        @if (addUsers)
+        @if (addingUsers)
         {
             <div class="col-4 mb-3">
                 <button class="btn btn-primary" type="submit" @onclick="Delete">Eliminar Usuarios</button>
@@ -28,10 +27,10 @@
 </div>
 
 
-@if (addUsers || deleteUsers)
+@if (addingUsers || deletingUsers)
 {
     string thead;
-    if (addUsers)
+    if (addingUsers)
     {
         thead = "Agregar Usuario";
         userList = usersNotInTeam;
@@ -56,7 +55,7 @@
         {
             <tr>
                 <td>
-                    @if (addUsers)
+                    @if (addingUsers)
                     {
                         <input type="checkbox" @onchange="e => ToggleSelectionAdd(user, e.Value)"/>
                     }
@@ -72,7 +71,7 @@
         </tbody>
     </table>
     </div>
-    @if (SelectedUsersAdd.Count > 0 && addUsers)
+    @if (SelectedUsersAdd.Count > 0 && addingUsers)
     {
         <h4>Usuarios a agregar al equipo: (@SelectedUsersAdd.Count)</h4>
         <ul>
@@ -85,7 +84,7 @@
         <button class="btn btn-success" @onclick="AddSelectedUsers">Agregar usuarios</button>
     }
     
-    @if (SelectedUsersDelete.Count > 0 && deleteUsers)
+    @if (SelectedUsersDelete.Count > 0 && deletingUsers)
     {
         <h4>Usuarios a quitar del equipo: (@SelectedUsersDelete.Count)</h4>
         <ul>
@@ -98,6 +97,19 @@
         <button class="btn btn-primary" @onclick="DeleteSelectedUsers">Quitar usuarios</button>
     }
     
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert alert-info" role="alert">
+            @message
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(warningMessage))
+    {
+        <div class="alert alert-warning" role="alert">
+            @warningMessage
+        </div>
+    }
+    
 }
 
 @code {
@@ -105,8 +117,8 @@
     [Parameter]
     public string teamName { get; set; }
     
-    private bool deleteUsers = false;
-    private bool addUsers = true;
+    private bool deletingUsers;
+    private bool addingUsers = true;
     
     private List<User> allUsers;
     private List<User> userList;
@@ -156,16 +168,16 @@
     
     private void Delete()
     {
-        deleteUsers = true;
-        addUsers = false;
+        deletingUsers = true;
+        addingUsers = false;
         message = "Borrando usuarios.";
         UpdateUserLists();
     }
 
     private void Add()
     {
-        deleteUsers = false;
-        addUsers = true;
+        deletingUsers = false;
+        addingUsers = true;
         message = "Agregando usuarios.";
         UpdateUserLists();
     }
@@ -184,7 +196,8 @@
                              "del equipo superan la capacidad maxima.";
             return;
         }
-        
+
+        warningMessage = "";
 
         foreach (User user in SelectedUsersAdd)
         {
@@ -231,39 +244,4 @@
             }
         }
     }
-    
-    @*private void AddUserSelection(string email, object isSelected)
-    {
-        if ((bool)isSelected)
-        {
-            SelectedUsersAdd.Add(UDatabase.GetUserByEmail(email));
-        }
-    }
-    private void DeleteUserSelection(string email, object isSelected)
-    {
-        if ((bool)isSelected)
-        {
-            SelectedUsersDelete.Add(UDatabase.GetUserByEmail(email));
-        }
-    }
-
-    private void HandleAdd()
-    {
-        foreach (var user in SelectedUsersAdd)
-        {
-            TmService.AddUserToTeam(teamName, user.Email);
-            usersInTeam.Add(user);
-        }
-
-        message = "Usuario/s Agregado/s";
-    }
-    private void HandleDelete()
-    {
-        foreach (var user in SelectedUsersDelete)
-        {
-            TmService.RemoveUserFromTeam(teamName, user.Email);
-            usersNotInTeam.Add(user);
-        }
-        message = "Usuario/s Eliminado/s";
-    }*@
 }

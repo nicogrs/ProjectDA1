@@ -15,7 +15,7 @@ public class Program
         
         builder.Services.AddSingleton<IUserDatabase, UserDataBase>();
         builder.Services.AddSingleton<IUserService, UserService>();
-        builder.Services.AddSingleton<PasswordService>();
+        builder.Services.AddScoped<PasswordService>();
         builder.Services.AddSingleton<TeamDataBase>();
         builder.Services.AddSingleton<ITeamDataBase, TeamDataBase>();
         builder.Services.AddSingleton<TeamService>();
@@ -23,7 +23,7 @@ public class Program
         builder.Services.AddSingleton<PanelService>();
         builder.Services.AddSingleton<IPanelService, PanelService>();
         builder.Services.AddSingleton<TaskService>();
-        builder.Services.AddSingleton<Session>();
+        builder.Services.AddScoped<Session>();
         
         
         var app = builder.Build();

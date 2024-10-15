@@ -2,19 +2,13 @@ namespace Dominio;
 
 public class TaskImport
 {
-    public string fileName;
     private StreamReader reader;
     private StreamWriter writer;
     private List<Task> tasks;
     private List<string> errors;
-
-    public void LoadFileFromPath(string _fileName)
-    {
-        fileName = _fileName;
-        reader = new StreamReader(fileName);
-    }
     
-    public List<Task> ReadTasksFromFile(User user)
+    
+    /*public List<Task> ReadTasksFromFile(User user)
     {
         tasks = new List<Task>();
         errors = new List<string>();
@@ -25,9 +19,9 @@ public class TaskImport
 
         MakeErrorFile($"../../../Data/Out/ErroresImport-{user.Name}.txt");
         return tasks;
-    }
+    }*/
 
-    public void processLines(List<string> linesOfLoadedFile)
+    private void ProcessLines(List<string> linesOfLoadedFile)
     {
         foreach (string line in linesOfLoadedFile)
         {
@@ -46,13 +40,16 @@ public class TaskImport
 
     private void MakeErrorFile(string errorFileName)
     {
+        //directorio interfaz 
         string directory = Directory.GetCurrentDirectory();
+        directory = Directory.GetParent(directory).FullName;
+        
         string filePath = Path.Combine(directory, errorFileName);
         
-        if (!Directory.Exists(directory))
+        /*if (!Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory);
-        }
+        }*/
         
         writer = new StreamWriter(filePath);
         foreach (string line in errors)
@@ -68,9 +65,9 @@ public class TaskImport
         errors = new List<string>();
         List<string> linesOfContent = content.Split('\n').ToList();
 
-        processLines(linesOfContent);
+        ProcessLines(linesOfContent);
         
-        //MakeErrorFile($"../../../Data/Out/ErroresImport-{user.Name}.txt");
+        MakeErrorFile($"ErroresImport-{user.Name}.txt");
         return tasks;
     }
     
@@ -81,47 +78,30 @@ public class TaskImport
 
         if (!correctColumnAmount)
         {
-            LogError(line,"- Cantidad incorrecta de columnas. - ");
+            LogError(line,"Cantidad incorrecta de columnas.");
             return;
         }
         
         if (!StringIsValidDate(separatedLine[2]))
         {
-            LogError(line,"- Formato de fecha incorrecto. - ");
+            LogError(line,"Formato de fecha incorrecto.");
             return;
         }
         
         if (!IsPanelIdValid(separatedLine[3]))
         {
-            LogError(line,"- Id de panel incorrecto. -");
+            LogError(line,"Id de panel incorrecto.");
             return;
         }
     }
 
     private void LogError(string line, string errorMessage)
     {
-        string error = line + errorMessage + CurrentDateTime();
+        string currentTime = DateTime.Now.ToString("yyyy-mm-dd HH:mm:ss");
+        string error = $"{line} --- {errorMessage} --- {currentTime}";
         errors.Add(error);
     }
-
-    private string CurrentDateTime()
-    {
-        return DateTime.Now.ToString("yyyy-mm-dd HH:mm:ss");
-    }
     
-    private List<string> ListLinesOfLoadedFile()
-    {
-        List<string> result = new List<string>();
-        string line;
-        
-        while (!reader.EndOfStream)
-        {
-            line = reader.ReadLine();
-            result.Add(line);
-        }
-        
-        return result;
-    }
     private List<string> SplitString(string str)
     {
         string[] strArr = str.Split(",");

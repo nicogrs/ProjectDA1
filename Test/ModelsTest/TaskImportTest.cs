@@ -17,16 +17,22 @@ public class TaskImportTest
     [TestInitialize]
     public void Setup()
     {
+        string directory = Directory.GetCurrentDirectory();
+        directory = $"../Data/{directory}";
+        
         filesToTest = new List<string>()
         {
-            "../../../Data/tareasTestData.csv",
-            "../../../Data/tareas.csv",
-            "../../../Data/tareasValidDateTest.csv",
-            "../../../Data/tareasValidLineTest.csv"
+            "tareasTestData.csv",
+            "Data/tareas.csv",
+            "tareasValidDateTest.csv",
+            "tareasValidLineTest.csv"
         };
-        
-        Directory.CreateDirectory("../../../Data/Out/");
 
+        for (int i = 0; i < filesToTest.Count; i++)
+        {
+            filesToTest[i] = Path.Combine(directory, filesToTest[i]);
+        }
+        
         referenceTasks = new List<Task>()
         {
             new Task()
@@ -51,61 +57,8 @@ public class TaskImportTest
         taskImport = new TaskImport();
     }
     
-    [TestMethod]
-    public void LoadFileTest1()
-    {
-        taskImport.LoadFileFromPath(filesToTest[0]);
 
-        Assert.AreEqual(filesToTest[0], taskImport.fileName);
-    }
-
-    [TestMethod]
-    public void ReadTasksFromFileTest1()
-    {
-        taskImport.LoadFileFromPath(filesToTest[0]);
-
-        List<Task> taskList = taskImport.ReadTasksFromFile(new User(){Name = "Testuser 1"});
-
-        int taskListElementCount = taskList.Count;
-        for (int i = 0; i < taskListElementCount; i++)
-        {
-            Assert.AreEqual(taskList[i].Title, referenceTasks[i].Title);
-            Assert.AreEqual(taskList[i].Description, referenceTasks[i].Description);
-            Assert.AreEqual(taskList[i].ExpirationDate, referenceTasks[i].ExpirationDate);
-        }
-    }
-
-    [TestMethod]
-    public void ReadTasksValidDateTests()
-    {
-        taskImport.LoadFileFromPath(filesToTest[2]);
-
-        List<Task> taskList = taskImport.ReadTasksFromFile(new User(){Name = "Testuser 2"});
-        
-        int taskListElementCount = taskList.Count;
-        for (int i = 0; i < taskListElementCount; i++)
-        {
-            Assert.AreEqual(taskList[i].Title, referenceTasks[i].Title);
-            Assert.AreEqual(taskList[i].Description, referenceTasks[i].Description);
-            Assert.AreEqual(taskList[i].ExpirationDate, referenceTasks[i].ExpirationDate);
-        }
-    }
     
-    [TestMethod]
-    public void TasksValidLineTests()
-    {
-        taskImport.LoadFileFromPath(filesToTest[3]);
-
-        List<Task> taskList = taskImport.ReadTasksFromFile(new User(){Name = "Testuser 3"});
-        
-        int taskListElementCount = taskList.Count;
-        for (int i = 0; i < taskListElementCount; i++)
-        {
-            Assert.AreEqual(taskList[i].Title, referenceTasks[i].Title);
-            Assert.AreEqual(taskList[i].Description, referenceTasks[i].Description);
-            Assert.AreEqual(taskList[i].ExpirationDate, referenceTasks[i].ExpirationDate);
-        }
-    }
 
     [TestMethod]
     public void ReadTasksFromContentTest()

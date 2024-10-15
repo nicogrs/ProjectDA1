@@ -39,7 +39,7 @@
             <td>@user.Surname</td>
             <td>@user.Email</td>
             <td>@user.BirthDate</td>
-            <td>@user.Admin</td>
+            <td>@(user.Admin ? "Si" : "No")</td>
             <td>
                 <button class="btn btn-warning btn-sm" @onclick="() => ModifyUsers(user.Email)">Modificar</button>
                 <button class="btn btn-danger btn-sm" @onclick="() =>ShowModal(user)">Eliminar</button>

@@ -76,6 +76,7 @@ public class TeamService : ITeamService
         var user = _userService.GetUserByEmail(userEmail);
         var team = GetTeamByName(teamName);
         var result = team.TeamMembers.Remove(user);
+        team.MembersCount--;
         return result;
     }
 

@@ -8,7 +8,7 @@
 @inject NavigationManager Navigation
 @inject Session Session
 
-<div class="card mb-2 mt-2">
+<div class="card mb-2 mt-4">
     <div>
         @if (Precedence == Task.Priority.Urgent)
         {
@@ -34,27 +34,33 @@
             <p class="card-text">Prioridad: @Precedence.ToString()</p>
             <p class="card-text">Vencimiento: @EndDate</p>
         </div>
-        <div>
+        <div class="border-top-2">
             <p class="card-text">Descripcion de la tarea:<br/> @Description</p>
         </div>
         @if (Comments != null && Comments.Count > 0)
         {
+            <div>
+                <p class="card-text border-top-2 mt-2 mb-2">Comentarios:</p>
+            </div>
             foreach (var comment in Comments)
             {
                 <div class="card-text border-bottom mb-2 pb-2">
-                    
+         
                     @if (comment.Resolved)
                     {
                         <s>@comment.Content - Resuelto por @comment.ResolvedBy.Email el @comment.ResolvedTime.ToString()</s>
                     }
                     else
                     {
-                        <p>@comment.Content</p>
+                        <p>@comment.CreatedBy.Name @comment.CreatedBy.Surname Respondio: <br/> @comment.Content</p>
                     }
-                    
-                    <div class="form-group">
-                        <button class="btn btn-primary" type="submit" @onclick="() => CompleteComment(comment)">Terminar</button>
-                    </div>
+                    @if (!comment.Resolved)
+                    {
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit" 
+                                    @onclick="() => CompleteComment(comment)">Terminar</button>
+                        </div>
+                    }
                 </div>
             }
         }
@@ -86,9 +92,21 @@
                     <span>&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <p>¿Estás seguro de que deseas eliminar la tarea <strong>@selectedTask.Title</strong>?</p>
-            </div>
+            @if (UService.GetUserByEmail(Session.CurrentUser.Email).PaperBin.ElementsCount < 10)
+            {
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas enviar la tarea <strong>@selectedTask.Title
+                        </strong> a la papelera?</p>
+                </div>     
+            }
+            else
+            {
+                <div class="modal-body">
+                    <p>¡Tu papelera esta llena! ¿Estas seguro que quieres eliminar <strong>@selectedTask.Title
+                        por completo?</strong></p>
+                </div>    
+            }
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
                 <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Confirmar</button>

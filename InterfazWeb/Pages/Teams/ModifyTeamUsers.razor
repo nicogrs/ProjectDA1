@@ -170,7 +170,7 @@
     {
         deletingUsers = true;
         addingUsers = false;
-        message = "Borrando usuarios.";
+        message = null;
         UpdateUserLists();
     }
 
@@ -178,7 +178,7 @@
     {
         deletingUsers = false;
         addingUsers = true;
-        message = "Agregando usuarios.";
+        message = null;
         UpdateUserLists();
     }
 
@@ -212,14 +212,18 @@
     private void DeleteSelectedUsers()
     {
         Team team = TmService.GetTeamByName(teamName);
+        if (SelectedUsersDelete.Count == team.MembersCount)
+        {
+            warningMessage = "El equipo no puede quedar sin miembros";
+            return;
+        }
         
         foreach (User user in SelectedUsersDelete)
         {
-            team.TeamMembers.Remove(user);
-            team.MembersCount--;
+            TmService.RemoveUserFromTeam(teamName, user.Email);
         }
         
-        message=$"{SelectedUsersDelete.Count} Usuarios borrados exitosamente de {team.Name}.";
+        message=$"{SelectedUsersDelete.Count} Usuarios borrados exitosamente de {teamName}.";
         UpdateUserLists();
     }
 

@@ -8,23 +8,27 @@
 <h3>Agregar Comentario</h3>
 @if (!string.IsNullOrEmpty(message))
 {
-    <div class="alert alert-success" role="alert">
+    <div class="alert alert-success mb-2" role="alert">
         @message
     </div>
 }
 <EditForm Model="modelAddComment" OnValidSubmit="HandleCreate">
     <DataAnnotationsValidator/>
-    <div class="form-group">
-        <label id="content">Comentario</label>
-        <InputText class="form-control" @bind-Value="@modelAddComment.Content" id="content"></InputText>
-        <ValidationMessage For="@(() => modelAddComment.Content)"/>
-    </div>
-    <div class="form-group">
-        <button class="btn btn-primary" type="submit">Agregar Comentario</button>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="w-75">
+        <div class="form-group">
+            <label id="content">Comentario</label>
+            <InputText class="form-control" @bind-Value="@modelAddComment.Content" id="content"></InputText>
+            <ValidationMessage For="@(() => modelAddComment.Content)"/>
+        </div>
+        <div class="form-group mt-3">
+            <button class="btn btn-primary" type="submit">Agregar Comentario</button>
+        </div>
+        </div>
     </div>
 </EditForm>
 <div class="col-4">
-    <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
+    <button class="btn btn-secondary" type="submit" @onclick="GoBack">Volver</button>
 </div>
 
 @code{

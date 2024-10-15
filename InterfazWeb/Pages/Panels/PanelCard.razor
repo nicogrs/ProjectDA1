@@ -41,9 +41,20 @@
                     <span>&times;</span>
                 </button>
             </div>
+            @if (UService.GetUserByEmail(Session.CurrentUser.Email).PaperBin.ElementsCount < 10)
+            {
             <div class="modal-body">
-                <p>¿Estás seguro de que deseas eliminar el Panel <strong>@selectedPanel.Name</strong>?</p>
+                <p>¿Estás seguro de que deseas enviar el Panel <strong>@selectedPanel.Name
+                    </strong> a la papelera?</p>
             </div>
+            }
+            else
+            {
+            <div class="modal-body">
+                <p>¡Tu papelera esta llena! ¿Estas seguro que quieres eliminar <strong>@selectedPanel.Name
+                        por completo?</strong></p>
+            </div>
+            }
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
                 <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Confirmar</button>

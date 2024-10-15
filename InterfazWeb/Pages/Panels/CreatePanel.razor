@@ -19,7 +19,7 @@
             </div>
             <div class="form-group">
                 <label id="userAmount">Descripcion</label>
-                <InputText class="form-control" @bind-Value="@modelCreatePanel.Description" id="userAmount"></InputText>
+                <InputText class="form-control" required @bind-Value="@modelCreatePanel.Description" id="userAmount"></InputText>
                 <ValidationMessage For="@(() => modelCreatePanel.Description)"/>
             </div>
 

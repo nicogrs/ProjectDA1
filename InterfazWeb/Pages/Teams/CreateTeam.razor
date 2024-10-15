@@ -37,22 +37,11 @@
                 <InputNumber class="form-control" @bind-Value="@modelCreateTeam.MaxUsers" id="userAmount"></InputNumber>
                 <ValidationMessage For="@(() => modelCreateTeam.MaxUsers)"/>
             </div>
-            @*<div class="dropdown mb-3">
-                <button class="btn btn-secondary dropdown-toggle" type="button"
-                        id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Selecciona Usuarios
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
-                    @foreach (var user in users)
-                    {
-                        <li class="dropdown-item mb-3">
-                            @*<input type="checkbox" @onchange="(e) => ToggleUserSelection(user.Email, e.Value)"/> @user.Email*@
-                            @*@user.Email
-                        </li>
-                    }
-                </ul>
-            </div>*@
-
+            <div class="form-group mb-3">
+                <label id="tasksDescription">Descripción de tareas</label>
+                <InputText class="form-control" required @bind-Value="@modelCreateTeam.TasksDescription" id="tasksDescription"></InputText>
+                <ValidationMessage For="@(() => modelCreateTeam.TasksDescription)"/>
+            </div>
             @if (users != null && users.Any() && users.Count > 1)
             {
                 <table class="table table-bordered">
@@ -172,7 +161,7 @@
             CreatedOn = DateTime.Now,
             TeamMembers = SelectedUsers,
             MembersCount = SelectedUsers.Count,
-            TasksDescription = "",
+            TasksDescription = modelCreateTeam.TasksDescription,
             Panels = new List<Panel>(),
             MaxUsers = modelCreateTeam.MaxUsers
         };

@@ -25,6 +25,11 @@ public class Program
         builder.Services.AddSingleton<TaskService>();
         builder.Services.AddScoped<Session>();
         
+        builder.Services.AddDbContextFactory<SqlContext>(
+            options => options.UseSqlServer(
+                builder.Configuration.GetConnectionString("DefaultConnection"),
+                providerOptions => providerOptions.EnableRetryOnFailure())
+        );
         
         var app = builder.Build();
 

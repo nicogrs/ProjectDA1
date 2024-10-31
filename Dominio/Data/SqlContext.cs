@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Dominio.Data;
 
 public class SqlContext : DbContext

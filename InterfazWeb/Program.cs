@@ -1,5 +1,6 @@
 using Dominio.Data;
 using Dominio;
+using Microsoft.EntityFrameworkCore;
 using IUserDatabase = Dominio.IUserDatabase;
 
 namespace InterfazWeb;

@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOs", "DTOs\DTOs.csproj", "{F488C689-DC94-4856-82BA-CA752B0C5221}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{946F0AD4-6584-4E2D-B9D3-E352CF710E89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{F488C689-DC94-4856-82BA-CA752B0C5221}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F488C689-DC94-4856-82BA-CA752B0C5221}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F488C689-DC94-4856-82BA-CA752B0C5221}.Release|Any CPU.Build.0 = Release|Any CPU
+		{946F0AD4-6584-4E2D-B9D3-E352CF710E89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{946F0AD4-6584-4E2D-B9D3-E352CF710E89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{946F0AD4-6584-4E2D-B9D3-E352CF710E89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{946F0AD4-6584-4E2D-B9D3-E352CF710E89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

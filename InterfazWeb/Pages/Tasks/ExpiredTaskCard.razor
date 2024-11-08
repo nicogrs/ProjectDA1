@@ -70,7 +70,7 @@ public List<Comment> Comments { get; set; }
 protected override void OnInitialized()
 {
 Comments = Task.Comments;
-panelId = TkService.GetPanelIdByTask(teamName, Task.TaskId).ToString();
+panelId = TkService.GetPanelIdByTask(teamName, Task.Id).ToString();
 }
 
 private void CompleteComment(Comment comment)

@@ -14,7 +14,7 @@ public class CommentCreateTest
     {
         u1 = new User();
         u2 = new User();
-        c = new Comment(u1, "ComentarioPrueba");
+        c = new Comment("ComentarioPrueba");
     }
 
     [TestMethod]

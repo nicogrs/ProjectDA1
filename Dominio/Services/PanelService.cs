@@ -11,12 +11,12 @@ public class PanelService : IPanelService
     public Panel GetPanelById(string teamName, int panelId)
     {
         var team = _teamService.GetTeamByName(teamName);
-        return team.Panels.Find(x => x.PanelId == panelId);
+        return team.Panels.Find(x => x.Id == panelId);
     }
     
     public bool AddPanel(string teamName, Panel panel)
     {
-        if (GetPanelById(teamName, panel.PanelId) == null)
+        if (GetPanelById(teamName, panel.Id) == null)
         {
             var team = _teamService.GetTeamByName(teamName);
             team.Panels.Add(panel);
@@ -39,7 +39,7 @@ public class PanelService : IPanelService
     public void RemovePanel(string teamName,int panelId)
     {
         var team = _teamService.GetTeamByName(teamName);
-        var panel = team.Panels.Find(x => x.PanelId == panelId);
+        var panel = team.Panels.Find(x => x.Id == panelId);
         if (panel != null)
         {
             team.Panels.Remove(panel); 

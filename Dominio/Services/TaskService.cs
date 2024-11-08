@@ -34,7 +34,7 @@ public class TaskService
     public Task GetTaskById(string teamName, int panelId, int taskId)
     {
         var panel = _panelService.GetPanelById(teamName, panelId);
-        return panel.Tasks.Find(x => x.TaskId == taskId);
+        return panel.Tasks.Find(x => x.Id == taskId);
     }
 
     public int GetPanelIdByTask(string teamName, int taskId)
@@ -42,10 +42,10 @@ public class TaskService
         var panels = _panelService.GetAllPanelsFromTeam(teamName);
         foreach (var panel in panels)
         {
-           var task = panel.Tasks.FirstOrDefault(x => x.TaskId == taskId);
+           var task = panel.Tasks.FirstOrDefault(x => x.Id == taskId);
            if (task != null)
            {
-               return panel.PanelId;
+               return panel.Id;
            }
         }
 

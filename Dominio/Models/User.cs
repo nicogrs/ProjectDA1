@@ -2,6 +2,7 @@
 
 public class User
 {
+    public int Id { get; set; }
     public string Name { get; set; }
     public string Surname { get; set; }
     public string Email { get; set; }
@@ -9,7 +10,8 @@ public class User
     public string Password { get; set; }
     public bool Admin { get; set; }
     public Trash PaperBin { get; set; }
-
+    
+    public List<Team> UserTeams { get; set; } = new List<Team>();
     public User()
     {
         PaperBin = new Trash();

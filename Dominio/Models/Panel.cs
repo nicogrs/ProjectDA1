@@ -2,11 +2,9 @@
 
 public class Panel : IPaperBinItem
 {
-    public static int contadorId = 0;
-    
+    public int Id { get; set; }
     public string Name { get; set; }
     public string Team { get; set; }
-    public int PanelId { get; set; }
     public string Description { get; set; }
     public User CreatedBy { get; set; }
     public List<Task> Tasks { get; set; }
@@ -18,8 +16,6 @@ public class Panel : IPaperBinItem
         Description = "";
         CreatedBy = null;
         Tasks = new List<Task>();
-        contadorId++;
-        PanelId = contadorId;
     }
     
     public void AddTask(Task task)
@@ -35,7 +31,7 @@ public class Panel : IPaperBinItem
 
     public void DeleteItem(int taskId)
     {
-        var task = Tasks.Find(x => x.TaskId == taskId);
+        var task = Tasks.Find(x => x.Id == taskId);
         if (task != null)
         {
             Tasks.Remove(task);
@@ -44,6 +40,7 @@ public class Panel : IPaperBinItem
 
     public override string ToString()
     {
-        return $"Tipo: Panel - ID: {PanelId} - Nombre: {Name}";
+        return $"Tipo: Panel - ID: {Id} - Nombre: {Name}";
     }
+    
 }

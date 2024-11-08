@@ -19,9 +19,9 @@ public class TaskTest
     {
         u1 = new User();
         u2 = new User();
-        c1 = new Comment(u1, "Primer comentario de u1");
-        c2 = new Comment(u1, "Segundo comentario de u1");
-        c3 = new Comment(u2, "Primer comentario de u2");
+        c1 = new Comment("Primer comentario de u1");
+        c2 = new Comment("Segundo comentario de u1");
+        c3 = new Comment("Primer comentario de u2");
         comments = new List<Comment>(){c1, c2, c3};
         t1 = new Task()
         {
@@ -101,7 +101,7 @@ public class TaskTest
     [TestMethod]
     public void ToStringTest()
     {
-        var result = $"Tipo: Task - ID: {t1.TaskId} - Nombre: Titulo 1 - Prioridad: Low" ;
+        var result = $"Tipo: Task - ID: {t1.Id} - Nombre: Titulo 1 - Prioridad: Low" ;
         Assert.AreEqual(t1.ToString(), result);
     }
 

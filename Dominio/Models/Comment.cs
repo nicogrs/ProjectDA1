@@ -2,18 +2,19 @@
 
 public class Comment
 {
+    public int Id { get; set; }
+    public int? CreatedById { get; set; }
     public User CreatedBy {get; set;}
     public bool Resolved {get; set;}
+    public int? ResolvedById { get; set; }
     public User ResolvedBy {get; set;}
     
     public DateTime ResolvedTime {get; set;}
     public string Content {get; set;}
     
-    public Comment(User createdBy, string content)
+    public Comment(string content)
     {
-        CreatedBy = createdBy;
         Content = content;
         Resolved = false;
-        ResolvedBy = null;
     }
 }

@@ -34,12 +34,12 @@ else
             Navigation.NavigateTo("/error");
         }
        selectedUser = UService.GetUserByEmail(Session.CurrentUser.Email);
-       PaperBinItems = selectedUser.PaperBin.Paperbin;
+       //PaperBinItems = selectedUser.PaperBin.Paperbin;
     }
 
     public void DeleteElement(IPaperBinItem item)
     {
         selectedUser.PaperBin.DeleteElementFromPaperbin(item);
-        PaperBinItems = selectedUser.PaperBin.Paperbin;
+        //PaperBinItems = selectedUser.PaperBin.Paperbin;
     }
 }

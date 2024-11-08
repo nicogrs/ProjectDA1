@@ -40,7 +40,7 @@ public class PanelServiceTest
         _mockTeamService.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         Panel panelTest = new Panel{Name = "Panel Test"};
         team.Panels.Add(panelTest);
-        panelService.RemovePanel(team.Name, panelTest.PanelId);
+        panelService.RemovePanel(team.Name, panelTest.Id);
         CollectionAssert.DoesNotContain(team.Panels, panelTest);
     }
     
@@ -51,7 +51,7 @@ public class PanelServiceTest
         _mockTeamService.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         Panel panelTest = new Panel{Name = "New panel"};
         team.Panels.Add(panelTest);
-        var panelFromTeam = panelService.GetPanelById(team.Name, panelTest.PanelId);
+        var panelFromTeam = panelService.GetPanelById(team.Name, panelTest.Id);
         Assert.AreEqual(panelFromTeam, panelTest);
     }
 

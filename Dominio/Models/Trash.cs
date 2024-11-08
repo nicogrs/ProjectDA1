@@ -1,13 +1,15 @@
+using System.Collections.ObjectModel;
+
 namespace Dominio;
 
 public class Trash
 {
-    public List<IPaperBinItem> Paperbin { get; set; }
+    public int Id { get; set; }
     public int ElementsCount { get; set; }
 
     public Trash()
     {
-        Paperbin = new List<IPaperBinItem>();
+       // Paperbin = new List<IPaperBinItem>();
         ElementsCount = 0;
     }
 
@@ -15,14 +17,14 @@ public class Trash
     {
         if (ElementsCount < 10)
         {
-            Paperbin.Add(item);
+         //   Paperbin.Add(item);
             ElementsCount++;
         }
     }
 
     public void DeleteElementFromPaperbin(IPaperBinItem item)
     {
-        if (Paperbin.Remove(item))
+       // if (Paperbin.Remove(item))
         {
             ElementsCount--;
         }

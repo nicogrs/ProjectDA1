@@ -4,20 +4,15 @@ namespace Dominio;
 
 public class Task : IPaperBinItem
 {
-    public static int taskCounter = 0;
-    
+    public int Id { get; set; }
     public string Title { get; set; }
     public Priority Precedence { get; set; }
     public string Description { get; set; }
     public DateTime ExpirationDate { get; set; }
     public List<Comment> Comments { get; set; }
-    public int TaskId { get; private set; }
-
     public Task()
     {
         Comments = new List<Comment>();
-        taskCounter++;
-        TaskId = taskCounter;
     }
 
     public enum Priority
@@ -44,7 +39,7 @@ public class Task : IPaperBinItem
     {
         bool success = false;
         
-        Comment commentToAdd = new Comment(user, content);
+        Comment commentToAdd = new Comment(content);
         Comments.Add(commentToAdd);
         success = true;
         
@@ -53,6 +48,6 @@ public class Task : IPaperBinItem
 
     public override string ToString()
     {
-        return $"Tipo: Task - ID: {TaskId.ToString()} - Nombre: {Title} - Prioridad: {Precedence}";
+        return $"Tipo: Task - ID: {Id.ToString()} - Nombre: {Title} - Prioridad: {Precedence}";
     }
 }

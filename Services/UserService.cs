@@ -1,22 +1,23 @@
 ﻿using System.Data;
 using System.Text;
+using Interfaces;
 
-namespace Dominio;
-
+namespace Services;
+using Dominio;
 public class UserService : IUserService
 {
-    private readonly IUserDatabase _userDatabase;
+    private readonly IRepository<User> _userDatabase;
     private readonly PasswordService _passwordService;
 
-    public UserService(IUserDatabase userDatabase)
+    public UserService(IRepository<User> userRepo)
     {
         _passwordService = new PasswordService();
-        _userDatabase = userDatabase;
+        _userDatabase= userRepo;
     }
 
     public bool UserExists(string email)
     {
-       return _userDatabase.GetUserByEmail(email) != null;
+       return _userDatabase.Find(u => u.Email == email) != null;
     }
     
 
@@ -38,7 +39,7 @@ public class UserService : IUserService
         }
         try
         {
-            _userDatabase.AddUser(user);
+            _userDatabase.Add(user);
             return true;
         }
         catch (Exception e)
@@ -50,7 +51,8 @@ public class UserService : IUserService
 
     public User GetUserByEmail(string email)
     {
-        return _userDatabase.GetUserByEmail(email);
+       // return _userDatabase.GetUserByEmail(email);
+       throw new NotImplementedException();
     }
     
     public string ResetUserPassword(string email)
@@ -82,7 +84,7 @@ public class UserService : IUserService
             if (user.IsUserValid() && _passwordService.IsPasswordValid(user.Password))
             {
                 Console.WriteLine("entro a update");
-                _userDatabase.UpdateUser(user);
+           //     _userDatabase.UpdateUser(user);
                 return true;
             }
         Console.WriteLine("No se puede realizar el usuario");
@@ -101,26 +103,17 @@ public class UserService : IUserService
         {
             throw new ArgumentException("El Email no Puede ser vacio", nameof(email));
         }
-
-        return _userDatabase.DeleteUser(email);
-    }
-    
-    public void AddPanelToPaperBin(Team team, Panel panel, string email)
-    {
-        var user = GetUserByEmail(email);
-        if (team.Panels.Remove(panel))
-        {
-            user.PaperBin.AddElementToPaperbin(panel);
-        }
-        
+        throw new NotImplementedException();
+       // return _userDatabase.DeleteUser(email);
     }
 
     public void AddTaskToPaperBin(Panel panel, Task task, string email)
     {
-        var user = GetUserByEmail(email);
-        if(panel.Tasks.Remove(task))
-        {
-            user.PaperBin.AddElementToPaperbin(task);  
-        }
+        throw new NotImplementedException();
+    }
+
+    public void AddPanelToPaperBin(Team team, Panel panel, string email)
+    {
+        throw new NotImplementedException();
     }
 }

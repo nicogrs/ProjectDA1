@@ -10,6 +10,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOs", "DTOs\DTOs.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{946F0AD4-6584-4E2D-B9D3-E352CF710E89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{C3B38C95-9BEE-413B-85BD-C1DE68B386F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\Interfaces.csproj", "{85113E31-80C2-4B22-BBC3-C9668D162E66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +40,13 @@ Global
 		{946F0AD4-6584-4E2D-B9D3-E352CF710E89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{946F0AD4-6584-4E2D-B9D3-E352CF710E89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{946F0AD4-6584-4E2D-B9D3-E352CF710E89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3B38C95-9BEE-413B-85BD-C1DE68B386F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3B38C95-9BEE-413B-85BD-C1DE68B386F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3B38C95-9BEE-413B-85BD-C1DE68B386F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3B38C95-9BEE-413B-85BD-C1DE68B386F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85113E31-80C2-4B22-BBC3-C9668D162E66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85113E31-80C2-4B22-BBC3-C9668D162E66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85113E31-80C2-4B22-BBC3-C9668D162E66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85113E31-80C2-4B22-BBC3-C9668D162E66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

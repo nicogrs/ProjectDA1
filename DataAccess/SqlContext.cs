@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-
-namespace Dominio.Data;
-
+using Task = Dominio.Task;
+namespace DataAccess;
+using Dominio;
 public class SqlContext : DbContext
 {
 
@@ -16,7 +16,10 @@ public class SqlContext : DbContext
 
    public SqlContext(DbContextOptions<SqlContext> options) : base(options)
    {
-       this.Database.Migrate(); // esto es para ejecutar las migraciones.
+       if (!Database.IsInMemory())
+       {
+           Database.Migrate();
+       }
    }
 
    protected override void OnModelCreating(ModelBuilder modelBuilder)

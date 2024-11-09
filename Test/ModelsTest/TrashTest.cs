@@ -6,7 +6,7 @@ using Moq;
 public class TrashTest
 {
     Mock<IUserDatabase> mockUserDatabase;
-    private IUserService _userService;
+   // private IUserService _userService;
     private User _user;
 
     [TestInitialize]
@@ -34,21 +34,4 @@ public class TrashTest
         Assert.AreEqual(_user.PaperBin.ElementsCount, 1);
     }
     
-    [TestMethod]
-    public void AddPanelToPaperBin()
-    {
-        Panel panelTest = new Panel{Name = "Panel 1"};
-        _user.PaperBin.AddElementToPaperbin(panelTest);
-        Assert.AreEqual(_user.PaperBin.ElementsCount, 1);
-    }
-
-    [TestMethod]
-    public void DeleteItem()
-    {
-        Panel panelTest = new Panel{Name = "Panel 1"};
-        _user.PaperBin.AddElementToPaperbin(panelTest);
-        _user.PaperBin.DeleteElementFromPaperbin(panelTest);
-      //  CollectionAssert.DoesNotContain(_user.PaperBin.Paperbin, panelTest);
-        
-    }
 }

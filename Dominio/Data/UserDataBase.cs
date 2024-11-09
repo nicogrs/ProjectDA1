@@ -2,7 +2,8 @@
 
 public class UserDataBase : IUserDatabase
 {
-    private List<User> Users;
+    private readonly List<User> Users;
+
     public UserDataBase()
     {
         Users = new List<User>();
@@ -13,38 +14,39 @@ public class UserDataBase : IUserDatabase
             Email = "admin@taskpanel.com",
             BirthDate = new DateTime(2000, 8, 30),
             Password = "Admin123$",
-            Admin = true,
+            Admin = true
         });
     }
+
     public List<User> GetUsers()
     {
-        return new List<User>(Users); 
+        return new List<User>(Users);
     }
-    
+
     public User GetUserByEmail(string email)
     {
-       var user = Users.Find(u => u.Email == email);
-       return user;
+        var user = Users.Find(u => u.Email == email);
+        return user;
     }
-    
+
     public void AddUser(User user)
     {
-        this.Users.Add(user);
+        Users.Add(user);
     }
 
     public void UpdateUser(User user)
     {
-       var actualUser = GetUserByEmail(user.Email);
-       actualUser.Name = user.Name;
-       actualUser.Surname = user.Surname;
-       actualUser.BirthDate = user.BirthDate;
-       actualUser.Password = user.Password;
-       actualUser.Admin =user.Admin;
+        var actualUser = GetUserByEmail(user.Email);
+        actualUser.Name = user.Name;
+        actualUser.Surname = user.Surname;
+        actualUser.BirthDate = user.BirthDate;
+        actualUser.Password = user.Password;
+        actualUser.Admin = user.Admin;
     }
 
     public bool DeleteUser(string email)
     {
         var result = Users.RemoveAll(user => user.Email == email);
-         return (result != 0);
+        return result != 0;
     }
 }

@@ -1,5 +1,4 @@
 using System.IO.Enumeration;
-using Dominio;
 using Microsoft.VisualBasic;
 
 namespace Test;

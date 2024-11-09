@@ -1,21 +1,18 @@
 ﻿namespace Dominio.Data;
 
-public class TeamDataBase : ITeamDataBase
+public class TeamDataBase
 {
-    public List<Team> Teams { get; set; }
-
     public TeamDataBase()
     {
         Teams = new List<Team>();
     }
-    
+
+    public List<Team> Teams { get; set; }
+
     public Team GetTeamByName(string teamName)
     {
         var team = Teams.Find(x => x.Name == teamName);
-        if (team == null)
-        {
-            throw new NullReferenceException("Team not found");
-        }
+        if (team == null) throw new NullReferenceException("Team not found");
 
         return team;
     }
@@ -37,13 +34,13 @@ public class TeamDataBase : ITeamDataBase
         if (teamInDb != null)
         {
             teamInDb.MaxUsers = team.MaxUsers;
-            teamInDb.TasksDescription = team.TasksDescription;    
+            teamInDb.TasksDescription = team.TasksDescription;
         }
     }
 
     public List<Team> GetTeamsByUserEmail(string email)
     {
-      return  Teams.Where(x => x.TeamMembers.Exists(y=> y.Email == email)).ToList();
+        return Teams.Where(x => x.TeamMembers.Exists(y => y.Email == email)).ToList();
     }
 
     public List<Team> GetTeams()

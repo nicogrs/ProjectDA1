@@ -31,11 +31,18 @@ public class UserDatabaseRepository : IRepository<User>
 
     public User? Update(User updatedEntity)
     {
-        throw new NotImplementedException();
+        var actualUser = Find(x => x.Email == updatedEntity.Email);
+        actualUser.Name = updatedEntity.Name;
+        actualUser.Surname = updatedEntity.Surname;
+        actualUser.BirthDate = updatedEntity.BirthDate;
+        actualUser.Password = updatedEntity.Password;
+        actualUser.Admin = updatedEntity.Admin;
+        _context.SaveChanges();
+        return actualUser;
     }
 
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        var userToBeDeleted = Find(x => x.Id == id);
     }
 }

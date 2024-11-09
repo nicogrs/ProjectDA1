@@ -85,8 +85,6 @@ public class UserServiceTest
     [ExpectedException(typeof(InvalidOperationException))]
     public void CreateUserCatchException()
     {
-       // _mockUserDatabase.Setup(x => x.AddUser(_user)).Throws(new NullReferenceException());
-       // _mockUserDatabase.Setup(x => x.GetUserByEmail(null) ).Returns((User)null);
         _user.Email = null;
         _user.Password = "";
         _service.CreateUser(_user);
@@ -96,7 +94,7 @@ public class UserServiceTest
     [ExpectedException(typeof(InvalidOperationException))]
     public void AddExistingUser()
     {
-      //  _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+         _service.CreateUser(_user);
          _service.CreateUser(_user);
     }
     
@@ -111,7 +109,7 @@ public class UserServiceTest
     [TestMethod]
     public void GetUserByEmail()
     {
-      //  _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+        _service.CreateUser(_user);
         var userFromService = _service.GetUserByEmail(_user.Email);
         Assert.IsNotNull(userFromService);
     }
@@ -119,25 +117,23 @@ public class UserServiceTest
     [TestMethod]
     public void ResetUserPassword()
     {
-      //  _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+        _service.CreateUser(_user);
         var oldPassword = _user.Password;
         var resetedPassword = _service.ResetUserPassword(_user.Email);
         Assert.AreNotEqual(oldPassword, resetedPassword);
     }
     
     [TestMethod]
-    [ExpectedException(typeof(DataException
-        ))]
+    [ExpectedException(typeof(DataException))]
     public void InvalidUserResetPassword()
     {
-     //   _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns((User)null);
         var resetedPassword = _service.ResetUserPassword(_user.Email);
     }
 
     [TestMethod]
     public void UpdateUser()
     {
-    //    _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+        _service.CreateUser(_user);
         var updatedUser = new User
         {
             Name = _user.Name,
@@ -153,7 +149,7 @@ public class UserServiceTest
     [TestMethod]
     public void UpdateInvalidUser()
     {
-     //   _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+        _service.CreateUser(_user);
         var updatedUser = new User
         {
             Name = _user.Name,
@@ -170,7 +166,6 @@ public class UserServiceTest
     [ExpectedException(typeof(InvalidDataException))]
     public void UpdateUserCatchException()
     {
-     //   _mockUserDatabase.Setup(x => x.UpdateUser(_user)).Throws(new InvalidDataException());
         _service.UpdateUser(_user);
     }
     
@@ -178,7 +173,7 @@ public class UserServiceTest
     [TestMethod]
     public void DeleteUser()
     {
-   //     _mockUserDatabase.Setup(x => x.DeleteUser(_user.Email)).Returns(true);
+        _service.CreateUser(_user);
         var isUserDeleted = _service.DeleteUser(_user.Email);
         Assert.IsTrue(isUserDeleted );
     }
@@ -187,7 +182,6 @@ public class UserServiceTest
     [ExpectedException(typeof(ArgumentException))]
     public void DeleteInvalidUser()
     {
-   //     _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns((User)null);
         _service.DeleteUser("");
     }
 

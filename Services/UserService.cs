@@ -51,8 +51,7 @@ public class UserService : IUserService
 
     public User GetUserByEmail(string email)
     {
-       // return _userDatabase.GetUserByEmail(email);
-       throw new NotImplementedException();
+      return  _userDatabase.Find(u => u.Email == email);
     }
     
     public string ResetUserPassword(string email)
@@ -65,6 +64,7 @@ public class UserService : IUserService
             {
                 Name = actualUser.Name,
                 Email = actualUser.Email,
+                Surname = actualUser.Surname,
                 Password = newPassword,
                 BirthDate = actualUser.BirthDate,
             };
@@ -84,10 +84,10 @@ public class UserService : IUserService
             if (user.IsUserValid() && _passwordService.IsPasswordValid(user.Password))
             {
                 Console.WriteLine("entro a update");
-           //     _userDatabase.UpdateUser(user);
+                _userDatabase.Update(user);
                 return true;
             }
-        Console.WriteLine("No se puede realizar el usuario");
+        Console.WriteLine("No se puede modificar el usuario");
             return false;
         }
         catch (Exception e)
@@ -103,8 +103,8 @@ public class UserService : IUserService
         {
             throw new ArgumentException("El Email no Puede ser vacio", nameof(email));
         }
-        throw new NotImplementedException();
-       // return _userDatabase.DeleteUser(email);
+       _userDatabase.Delete(GetUserByEmail(email).Id);
+       return true;
     }
 
     public void AddTaskToPaperBin(Panel panel, Task task, string email)

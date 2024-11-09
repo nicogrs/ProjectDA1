@@ -10,6 +10,7 @@
       <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
       <ProjectReference Include="..\Dominio\Dominio.csproj" />
       <ProjectReference Include="..\DTOs\DTOs.csproj" />
+      <ProjectReference Include="..\Services\Services.csproj" />
     </ItemGroup>
 
     <ItemGroup>

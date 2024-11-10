@@ -82,4 +82,13 @@ public class EpicTest
         Assert.AreSame(t.Epic,e);
         Assert.AreNotSame(t2.Epic,e);
     }
+    
+    [TestMethod]
+    public void RemoveTaskFromEpicTest3()
+    {
+        e.RemoveTask(t);
+        
+        Assert.AreEqual(e.Tasks.Count, 0);
+        Assert.AreNotSame(t.Epic,e);
+    }
 }

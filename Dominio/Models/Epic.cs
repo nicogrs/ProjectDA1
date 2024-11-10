@@ -28,6 +28,7 @@ public class Epic
 
     public void RemoveTask(Task task)
     {
-        
+        Tasks.Remove(task);
+        task.Epic = null;
     }
 }

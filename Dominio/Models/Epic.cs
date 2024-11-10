@@ -1,3 +1,5 @@
+using System.Data;
+
 namespace Dominio;
 
 public class Epic
@@ -8,7 +10,7 @@ public class Epic
     public string Description { get; set; }
     public DateTime ExpirationDate { get; set; }
     public List<Task> Tasks { get; set; }
-    public int TaskCount { get; set; }
+
 
 
     public enum Precedence
@@ -21,6 +23,5 @@ public class Epic
     public void AddTask(Task task)
     {
         Tasks.Add(task);
-        TaskCount++;
     }
 }

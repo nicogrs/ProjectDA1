@@ -17,6 +17,9 @@ public class Epic
         Medium ,
         Urgent
     }
-    
-    
+
+    public void AddTask(Task task)
+    {
+        return;
+    }
 }

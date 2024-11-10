@@ -1,5 +1,5 @@
 using Dominio;
-using Task = System.Threading.Tasks.Task;
+using Task = Dominio.Task;
 
 namespace Test;
 
@@ -32,5 +32,27 @@ public class EpicTest
         Assert.AreEqual(e.Description, "Descripcion de la epica");
         Assert.AreEqual(e.ExpirationDate, new DateTime(2030,1,1));
         Assert.IsNull(e.Tasks);
+    }
+
+    [TestMethod]
+    public void AddTaskToEpicTest()
+    {
+        Task t = new Task()
+        {
+            Title = "Titulo de tarea",
+            Description = "Descripcion de tarea",
+            Comments = new List<Comment>(),
+            ExpirationDate = new DateTime(2029, 1, 1),
+            Precedence = Task.Priority.Low
+        };
+
+        e.AddTask(t);
+        
+        Assert.AreEqual(e.Tasks.Count,1)
+        Assert.AreEqual(e.Tasks[0].Title, "Titulo de epica");
+        Assert.AreEqual(e.Tasks[0].Description, "Descripcion de tarea");
+        Assert.AreEqual(e.Tasks[0].Comments.Count, 0);
+        Assert.AreEqual(e.Tasks[0].ExpirationDate, new DateTime(2029, 1, 1));
+        Assert.AreEqual(e.Tasks[0].Precedence, Task.Priority.Low);
     }
 }

@@ -49,10 +49,6 @@ public class EpicTest
         e.AddTask(t);
 
         Assert.AreEqual(e.Tasks.Count, 1);
-        Assert.AreEqual(e.Tasks[0].Title, "Titulo de tarea");
-        Assert.AreEqual(e.Tasks[0].Description, "Descripcion de tarea");
-        Assert.AreEqual(e.Tasks[0].Comments.Count, 0);
-        Assert.AreEqual(e.Tasks[0].ExpirationDate, new DateTime(2029, 1, 1));
-        Assert.AreEqual(e.Tasks[0].Precedence, Task.Priority.Low);
+        Assert.AreSame(e.Tasks[0], t);
     }
 }

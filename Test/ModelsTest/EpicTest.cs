@@ -8,6 +8,7 @@ public class EpicTest
 {
     private Epic e;
     private List<Task> tasks;
+    private Task t;
     
     [TestInitialize]
     public void Setup()
@@ -21,6 +22,15 @@ public class EpicTest
             Description = "Descripcion de la epica",
             ExpirationDate = new DateTime(2030, 1, 1),
             Tasks = new List<Task>()
+        };
+        
+        t = new Task()
+        {
+            Title = "Titulo de tarea",
+            Description = "Descripcion de tarea",
+            Comments = new List<Comment>(),
+            ExpirationDate = new DateTime(2029, 1, 1),
+            Precedence = Task.Priority.Low
         };
     }
     
@@ -37,19 +47,20 @@ public class EpicTest
     [TestMethod]
     public void AddTaskToEpicTest()
     {
-        Task t = new Task()
-        {
-            Title = "Titulo de tarea",
-            Description = "Descripcion de tarea",
-            Comments = new List<Comment>(),
-            ExpirationDate = new DateTime(2029, 1, 1),
-            Precedence = Task.Priority.Low
-        };
-
         e.AddTask(t);
 
         Assert.AreEqual(e.Tasks.Count, 1);
         Assert.AreSame(e.Tasks[0], t);
         Assert.AreSame(t.Epic,e);
+    }
+
+    [TestMethod]
+    public void RemoveTaskFromEpicTest()
+    {
+        e.AddTask(t);
+        e.RemoveTask(t);
+        
+        Assert.AreEqual(e.Tasks.Count, 0);
+        Assert.AreNotSame(t.Epic,e);
     }
 }

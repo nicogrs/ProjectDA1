@@ -25,4 +25,9 @@ public class Epic
         Tasks.Add(task);
         task.Epic = this;
     }
+
+    public void RemoveTask(Task task)
+    {
+        
+    }
 }

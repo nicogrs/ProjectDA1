@@ -28,7 +28,10 @@ public class Epic
 
     public void RemoveTask(Task task)
     {
-        Tasks.Remove(task);
-        task.Epic = null;
+        if (task.Epic == this)
+        {
+            Tasks.Remove(task);
+            task.Epic = null;
+        }
     }
 }

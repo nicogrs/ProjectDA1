@@ -20,6 +20,7 @@ public class Epic
 
     public void AddTask(Task task)
     {
-        return;
+        Tasks.Add(task);
+        TaskCount++;
     }
 }

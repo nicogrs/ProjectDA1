@@ -20,7 +20,7 @@ public class EpicTest
             Priority = Epic.Precedence.Low,
             Description = "Descripcion de la epica",
             ExpirationDate = new DateTime(2030, 1, 1),
-            Tasks = null
+            Tasks = new List<Task>()
         };
     }
     
@@ -31,7 +31,7 @@ public class EpicTest
         Assert.AreEqual(e.Priority,Epic.Precedence.Low);
         Assert.AreEqual(e.Description, "Descripcion de la epica");
         Assert.AreEqual(e.ExpirationDate, new DateTime(2030,1,1));
-        Assert.IsNull(e.Tasks);
+        Assert.AreEqual(e.Tasks.Count, 0);
     }
 
     [TestMethod]
@@ -47,9 +47,9 @@ public class EpicTest
         };
 
         e.AddTask(t);
-        
-        Assert.AreEqual(e.Tasks.Count,1)
-        Assert.AreEqual(e.Tasks[0].Title, "Titulo de epica");
+
+        Assert.AreEqual(e.Tasks.Count, 1);
+        Assert.AreEqual(e.Tasks[0].Title, "Titulo de tarea");
         Assert.AreEqual(e.Tasks[0].Description, "Descripcion de tarea");
         Assert.AreEqual(e.Tasks[0].Comments.Count, 0);
         Assert.AreEqual(e.Tasks[0].ExpirationDate, new DateTime(2029, 1, 1));

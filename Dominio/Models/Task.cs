@@ -12,6 +12,8 @@ public class Task : IPaperBinItem
     public DateTime ExpirationDate { get; set; }
     public List<Comment> Comments { get; set; }
     public int TaskId { get; private set; }
+    
+    public Epic Epic { get; set; }
 
     public Task()
     {

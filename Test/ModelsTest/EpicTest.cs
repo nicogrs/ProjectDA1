@@ -50,5 +50,6 @@ public class EpicTest
 
         Assert.AreEqual(e.Tasks.Count, 1);
         Assert.AreSame(e.Tasks[0], t);
+        Assert.AreSame(t.Epic,e);
     }
 }

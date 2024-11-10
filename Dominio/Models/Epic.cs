@@ -23,5 +23,6 @@ public class Epic
     public void AddTask(Task task)
     {
         Tasks.Add(task);
+        task.Epic = this;
     }
 }

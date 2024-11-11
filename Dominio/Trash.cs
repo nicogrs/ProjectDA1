@@ -27,4 +27,13 @@ public class Trash
             ElementsCount--;
         }
     }
+
+    public void RestoreElementFromPaperbin(IDeleteable item)
+    {
+        if (Paperbin.Remove(item))
+        {
+            ElementsCount--;
+            item.IsDeleted = false;
+        }
+    }
 }

@@ -48,6 +48,13 @@ public class TrashTest
         Assert.AreEqual(_user.PaperBin.ElementsCount, 0);
     }
     
-
+    [TestMethod]
+    public void RestoreElementFromPaperBin()
+    {
+        Task taskTest = new Task{Name = "Task 1"};
+        _user.PaperBin.AddElementToPaperbin(taskTest);
+        _user.PaperBin.RestoreElementFromPaperbin(taskTest);
+        Assert.AreEqual(_user.PaperBin.ElementsCount, 0);
+    }
     
 }

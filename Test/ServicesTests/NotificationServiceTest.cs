@@ -11,14 +11,15 @@ public class NotificationServiceTest
 {
     private NotificationService _notificationService;
     private SqlContext _context;
-    private IRepository<Notification> _panelDatabase;
+    private IRepository<Notification> _notificationDatabase;
 
     [TestInitialize]
     public void Setup()
     {
         SqlContextFactory sqlContextFactory = new SqlContextFactory();
         _context = sqlContextFactory.CreateMemoryContext();
-        _notificationService = new NotificationService(_panelDatabase);
+        _notificationDatabase = new NotificationDatabaseRepository(_context);
+        _notificationService = new NotificationService(_notificationDatabase);
     }
 
     [TestMethod]
@@ -29,10 +30,12 @@ public class NotificationServiceTest
             Email = "test@test.com",
             Name = "Test",
             Surname = "Test",
+            Password = "Test123$"
         };
         Notification notification = new Notification();
         notification.Text = "Test";
         notification.ToUser = user;
-        _notificationService.AddNotification(notification);
+        var resultNotification = _notificationService.AddNotification(notification);
+        Assert.AreEqual(resultNotification, notification);
     }
 }

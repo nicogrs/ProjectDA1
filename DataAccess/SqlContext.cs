@@ -13,6 +13,7 @@ public class SqlContext : DbContext
    //public DbSet<DeletedTask> DeletedTasks { get; set; }
    //public DbSet<DeletedPanel> DeletedPanels { get; set; }
    public DbSet<Comment> Comments { get; set; }
+   public DbSet<Notification> Notifications { get; set; }
 
    public SqlContext(DbContextOptions<SqlContext> options) : base(options)
    {

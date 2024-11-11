@@ -12,9 +12,11 @@ public class NotificationDatabaseRepository : IRepository<Notification>
         _context = context;
     }
 
-    public Notification Add(Notification oneElement)
+    public Notification Add(Notification notification)
     {
-        throw new NotImplementedException();
+        _context.Notifications.Add(notification);
+        _context.SaveChanges();
+        return notification;
     }
 
     public Notification? Find(Func<Notification, bool> filter)

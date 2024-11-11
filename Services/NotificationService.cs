@@ -12,8 +12,9 @@ public class NotificationService
         _notificationDatabase = notificationDatabase;
     }
 
-    public void AddNotification(Notification notification)
+    public Notification AddNotification(Notification notification)
     {
-        throw new NotImplementedException();
+        return _notificationDatabase.Add(notification);
     }
+    
 }

@@ -9,7 +9,6 @@ using Moq;
 [TestClass]
 public class TrashTest
 {
-    Mock<IUserDatabase> mockUserDatabase;
     private IUserService _userService;
     private User _user;
     [TestInitialize]
@@ -17,8 +16,6 @@ public class TrashTest
     {
 
         
-        mockUserDatabase = new Mock<IUserDatabase>();
-        //_userService = new UserService(mockUserDatabase.Object);
         _user = new User
         {
             Name = "Carlos",

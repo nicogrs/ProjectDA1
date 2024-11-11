@@ -4,7 +4,6 @@ using Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Services;
 using Task = Dominio.Task;
-using IUserDatabase = Dominio.IUserDatabase;
 
 namespace InterfazWeb;
 

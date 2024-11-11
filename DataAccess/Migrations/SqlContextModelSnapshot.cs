@@ -62,6 +62,33 @@ namespace DataAccess.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("Dominio.Epic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Epic");
+                });
+
             modelBuilder.Entity("Dominio.IDeleteable", b =>
                 {
                     b.Property<int>("Id")
@@ -220,6 +247,9 @@ namespace DataAccess.Migrations
                 {
                     b.HasBaseType("Dominio.IDeleteable");
 
+                    b.Property<int>("EpicId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
@@ -228,6 +258,8 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("Precedence")
                         .HasColumnType("int");
+
+                    b.HasIndex("EpicId");
 
                     b.HasIndex("PanelId");
 
@@ -307,13 +339,26 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Dominio.Task", b =>
                 {
+                    b.HasOne("Dominio.Epic", "Epic")
+                        .WithMany("Tasks")
+                        .HasForeignKey("EpicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Dominio.Panel", "Panel")
                         .WithMany("Tasks")
                         .HasForeignKey("PanelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Epic");
+
                     b.Navigation("Panel");
+                });
+
+            modelBuilder.Entity("Dominio.Epic", b =>
+                {
+                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("Dominio.Team", b =>

@@ -23,4 +23,9 @@ public class NotificationService
         var notifications = _notificationDatabase.FindAll();
         return notifications.Where(x => x.ToUserId == userId).ToList();
     }
+
+    public void DeleteNotification(Notification notification)
+    {
+        throw new NotImplementedException();
+    }
 }

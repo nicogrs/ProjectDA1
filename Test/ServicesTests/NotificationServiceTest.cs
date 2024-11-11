@@ -64,4 +64,25 @@ public class NotificationServiceTest
        var result = _notificationService.GetNotificationsByUserId(user.Id);
       CollectionAssert.AreEquivalent(result,new List<Notification> {notification1,notification});  
     }
+
+    [TestMethod]
+    public void DeleteNotificationTest()
+    {
+        User user = new User
+        {
+            Email = "test@test.com",
+            Name = "Test",
+            Surname = "Test",
+            Password = "Test123$"
+        };
+        Notification notification = new Notification
+        { 
+            ToUser = user,
+            Text = "Test2"
+        };
+        _notificationService.AddNotification(notification);
+        _notificationService.DeleteNotification(notification);
+        var result = _notificationService.GetNotificationsByUserId(user.Id);
+        Assert.IsNull(result);
+    }
 }

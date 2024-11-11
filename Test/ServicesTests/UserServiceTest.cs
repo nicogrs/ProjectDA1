@@ -169,7 +169,6 @@ public class UserServiceTest
         _service.UpdateUser(_user);
     }
     
-    
     [TestMethod]
     public void DeleteUser()
     {

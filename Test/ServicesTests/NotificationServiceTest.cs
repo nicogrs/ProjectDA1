@@ -38,4 +38,28 @@ public class NotificationServiceTest
         var resultNotification = _notificationService.AddNotification(notification);
         Assert.AreEqual(resultNotification, notification);
     }
+
+    [TestMethod]
+    public void GetNotificationsByUserIdTest()
+    {
+        User user = new User
+        {
+            Email = "test@test.com",
+            Name = "Test",
+            Surname = "Test",
+            Password = "Test123$"
+        };
+        Notification notification = new Notification
+        { 
+            ToUser = user,
+            Text = "Test2"
+        };
+        Notification notification1 = new Notification
+        {
+            Text = "Test",
+            ToUser = user
+        };
+       var result = _notificationService.GetNotificationsByUserId(user.Id);
+      CollectionAssert.AreEqual(result,new List<Notification> {notification1,notification});  
+    }
 }

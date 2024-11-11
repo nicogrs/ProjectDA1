@@ -1,3 +1,4 @@
+using System.Collections;
 using Dominio;
 using Interfaces;
 
@@ -16,5 +17,9 @@ public class NotificationService
     {
         return _notificationDatabase.Add(notification);
     }
-    
+
+    public List<Notification> GetNotificationsByUserId(int userId)
+    {
+        throw new NotImplementedException();
+    }
 }

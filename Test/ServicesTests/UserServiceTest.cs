@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Azure.Core;
 using DataAccess;
 using Interfaces;
 using Services;
@@ -184,4 +185,58 @@ public class UserServiceTest
         _service.DeleteUser("");
     }
 
+    [TestMethod]
+    public void AddElementToPaperBinTest()
+    {
+        Task task = new Task
+        {
+            Name = "Test",
+            Description = "DescriptionTest",
+        };
+        _service.CreateUser(_user);
+        _service.AddElementToPaperBin(_user.Email,task);
+        Assert.AreEqual(_user.PaperBin.ElementsCount, 1);
+    }
+    [TestMethod]
+    public void DeleteElementFromPaperbinTest()
+    {
+        Task task = new Task
+        {
+            Name = "Test",
+            Description = "DescriptionTest",
+        };
+        _service.CreateUser(_user);
+        _service.AddElementToPaperBin(_user.Email,task);
+        _service.DeleteElementFromPaperbin(_user.Email,task);
+        Assert.AreEqual(_user.PaperBin.ElementsCount, 0);
+    }
+    
+    [TestMethod]
+    public void GetDeletedElementsTest()
+    {
+        Task task = new Task
+        {
+            Name = "Test",
+            Description = "DescriptionTest",
+        };
+        _service.CreateUser(_user);
+        _service.AddElementToPaperBin(_user.Email,task);
+        var elements = _service.GetDeletedElements(_user.Email);
+        CollectionAssert.Contains(elements,task);
+    }
+    
+    [TestMethod]
+    public void RestoreElementTest()
+    {
+        Task task = new Task
+        {
+            Name = "Test",
+            Description = "DescriptionTest",
+        };
+        _service.CreateUser(_user);
+        _service.AddElementToPaperBin(_user.Email,task);
+        _service.RestoreElement(task.Id,_user.Email);
+        Assert.AreEqual(task.IsDeleted,false);
+    }
+    
 }

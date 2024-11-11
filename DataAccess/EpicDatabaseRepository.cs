@@ -11,9 +11,10 @@ public class EpicDatabaseRepository : IRepository<Epic>
         _context = context;
     }
 
-    public Epic Add(Epic oneElement)
+    public Epic Add(Epic epic)
     {
-        throw new NotImplementedException();
+       _context.Epic.Add(epic);
+       return epic;
     }
 
     public Epic? Find(Func<Epic, bool> filter)

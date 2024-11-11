@@ -11,4 +11,9 @@ public class EpicService
     {
         _epicDatabase = epicDatabase;
     }
+
+    public Epic CreateEpic(Epic epic)
+    {
+      return _epicDatabase.Add(epic);
+    }
 }

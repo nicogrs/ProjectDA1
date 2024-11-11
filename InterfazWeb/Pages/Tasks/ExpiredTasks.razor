@@ -1,5 +1,5 @@
-@page "/{teamName}/panels/expiredtasks"
-@using Dominio
+@page "/{teamName}/{panelid}/expiredtasks"
+@using Services
 @inject TaskService TkService
 @inject NavigationManager Navigation
 @inject Session Session
@@ -15,7 +15,7 @@
     {
     <div class="d-flex justify-content-center align-items-center">
         <div class="w-75">
-            <ExpiredTaskCard Title="@task.Title"
+            <ExpiredTaskCard Title="@task.Name"
                       Description="@task.Description"
                       Precedence="@task.Precedence"
                       EndDate="@task.ExpirationDate"
@@ -35,6 +35,8 @@
 @code {
     [Parameter]
     public string teamName { get; set; }
+    [Parameter]
+    public string panelId { get; set; }
     
     private List<Dominio.Task> Tasks;
     
@@ -45,7 +47,7 @@
             Navigation.NavigateTo("/error");
         }
 
-        Tasks = TkService.GetAllExpiredTasks(teamName);
+        Tasks = TkService.GetAllExpiredTasks(int.Parse(panelId));
     }
     
 }

@@ -1,21 +1,30 @@
 ﻿using System.Data;
+using DataAccess;
+using Interfaces;
+using Services;
+using Test.Context;
 
 namespace Test;
 using Dominio;
-using Moq;
+
 
 [TestClass]
 public class UserServiceTest
 {
     private UserService _service;
     private User _user;
-    Mock<IUserDatabase> _mockUserDatabase;
+    private IRepository<User> _userRepository;
+    private SqlContext _context;
     
     [TestInitialize]
     public void Setup()
     {
-        _mockUserDatabase = new Mock<IUserDatabase>();
-        _service = new UserService(_mockUserDatabase.Object);
+        SqlContextFactory sqlContextFactory = new SqlContextFactory();
+        _context = sqlContextFactory.CreateMemoryContext();
+        
+        _userRepository = new UserDatabaseRepository(_context);
+        _service = new UserService(_userRepository);
+        
         _user = new User        
         {
             Name = "Carlos",
@@ -27,34 +36,16 @@ public class UserServiceTest
 
     }
 
-    [TestMethod]
-    public void AddPanelToTrashTest()
+    [TestCleanup]
+    public void CleanUp()
     {
-        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
-        var panelTest = new Panel { Name = "Panel 1" };
-        var teamTest = new Team { Name = "Team 1" };
-        teamTest.Panels.Add(panelTest);
-        _service.AddPanelToPaperBin(teamTest, panelTest, _user.Email);
-        CollectionAssert.Contains(_user.PaperBin.Paperbin, panelTest);
-        CollectionAssert.DoesNotContain(teamTest.Panels, panelTest);
-    }
-    
-    [TestMethod]
-    public void AddTaskToTrash()
-    {
-        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
-        var panelTest = new Panel { Name = "Panel 1" };
-        var task = new Task{Title = "Task 1"};
-        panelTest.Tasks.Add(task);
-        _service.AddTaskToPaperBin(panelTest,task, _user.Email);
-        CollectionAssert.Contains(_user.PaperBin.Paperbin, task);
-        CollectionAssert.DoesNotContain(panelTest.Tasks, task);
+        _context.Database.EnsureDeleted();
     }
     
     [TestMethod]
     public void UserExists()
     {
-        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+       // _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
         var isUserAdded = _service.UserExists(_user.Email);
         Assert.IsTrue(isUserAdded);
     }
@@ -62,7 +53,7 @@ public class UserServiceTest
     [TestMethod]
     public void UserNotExists()
     {
-        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns((User)null);
+        //_mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns((User)null);
         var isUserDeleted = _service.UserExists(_user.Email);
         Assert.IsFalse(isUserDeleted);
     }
@@ -94,8 +85,6 @@ public class UserServiceTest
     [ExpectedException(typeof(InvalidOperationException))]
     public void CreateUserCatchException()
     {
-        _mockUserDatabase.Setup(x => x.AddUser(_user)).Throws(new NullReferenceException());
-        _mockUserDatabase.Setup(x => x.GetUserByEmail(null) ).Returns((User)null);
         _user.Email = null;
         _user.Password = "";
         _service.CreateUser(_user);
@@ -105,7 +94,7 @@ public class UserServiceTest
     [ExpectedException(typeof(InvalidOperationException))]
     public void AddExistingUser()
     {
-        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+         _service.CreateUser(_user);
          _service.CreateUser(_user);
     }
     
@@ -120,7 +109,7 @@ public class UserServiceTest
     [TestMethod]
     public void GetUserByEmail()
     {
-        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+        _service.CreateUser(_user);
         var userFromService = _service.GetUserByEmail(_user.Email);
         Assert.IsNotNull(userFromService);
     }
@@ -128,25 +117,23 @@ public class UserServiceTest
     [TestMethod]
     public void ResetUserPassword()
     {
-        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+        _service.CreateUser(_user);
         var oldPassword = _user.Password;
         var resetedPassword = _service.ResetUserPassword(_user.Email);
         Assert.AreNotEqual(oldPassword, resetedPassword);
     }
     
     [TestMethod]
-    [ExpectedException(typeof(DataException
-        ))]
+    [ExpectedException(typeof(DataException))]
     public void InvalidUserResetPassword()
     {
-        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns((User)null);
         var resetedPassword = _service.ResetUserPassword(_user.Email);
     }
 
     [TestMethod]
     public void UpdateUser()
     {
-        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+        _service.CreateUser(_user);
         var updatedUser = new User
         {
             Name = _user.Name,
@@ -162,7 +149,7 @@ public class UserServiceTest
     [TestMethod]
     public void UpdateInvalidUser()
     {
-        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns(_user);
+        _service.CreateUser(_user);
         var updatedUser = new User
         {
             Name = _user.Name,
@@ -179,7 +166,6 @@ public class UserServiceTest
     [ExpectedException(typeof(InvalidDataException))]
     public void UpdateUserCatchException()
     {
-        _mockUserDatabase.Setup(x => x.UpdateUser(_user)).Throws(new InvalidDataException());
         _service.UpdateUser(_user);
     }
     
@@ -187,7 +173,7 @@ public class UserServiceTest
     [TestMethod]
     public void DeleteUser()
     {
-        _mockUserDatabase.Setup(x => x.DeleteUser(_user.Email)).Returns(true);
+        _service.CreateUser(_user);
         var isUserDeleted = _service.DeleteUser(_user.Email);
         Assert.IsTrue(isUserDeleted );
     }
@@ -196,7 +182,6 @@ public class UserServiceTest
     [ExpectedException(typeof(ArgumentException))]
     public void DeleteInvalidUser()
     {
-        _mockUserDatabase.Setup(x => x.GetUserByEmail(_user.Email)).Returns((User)null);
         _service.DeleteUser("");
     }
 

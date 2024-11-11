@@ -1,6 +1,7 @@
 @page "/{teamName}/{panelId}/modify"
 @using Dominio
-@inject PanelService PlService
+@using Interfaces
+@inject IPanelService PlService
 @inject NavigationManager Navigation
 
 <PageTitle>Modificar Panel</PageTitle>
@@ -51,7 +52,7 @@
 
     protected override void OnInitialized()
     {
-        toModify = PlService.GetPanelById(teamName, int.Parse(panelId));
+        toModify = PlService.GetPanelById(int.Parse(panelId));
         modelChangePanel.Description = toModify.Description;
         modelChangePanel.Name= toModify.Name;
     }

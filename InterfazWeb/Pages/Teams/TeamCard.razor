@@ -1,7 +1,8 @@
 @using Dominio
+@using Interfaces
 @inject NavigationManager Navigation
 @inject Session Session
-@inject ITeamDataBase TmDataBase
+@inject ITeamService TmService
 
 <div class="card">
     <div class="card-body">
@@ -109,7 +110,7 @@
 
     private void ConfirmDelete()
     {
-        TmDataBase.RemoveTeamFromDatabase(Title);
+        TmService.DeleteTeam(Title);
         CloseModal();
         OnTeamDeleted.InvokeAsync();
     }

@@ -26,7 +26,7 @@ public class EpicTest
         
         t = new Task()
         {
-            Title = "Titulo de tarea",
+            Name = "Titulo de tarea",
             Description = "Descripcion de tarea",
             Comments = new List<Comment>(),
             ExpirationDate = new DateTime(2029, 1, 1),
@@ -34,7 +34,7 @@ public class EpicTest
         };
         t2 = new Task()
         {
-            Title = "Titulo de tarea 2",
+            Name = "Titulo de tarea 2",
             Description = "Descripcion de tarea 2",
             Comments = new List<Comment>(),
             ExpirationDate = new DateTime(2028, 1, 1),

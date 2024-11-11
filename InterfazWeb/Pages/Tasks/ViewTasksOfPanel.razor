@@ -1,27 +1,27 @@
 @page "/{teamName}/{panelId}/tasks"
-@using Dominio
-@using Dominio.Data
-@inject PanelService PnService
+@using Interfaces
+@using Services
+@inject IPanelService PnService
+@inject ITeamService TmService
 @inject TaskService TkService
-@inject ITeamDataBase TmDatabase
 @inject Session Session
 @inject NavigationManager Navigation
 <PageTitle>Task</PageTitle>
 
 <h3 class="mb-3">Tareas</h3>
-<div class="row d-inline">
-    <div class="col-4 d-inline">
-        <button class="btn btn-primary" type="submit" @onclick="CreateTask">Crear Tarea</button>
-    </div>
-    @if (!Session.IsAdmin)
-    {
-        <div class="col-4 d-inline">
+<div class="row d-flex justify-content-between align-items-center">
+    <div class="col d-flex">
+        <button class="btn btn-primary me-2" type="submit" @onclick="CreateTask">Crear Tarea</button>
+        <button class="btn btn-primary me-2" type="submit" @onclick="ExpiredTasks">Tareas Vencidas</button>
+        @if (Session.IsAdmin)
+        {
             <button class="btn btn-primary" type="submit" @onclick="GoToImport">Importar tareas desde .csv</button>
-        </div>
-    }
-    <div class="col-4 w-100 d-inline">
+        }
+    </div>
+    <div class="col-auto">
         <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver a Paneles</button>
     </div>
+
 </div>
 <div class="row">
     @if (Tasks.Count != 0)
@@ -32,14 +32,14 @@
             {
                 <div class="d-flex justify-content-center align-items-center">
                     <div class="w-75">
-                        <TaskCard Title="@task.Title"
+                        <TaskCard Title="@task.Name"
                                   Description="@task.Description"
                                   Precedence="@task.Precedence"
                                   EndDate="@task.ExpirationDate"
                                   Comments="@task.Comments"
                                   teamName="@teamName"
                                   panelId="@panelId"
-                                  TaskId="@task.TaskId"
+                                  TaskId="@task.Id"
                                   OnTaskDeleted="RefreshTasks"/>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
 
     private void RefreshTasks()
     {
-        Tasks = TkService.GetNonExpiredTasks(teamName, int.Parse(panelId));
+        Tasks = TkService.GetNonExpiredTasks(int.Parse(panelId));
     }
     
     private void CreateTask()
@@ -84,14 +84,15 @@
         Navigation.NavigateTo($"/{teamName}/{panelId}/TaskImport");
     }
     
+    public void ExpiredTasks()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/expiredtasks");
+    }
+    
     private void GoBack()
     {
         Navigation.NavigateTo($"/{teamName}/panel");
     }
-
-    private void DeletePanel()
-    {
-        PnService.RemovePanel(teamName, int.Parse(panelId));
-    }
+    
     
 }

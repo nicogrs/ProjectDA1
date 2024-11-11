@@ -1,5 +1,4 @@
 using System.IO.Enumeration;
-using Dominio;
 using Microsoft.VisualBasic;
 
 namespace Test;
@@ -37,19 +36,19 @@ public class TaskImportTest
         {
             new Task()
             {
-                Title = "Tarea Valida 1",
+                Name = "Tarea Valida 1",
                 Description = "Datos validos.",
                 ExpirationDate = new DateTime(2000, 01, 01)
             },
             new Task()
             {
-                Title = "Tarea Valida 2",
+                Name = "Tarea Valida 2",
                 Description = "Datos validos.",
                 ExpirationDate = new DateTime(2024, 12, 12)
             },
             new Task()
             {
-            Title = "Tarea Valida 3",
+            Name = "Tarea Valida 3",
             Description = "Datos validos - final.",
             ExpirationDate = new DateTime(2020, 06, 06)
         }
@@ -63,16 +62,16 @@ public class TaskImportTest
     [TestMethod]
     public void ReadTasksFromContentTest()
     {
-        string content = $"{referenceTasks[0].Title},{referenceTasks[0].Description},{referenceTasks[0].ExpirationDate.ToShortDateString()},1\n" +
-                         $"{referenceTasks[1].Title},{referenceTasks[1].Description},{referenceTasks[1].ExpirationDate.ToShortDateString()},1\n" +
-                         $"{referenceTasks[2].Title},{referenceTasks[2].Description},{referenceTasks[2].ExpirationDate.ToShortDateString()},1";
+        string content = $"{referenceTasks[0].Name},{referenceTasks[0].Description},{referenceTasks[0].ExpirationDate.ToShortDateString()},1\n" +
+                         $"{referenceTasks[1].Name},{referenceTasks[1].Description},{referenceTasks[1].ExpirationDate.ToShortDateString()},1\n" +
+                         $"{referenceTasks[2].Name},{referenceTasks[2].Description},{referenceTasks[2].ExpirationDate.ToShortDateString()},1";
         
         List<Task> tasks = taskImport.ReadTasksFromContent(content,new User(){Name = "User 1"});
 
         int taskListElementCount = tasks.Count;
         for (int i = 0; i < taskListElementCount; i++)
         {
-            Assert.AreEqual(tasks[i].Title, referenceTasks[i].Title);
+            Assert.AreEqual(tasks[i].Name, referenceTasks[i].Name);
             Assert.AreEqual(tasks[i].Description, referenceTasks[i].Description);
             Assert.AreEqual(tasks[i].ExpirationDate, referenceTasks[i].ExpirationDate);
         }

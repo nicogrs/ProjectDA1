@@ -3,7 +3,6 @@ using Interfaces;
 using Services;
 using Test.Context;
 using Dominio;
-using Moq;
 
 namespace Test;
 

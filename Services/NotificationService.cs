@@ -20,6 +20,7 @@ public class NotificationService
 
     public List<Notification> GetNotificationsByUserId(int userId)
     {
-        throw new NotImplementedException();
+        var notifications = _notificationDatabase.FindAll();
+        return notifications.Where(x => x.ToUserId == userId).ToList();
     }
 }

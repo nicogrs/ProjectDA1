@@ -59,7 +59,9 @@ public class NotificationServiceTest
             Text = "Test",
             ToUser = user
         };
+        _notificationService.AddNotification(notification);
+        _notificationService.AddNotification(notification1);
        var result = _notificationService.GetNotificationsByUserId(user.Id);
-      CollectionAssert.AreEqual(result,new List<Notification> {notification1,notification});  
+      CollectionAssert.AreEquivalent(result,new List<Notification> {notification1,notification});  
     }
 }

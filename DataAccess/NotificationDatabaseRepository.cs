@@ -26,7 +26,7 @@ public class NotificationDatabaseRepository : IRepository<Notification>
 
     public IList<Notification> FindAll()
     {
-        throw new NotImplementedException();
+        return _context.Notifications.ToList();
     }
 
     public Notification? Update(Notification updatedEntity)

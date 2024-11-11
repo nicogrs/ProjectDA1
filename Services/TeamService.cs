@@ -27,6 +27,7 @@ public class TeamService : ITeamService
     {
         return _teamDatabase.Find(t => t.Name == teamName) != null;
     }
+    
 
     public Team GetTeamByName(string teamName)
     {
@@ -94,6 +95,20 @@ public class TeamService : ITeamService
         }
         return hasBeenRemoved;
     }
+
+    public void AddPanelToTeam(Panel panel, string teamName)
+    {
+        var team = GetTeamByName(teamName);
+        team.Panels.Add(panel);
+        _teamDatabase.Update(team);
+    }
+
+    public void RemovePanelFromTeam(Panel panel, string teamName)
+    {
+        var team = GetTeamByName(teamName);
+        team.Panels.Remove(panel);
+        _teamDatabase.Update(team);
+    }
     
     public List<Team> GetAllTeams()
     {
@@ -104,6 +119,12 @@ public class TeamService : ITeamService
     {
         List<Team> teams = _teamDatabase.FindAll().ToList();
         return teams.Where(x => x.TeamMembers.Exists(y => y.Email == userEmail)).ToList();
+    }
+
+    public void DeleteTeam(string teamName)
+    {
+        var team = GetTeamByName(teamName);
+        _teamDatabase.Delete(team.Id);
     }
     
 }

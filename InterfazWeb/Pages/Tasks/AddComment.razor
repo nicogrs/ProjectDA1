@@ -1,5 +1,6 @@
-@page "/{teamName}/{panelId}/{title}/createComment"
+@page "/{teamName}/{panelId}/{taskId}/createComment"
 @using Dominio
+@using Services
 @inject TaskService TskService
 @inject NavigationManager Navigation
 @inject Session Session
@@ -41,7 +42,7 @@
     [Parameter]
     public string panelId { get; set; }
     [Parameter]
-    public string title { get; set; }
+    public string taskId { get; set; }
     
     private Comment modelAddComment;
     private List<User> users;
@@ -53,13 +54,22 @@
         {
         Navigation.NavigateTo("/error");
         }
-        modelAddComment = new Comment( string.Empty);
+        modelAddComment = new Comment();
     }
 
     private void HandleCreate()
     {
-        Dominio.Task taskToComment = TskService.GetNonExpiredTasks(teamName, int.Parse(panelId)).Find(t => t.Title == title);
-        taskToComment.AddComment(Session.CurrentUser, modelAddComment.Content);
+     
+        Comment c = new Comment
+        {
+            Content = modelAddComment.Content,
+            CreatedById = Session.CurrentUser.Id,
+            CreatedBy = Session.CurrentUser,      
+            Resolved = false                      
+        };
+        TskService.AddCommentToTask(int.Parse(taskId),c);
+       // Dominio.Task taskToComment = TskService.GetNonExpiredTasks(int.Parse(panelId)).Find(t => t.Name == title);
+       // taskToComment.AddComment(Session.CurrentUser, modelAddComment.Content);
         message = "Comentario agregado con éxito";
         modelAddComment.Content = "";
     }

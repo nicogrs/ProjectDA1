@@ -185,5 +185,17 @@ public class TeamServiceTest
         CollectionAssert.AreEquivalent(teamsByUserEmail, new List<Team> { team1, team2 });
     }
     
+    [TestMethod]
+    public void DeleteTeamOk()
+    {
+        Team team1 = new Team { Name = "Team 1" };
+        Team team2 = new Team { Name = "Team 2" };
+        _teamService.CreateTeam(team1);
+        _teamService.CreateTeam(team2);
+        _teamService.DeleteTeam(team1.Name);
+        var allTeams = _teamService.GetAllTeams();
+        CollectionAssert.AreEquivalent(allTeams, new List<Team> {team1, team2 });
+    }
+
     
 }

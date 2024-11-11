@@ -105,7 +105,7 @@ public class TaskImport
     private Task TaskFromStringList(List<string> strList)
     {
         var task = new Task();
-        task.Title = strList[0];
+        task.Name = strList[0];
         task.Description = strList[1];
 
         var strDate = strList[2];

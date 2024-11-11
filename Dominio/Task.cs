@@ -1,6 +1,13 @@
 ﻿namespace Dominio;
-public class Task : IPaperBinItem
+
+public class Task : IDeleteable
+
 {
+    public Priority Precedence { get; set; }
+    public int PanelId { get; set; }
+    public Panel Panel { get; set; }
+    public DateTime ExpirationDate { get; set; }
+    public List<Comment> Comments { get; set; }
     public enum Priority
     {
         Low,
@@ -11,14 +18,8 @@ public class Task : IPaperBinItem
     public Task()
     {
         Comments = new List<Comment>();
+        IsDeleted = false;
     }
-
-    public int Id { get; set; }
-    public string Title { get; set; }
-    public Priority Precedence { get; set; }
-    public string Description { get; set; }
-    public DateTime ExpirationDate { get; set; }
-    public List<Comment> Comments { get; set; }
 
     public bool ChangePriority(Priority _priority)
     {
@@ -33,19 +34,9 @@ public class Task : IPaperBinItem
         comment.ResolvedTime = DateTime.Now;
     }
 
-    public bool AddComment(User user, string content)
-    {
-        var success = false;
-
-        var commentToAdd = new Comment(content);
-        Comments.Add(commentToAdd);
-        success = true;
-
-        return success;
-    }
-
     public override string ToString()
     {
-        return $"Tipo: Task - ID: {Id.ToString()} - Nombre: {Title} - Prioridad: {Precedence}";
+        return $"Tipo: Task - ID: {Id.ToString()} - Nombre: {Name} - Prioridad: {Precedence}";
     }
+    
 }

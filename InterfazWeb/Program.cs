@@ -1,9 +1,9 @@
 using DataAccess;
-using Dominio.Data;
 using Dominio;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Services;
+using Task = Dominio.Task;
 using IUserDatabase = Dominio.IUserDatabase;
 
 namespace InterfazWeb;
@@ -20,13 +20,15 @@ public class Program
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<PasswordService>();
         builder.Services.AddScoped<IRepository<User>, UserDatabaseRepository>();
-        builder.Services.AddScoped<TeamDataBase>();
-        builder.Services.AddScoped<ITeamDataBase, TeamDataBase>();
+        builder.Services.AddScoped<IRepository<Team>, TeamDatabaseRepository>();
+        builder.Services.AddScoped<IRepository<Task>, TaskDatabaseRepository>();
+        builder.Services.AddScoped<IRepository<Panel>, PanelDatabaseRepository>();
         builder.Services.AddScoped<TeamService>();
         builder.Services.AddScoped<ITeamService, TeamService>();
         builder.Services.AddScoped<PanelService>();
         builder.Services.AddScoped<IPanelService, PanelService>();
         builder.Services.AddScoped<TaskService>();
+        builder.Services.AddScoped<ITaskService, TaskService>();
         builder.Services.AddScoped<Session>();
         
         builder.Services.AddDbContextFactory<SqlContext>(

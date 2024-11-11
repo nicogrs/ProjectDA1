@@ -3,47 +3,53 @@ using Dominio;
 using Interfaces;
 public class PanelService : IPanelService
 {
-    private readonly ITeamService _teamService;
+    private readonly IRepository<Panel> _panelDatabase;
 
-    public PanelService(ITeamService teamService)
+    public PanelService(IRepository<Panel> panelDatabase)
     {
-        _teamService = teamService;
+        _panelDatabase = panelDatabase;
     }
-    public Panel GetPanelById(string teamName, int panelId)
+    public Panel GetPanelById(int panelId)
     {
-        var team = _teamService.GetTeamByName(teamName);
-        return team.Panels.Find(x => x.Id == panelId);
+        return _panelDatabase.Find(x => x.Id == panelId);
     }
     
-    public bool AddPanel(string teamName, Panel panel)
+    public bool AddPanel(Panel panel)
     {
-        if (GetPanelById(teamName, panel.Id) == null)
+        if (GetPanelById(panel.Id) == null)
         {
-            var team = _teamService.GetTeamByName(teamName);
-            team.Panels.Add(panel);
+            _panelDatabase.Add(panel);
             return true;
         }
         return false;
     }
-    
+
+    public void AddTaskToPanel(int panelId, Task task)
+    {
+        var panel = GetPanelById(panelId);
+        panel.Tasks.Add(task);
+        _panelDatabase.Update(panel);
+    }
+
+    public void RemoveTaskFromPanel(int panelId, Task task)
+    {
+        var panel = GetPanelById(panelId);
+        panel.Tasks.Remove(task);
+        _panelDatabase.Update(panel);
+    }
     
     public List<Panel> GetAllPanelsFromTeam(string teamName)
     {
-        var team = _teamService.GetTeamByName(teamName);
-        if (team.Panels.Count == 0)
-        {
-            throw new InvalidOperationException($"Team {teamName} does not have a panels");
-        }
-        return team.Panels;
+        var panels = _panelDatabase.FindAll();
+        return panels.Where(x => x.Team == teamName && x.IsDeleted == false).ToList();
     }
     
-    public void RemovePanel(string teamName,int panelId)
+    public void RemovePanel(int panelId)
     {
-        var team = _teamService.GetTeamByName(teamName);
-        var panel = team.Panels.Find(x => x.Id == panelId);
+        var panel = _panelDatabase.Find(x => x.Id == panelId);
         if (panel != null)
         {
-            team.Panels.Remove(panel); 
+            _panelDatabase.Delete(panel.Id);
         }
     }
 }

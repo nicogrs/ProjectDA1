@@ -1,5 +1,10 @@
 @page "/account/paperbin"
 @using Dominio
+@using Task = Dominio.Task
+@using Interfaces
+@inject ITeamService TmService
+@inject ITaskService TkService
+@inject IPanelService PnService
 @inject IUserService UService
 @inject Session Session
 @inject NavigationManager Navigation
@@ -26,7 +31,7 @@ else
 
 @code {
     public User selectedUser { get; set; }
-    public List<IPaperBinItem> PaperBinItems { get; set; }
+    public List<IDeleteable> PaperBinItems { get; set; }
     protected override void OnInitialized()
     {
         if (Session.CurrentUser == null)
@@ -34,12 +39,21 @@ else
             Navigation.NavigateTo("/error");
         }
        selectedUser = UService.GetUserByEmail(Session.CurrentUser.Email);
-       //PaperBinItems = selectedUser.PaperBin.Paperbin;
+       PaperBinItems = UService.GetDeletedElements(Session.CurrentUser.Email);
     }
 
-    public void DeleteElement(IPaperBinItem item)
+    public void DeleteElement(IDeleteable item)
     {
-        selectedUser.PaperBin.DeleteElementFromPaperbin(item);
-        //PaperBinItems = selectedUser.PaperBin.Paperbin;
+        UService.DeleteElementFromPaperbin(Session.CurrentUser.Email, item);
+        if (item is Panel)
+        {
+            var panel = PnService.GetPanelById(item.Id);
+            TmService.RemovePanelFromTeam(panel, panel.Team);
+            PnService.RemovePanel(item.Id); // Lo tengo que remover independientemente sino no se elimina de la BD
+        }else if (item is Task)
+        {
+            var task = TkService.GetTaskById(item.Id);
+            PnService.RemoveTaskFromPanel(task.PanelId, task);
+        }
     }
 }

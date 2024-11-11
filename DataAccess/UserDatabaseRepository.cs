@@ -26,7 +26,7 @@ public class UserDatabaseRepository : IRepository<User>
 
     public IList<User> FindAll()
     {
-        throw new NotImplementedException();
+        return _context.Users.ToList();
     }
 
     public User? Update(User updatedEntity)

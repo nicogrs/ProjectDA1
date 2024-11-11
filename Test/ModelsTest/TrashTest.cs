@@ -29,7 +29,7 @@ public class TrashTest
     [TestMethod]
     public void AddTaskToPaperBin()
     {
-        Task taskTest = new Task{Title = "Task 1"};
+        Task taskTest = new Task{Name = "Task 1"};
         _user.PaperBin.AddElementToPaperbin(taskTest);
         Assert.AreEqual(_user.PaperBin.ElementsCount, 1);
     }

@@ -96,6 +96,10 @@ public class UserService : IUserService
         }
         
     }
+    public List<User> GetAllUsers()
+    {
+        return _userDatabase.FindAll().ToList();
+    }
     
     public bool DeleteUser(string email)
     {
@@ -107,13 +111,29 @@ public class UserService : IUserService
        return true;
     }
 
-    public void AddTaskToPaperBin(Panel panel, Task task, string email)
+    public void AddElementToPaperBin(string email, IDeleteable element)
     {
-        throw new NotImplementedException();
+      var user = GetUserByEmail(email);
+      user.PaperBin.AddElementToPaperbin(element);
+      _userDatabase.Update(user);
     }
 
-    public void AddPanelToPaperBin(Team team, Panel panel, string email)
+    public void DeleteElementFromPaperbin(string email, IDeleteable element)
+    {
+        var user = GetUserByEmail(email);
+        user.PaperBin.DeleteElementFromPaperbin(element);
+        _userDatabase.Update(user);
+    }
+    
+    public List<IDeleteable> GetDeletedElements(string userEmail)
+    {
+        var user = GetUserByEmail(userEmail);
+        return user.PaperBin.Paperbin;
+    }
+
+    public void RestoreElement(int elementId, string email)
     {
         throw new NotImplementedException();
     }
+    
 }

@@ -1,55 +1,57 @@
 namespace Services;
 using Dominio;
 using Interfaces;
-public class TaskService
+public class TaskService : ITaskService
 {
-    private readonly IPanelService _panelService;
-    private readonly ITeamService _teamService;
 
-    public TaskService(IPanelService panelService, ITeamService teamService)
+    private readonly IRepository<Task> _taskDatabase;
+
+    public TaskService(IRepository<Task> taskDatabase)
     {
-        _panelService = panelService;
-        _teamService = teamService;
+        _taskDatabase = taskDatabase;
     }
 
-    public List<Task> GetAllExpiredTasks(string teamName)
+    public List<Task> GetAllExpiredTasks(int panelId)
     {
-        List<Task> expiredTasks = new List<Task>();
-        var team = _teamService.GetTeamByName(teamName);
-        foreach (var panel in team.Panels)
-        {
-            var expiredInPanel = panel.Tasks.Where(x => x.ExpirationDate <= DateTime.Now).ToList();
-
-            expiredTasks.AddRange(expiredInPanel);
-        }
-
+        List<Task> expiredTasks = _taskDatabase.FindAll()
+            .Where(x => x.ExpirationDate <= DateTime.Now 
+                        && x.PanelId == panelId && x.IsDeleted == false).ToList();
+    
         return expiredTasks;
+        
     }
 
-    public List<Task> GetNonExpiredTasks(string teamName, int panelId)
+    public List<Task> GetNonExpiredTasks(int panelId)
     {
-        var panel = _panelService.GetPanelById(teamName, panelId);
-        return panel.Tasks.Where(x => x.ExpirationDate > DateTime.Now).ToList();
+        List<Task> expiredTasks = _taskDatabase.FindAll()
+            .Where(x => x.ExpirationDate > DateTime.Now 
+                        && x.PanelId == panelId && x.IsDeleted == false).ToList();
+        return expiredTasks;
+
     }
 
-    public Task GetTaskById(string teamName, int panelId, int taskId)
+    public Task GetTaskById(int taskId)
     {
-        var panel = _panelService.GetPanelById(teamName, panelId);
-        return panel.Tasks.Find(x => x.Id == taskId);
+        return _taskDatabase.Find(x => x.Id == taskId);
+    }
+    
+    public void AddCommentToTask(int taskId, Comment comment)
+    {
+        var task = GetTaskById(taskId);
+        task.Comments.Add(comment);
+        _taskDatabase.Update(task);
+    }
+
+    public List<Comment> GetCommentsFromTask(int taskId)
+    {
+        var task = GetTaskById(taskId);
+        return task.Comments;
     }
 
     public int GetPanelIdByTask(string teamName, int taskId)
     {
-        var panels = _panelService.GetAllPanelsFromTeam(teamName);
-        foreach (var panel in panels)
-        {
-            var task = panel.Tasks.FirstOrDefault(x => x.Id == taskId);
-            if (task != null)
-            {
-                return panel.Id;
-            }
-        }
-
-        return 0;
+        var task1 = GetTaskById(taskId);
+        return task1.PanelId;  
     }
+    
 }

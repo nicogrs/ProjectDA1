@@ -19,13 +19,13 @@ public class TaskTest
     {
         u1 = new User();
         u2 = new User();
-        c1 = new Comment("Primer comentario de u1");
-        c2 = new Comment("Segundo comentario de u1");
-        c3 = new Comment("Primer comentario de u2");
+        c1 = new Comment();
+        c2 = new Comment();
+        c3 = new Comment();
         comments = new List<Comment>(){c1, c2, c3};
         t1 = new Task()
         {
-            Title = "Titulo 1",
+            Name = "Titulo 1",
             Precedence = Task.Priority.Low,
             Description = "Descripcion tarea 1",
             ExpirationDate = new DateTime(2025, 10, 01),
@@ -37,7 +37,7 @@ public class TaskTest
     public void TaskCreateTest()
     {
         Assert.AreEqual(t1.Precedence, Task.Priority.Low);
-        Assert.AreEqual(t1.Title, "Titulo 1");
+        Assert.AreEqual(t1.Name, "Titulo 1");
         Assert.AreEqual(t1.Description, "Descripcion tarea 1");
         Assert.AreEqual(t1.ExpirationDate, new DateTime(2025, 10, 01));
         Assert.AreEqual(t1.Comments, comments);
@@ -91,7 +91,7 @@ public class TaskTest
         string content = "Comentario de AddComentTest";
         Comment lastAddedComment;
         
-        t1.AddComment(u1,content);
+       // t1.AddComment(u1,content);
         
         lastAddedComment = t1.Comments.Last();
         Assert.AreEqual(t1.Comments.Count, initialCommentCount + 1);

@@ -1,6 +1,7 @@
 
 @using Dominio
-@using Dominio.Data
+@using Interfaces
+@using Services
 @using Task = Dominio.Task
 @inject PanelService PlService
 @inject TaskService TkService
@@ -95,14 +96,14 @@
             @if (UService.GetUserByEmail(Session.CurrentUser.Email).PaperBin.ElementsCount < 10)
             {
                 <div class="modal-body">
-                    <p>¿Estás seguro de que deseas enviar la tarea <strong>@selectedTask.Title
+                    <p>¿Estás seguro de que deseas enviar la tarea <strong>@selectedTask.Name
                         </strong> a la papelera?</p>
                 </div>     
             }
             else
             {
                 <div class="modal-body">
-                    <p>¡Tu papelera esta llena! ¿Estas seguro que quieres eliminar <strong>@selectedTask.Title
+                    <p>¡Tu papelera esta llena! ¿Estas seguro que quieres eliminar <strong>@selectedTask.Name
                         por completo?</strong></p>
                 </div>    
             }
@@ -132,10 +133,10 @@
     [Parameter]
     public string panelId { get; set; }
     [Parameter]
-    public List<Comment> Comments { get; set; }
-    [Parameter]
     public EventCallback OnTaskDeleted { get; set; }
-
+    [Parameter]
+    public List<Comment> Comments { get; set; }
+    
     private Task selectedTask;
     private bool isModalVisible;
     private string messageNotSuccess;
@@ -143,13 +144,13 @@
 
     protected override void OnInitialized()
     {
-        //Comments = PlService.GetPanelById(teamName, panelId).Tasks.FirstOrDefault(t => t.Title.Equals(Title)).Comments;
-        selectedTask = TkService.GetTaskById(teamName,int.Parse(panelId),TaskId);
+        selectedTask = TkService.GetTaskById(TaskId);
+        Comments = TkService.GetCommentsFromTask(TaskId);
     }
 
     private void AddComment()
     {
-        Navigation.NavigateTo($"/{teamName}/{panelId}/{Title}/createComment");
+        Navigation.NavigateTo($"/{teamName}/{panelId}/{TaskId}/createComment");
     }
     private void ChangeTask()
     {
@@ -169,16 +170,14 @@
 
     private void ConfirmDelete()
     {
-        var user = UService.GetUserByEmail(Session.CurrentUser.Email);
-        var panel = PlService.GetPanelById(teamName, int.Parse(panelId));
-        UService.AddTaskToPaperBin(panel,selectedTask, Session.CurrentUser.Email);
+        UService.AddElementToPaperBin(Session.CurrentUser.Email, selectedTask as IDeleteable);
         CloseModal();
         OnTaskDeleted.InvokeAsync();
     }
 
     private void CompleteComment(Comment comment)
     {
-        Panel panel = PlService.GetPanelById(teamName, int.Parse(panelId));
-        panel.Tasks.Find(t => t.Title.Equals(Title)).MarkCommentAsResolved(Session.CurrentUser, comment);
+        Panel panel = PlService.GetPanelById(int.Parse(panelId));
+        panel.Tasks.Find(t => t.Name.Equals(Title)).MarkCommentAsResolved(Session.CurrentUser, comment);
     }
 }

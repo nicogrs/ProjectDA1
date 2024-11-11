@@ -1,8 +1,9 @@
 @page "/{teamName}/panel"
 @using Dominio
-@using Dominio.Data
-@inject ITeamDataBase TDatabase
+@using Interfaces
+@using Services
 @inject ITeamService TmService
+@inject IPanelService PnService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -14,9 +15,6 @@
         <button class="btn btn-primary" type="submit" @onclick="CreatePanel">Crear Panel</button>
     </div>
     <div class="col-4 mb-4"></div>
-    <div class="col-4 mb-4 d-flex align-items-center justify-content-end">
-        <button class="btn btn-primary" type="submit" @onclick="ExpiredTasks">Tareas Vencidas</button>
-    </div>
     
     @if (Panels.Count != 0)
     {
@@ -57,7 +55,7 @@
 
     private void LoadPanels()
     {
-        Panels = TDatabase.GetTeamByName(teamName).Panels;
+        Panels = PnService.GetAllPanelsFromTeam(teamName);
     }
     
     private void CreatePanel()
@@ -65,10 +63,6 @@
         Navigation.NavigateTo($"/{teamName}/panels/create");
     }
     
-    public void ExpiredTasks()
-    {
-        Navigation.NavigateTo($"/{teamName}/panels/expiredtasks");
-    }
 
     public void ModifyTeam()
     {

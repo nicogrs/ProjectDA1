@@ -12,11 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(SqlContext))]
-<<<<<<<< HEAD:DataAccess/Migrations/20241111035511_PrimeraMigracion.Designer.cs
-    [Migration("20241111035511_PrimeraMigracion")]
-========
-    [Migration("20241111060734_PrimeraMigracion")]
->>>>>>>> feature-restoreitem:DataAccess/Migrations/20241111060734_PrimeraMigracion.Designer.cs
+    [Migration("20241111061623_PrimeraMigracion")]
     partial class PrimeraMigracion
     {
         /// <inheritdoc />

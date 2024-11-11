@@ -18,5 +18,9 @@
     <ItemGroup>
         <None Remove="obj\**"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Interfaces\" />
+    </ItemGroup>
     
 </Project>

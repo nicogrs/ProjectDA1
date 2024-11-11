@@ -21,7 +21,7 @@ public class NotificationDatabaseRepository : IRepository<Notification>
 
     public Notification? Find(Func<Notification, bool> filter)
     {
-        throw new NotImplementedException();
+        return _context.Notifications.Where(filter).FirstOrDefault();
     }
 
     public IList<Notification> FindAll()
@@ -36,6 +36,8 @@ public class NotificationDatabaseRepository : IRepository<Notification>
 
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        var notification = Find(x => x.Id == id);
+        _context.Notifications.RemoveRange(notification);
+        _context.SaveChanges();
     }
 }

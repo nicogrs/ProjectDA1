@@ -83,6 +83,6 @@ public class NotificationServiceTest
         _notificationService.AddNotification(notification);
         _notificationService.DeleteNotification(notification);
         var result = _notificationService.GetNotificationsByUserId(user.Id);
-        Assert.IsNull(result);
+        CollectionAssert.DoesNotContain(result, notification);
     }
 }

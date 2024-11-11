@@ -26,6 +26,6 @@ public class NotificationService
 
     public void DeleteNotification(Notification notification)
     {
-        throw new NotImplementedException();
+        _notificationDatabase.Delete(notification.Id);
     }
 }

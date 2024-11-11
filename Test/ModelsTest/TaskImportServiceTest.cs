@@ -1,5 +1,6 @@
 using System.IO.Enumeration;
 using Dominio;
+using Dominio.Services;
 using Microsoft.VisualBasic;
 
 namespace Test;
@@ -7,9 +8,9 @@ using Dominio;
 using Task = Dominio.Task;
 
 [TestClass]
-public class TaskImportTest
+public class TaskImportServiceTest
 {
-    private TaskImport taskImport;
+    private TaskImportService _taskImportService;
     private List<string> filesToTest;
     private List<Task> referenceTasks;
     
@@ -54,7 +55,7 @@ public class TaskImportTest
             ExpirationDate = new DateTime(2020, 06, 06)
         }
         };
-        taskImport = new TaskImport();
+        _taskImportService = new TaskImportService();
     }
     
 
@@ -67,7 +68,7 @@ public class TaskImportTest
                          $"{referenceTasks[1].Title},{referenceTasks[1].Description},{referenceTasks[1].ExpirationDate.ToShortDateString()},1\n" +
                          $"{referenceTasks[2].Title},{referenceTasks[2].Description},{referenceTasks[2].ExpirationDate.ToShortDateString()},1";
         
-        List<Task> tasks = taskImport.ReadTasksFromContent(content,new User(){Name = "User 1"});
+        List<Task> tasks = _taskImportService.ReadTasksFromContent(content,new User(){Name = "User 1"});
 
         int taskListElementCount = tasks.Count;
         for (int i = 0; i < taskListElementCount; i++)

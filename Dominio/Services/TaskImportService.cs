@@ -1,25 +1,12 @@
-namespace Dominio;
+namespace Dominio.Services;
 
-public class TaskImport
+public class TaskImportService
 {
     private StreamReader reader;
     private StreamWriter writer;
     private List<Task> tasks;
     private List<string> errors;
     
-    
-    /*public List<Task> ReadTasksFromFile(User user)
-    {
-        tasks = new List<Task>();
-        errors = new List<string>();
-        
-        List<string> linesOfLoadedFile = ListLinesOfLoadedFile();
-        
-        processLines(linesOfLoadedFile);
-
-        MakeErrorFile($"../../../Data/Out/ErroresImport-{user.Name}.txt");
-        return tasks;
-    }*/
 
     private void ProcessLines(List<string> linesOfLoadedFile)
     {

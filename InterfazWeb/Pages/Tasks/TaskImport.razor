@@ -1,4 +1,4 @@
-@page "/{teamName}/{panelId}/TaskImport"
+@page "/{teamName}/{panelId}/TaskImportService"
 @using Dominio;
 @using Task = Dominio.Task
 @inject NavigationManager Navigation;
@@ -93,22 +93,21 @@
     private async System.Threading.Tasks.Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         selectedFile = e.File;
-
-        if (selectedFile != null)
-        {
-            using var stream = selectedFile.OpenReadStream();
-            using var reader = new StreamReader(stream);
-            fileContent = await reader.ReadToEndAsync();
-            
-            ProcessCsvFile(fileContent);
-        }
+        ProcessCsvFile(selectedFile);
     }
 
-    private void ProcessCsvFile(string content)
+    private async void ProcessCsvFile(IBrowserFile file)
     {
-        Dominio.TaskImport taskImport = new Dominio.TaskImport();
-
-        tasks = taskImport.ReadTasksFromContent(content,Session.CurrentUser);
+        if (selectedFile == null)
+            return;
+        
+        using var stream = file.OpenReadStream();
+        using var reader = new StreamReader(stream);
+        fileContent = await reader.ReadToEndAsync();
+        
+        
+        Dominio.Services.TaskImportService taskImportService = new Dominio.Services.TaskImportService();
+        tasks = taskImportService.ReadTasksFromContent(fileContent,Session.CurrentUser);
 
         StateHasChanged();
     }

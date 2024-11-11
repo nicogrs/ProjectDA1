@@ -14,6 +14,7 @@ public class EpicDatabaseRepository : IRepository<Epic>
     public Epic Add(Epic epic)
     {
        _context.Epic.Add(epic);
+       _context.SaveChanges();
        return epic;
     }
 

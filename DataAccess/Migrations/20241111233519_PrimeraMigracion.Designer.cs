@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    [Migration("20241111061623_PrimeraMigracion")]
+    [Migration("20241111233519_PrimeraMigracion")]
     partial class PrimeraMigracion
     {
         /// <inheritdoc />
@@ -80,6 +80,9 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("FromPanelId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 
@@ -88,6 +91,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FromPanelId");
 
                     b.ToTable("Epic");
                 });
@@ -277,7 +282,7 @@ namespace DataAccess.Migrations
                 {
                     b.HasBaseType("Dominio.IDeleteable");
 
-                    b.Property<int>("EpicId")
+                    b.Property<int?>("EpicId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ExpirationDate")
@@ -317,6 +322,17 @@ namespace DataAccess.Migrations
                     b.Navigation("ResolvedBy");
 
                     b.Navigation("Task");
+                });
+
+            modelBuilder.Entity("Dominio.Epic", b =>
+                {
+                    b.HasOne("Dominio.Panel", "FromPanel")
+                        .WithMany()
+                        .HasForeignKey("FromPanelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FromPanel");
                 });
 
             modelBuilder.Entity("Dominio.IDeleteable", b =>
@@ -388,19 +404,15 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Dominio.Task", b =>
                 {
-                    b.HasOne("Dominio.Epic", "Epic")
+                    b.HasOne("Dominio.Epic", null)
                         .WithMany("Tasks")
-                        .HasForeignKey("EpicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EpicId");
 
                     b.HasOne("Dominio.Panel", "Panel")
                         .WithMany("Tasks")
                         .HasForeignKey("PanelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Epic");
 
                     b.Navigation("Panel");
                 });

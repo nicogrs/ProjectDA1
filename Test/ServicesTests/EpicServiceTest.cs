@@ -52,7 +52,7 @@ public class EpicServiceTest
     }
 
     [TestMethod]
-    public void AddEpicToTask()
+    public void AddTaskToEpic()
     {
         Task task = new Task
         {

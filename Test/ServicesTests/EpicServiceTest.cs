@@ -52,7 +52,7 @@ public class EpicServiceTest
     }
 
     [TestMethod]
-    public void AddTaskToEpic()
+    public void AddTaskToEpicTest()
     {
         Task task = new Task
         {
@@ -66,5 +66,21 @@ public class EpicServiceTest
             ExpirationDate = DateTime.Now.AddDays(1),
         };
         epicService.AddTaskToEpic(epic.Id, task);
+        
+    }
+    
+    [TestMethod]
+    public void UpdateEpicTest()
+    {
+        Epic epic = new Epic
+        {
+            Title = "Test",
+            Description = "DescriptionTest",
+            ExpirationDate = DateTime.Now.AddDays(1),
+        };
+        epicService.CreateEpic(epic);
+        epic.Description = "UpdatedDescriptionTest";
+        var updatedepic = epicService.UpdateEpic(epic);
+        Assert.AreNotEqual(updatedepic.Description , epic.Description);
     }
 }

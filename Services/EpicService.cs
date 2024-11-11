@@ -24,7 +24,10 @@ public class EpicService
     }
     public Epic AddTaskToEpic(int epicId, Task task)
     {
-        throw new NotImplementedException();
+        var epic = GetEpicById(epicId);
+        epic.AddTask(task);
+        UpdateEpic(epic);
+        return epic;
     }
     
 }

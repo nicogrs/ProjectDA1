@@ -1,6 +1,9 @@
 ﻿@inject Session Session
 
 <div class="top-row ps-3 navbar navbar-dark">
+    @if (Session.CurrentUser != null){
+
+    }
     <div class="container-fluid">
         <a class="navbar-brand" href="">TASK PANEL</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">

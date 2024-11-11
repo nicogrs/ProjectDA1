@@ -4,7 +4,7 @@ using Interfaces;
 
 namespace Services;
 
-public class NotificationService
+public class NotificationService : INotificationService
 {
     private readonly IRepository<Notification> _notificationDatabase;
 

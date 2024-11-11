@@ -10,8 +10,6 @@ public class SqlContext : DbContext
    public DbSet<Team> Teams { get; set; }
    public DbSet<User> Users { get; set; }
    public DbSet<Trash> Trashes { get; set; }
-   //public DbSet<DeletedTask> DeletedTasks { get; set; }
-   //public DbSet<DeletedPanel> DeletedPanels { get; set; }
    public DbSet<Comment> Comments { get; set; }
    public DbSet<Notification> Notifications { get; set; }
 
@@ -45,6 +43,18 @@ public class SqlContext : DbContext
            .HasMany(p => p.Tasks)
            .WithOne(t => t.Panel)
            .HasForeignKey(t => t.PanelId)
+           .OnDelete(DeleteBehavior.Cascade);
+       
+       modelBuilder.Entity<Notification>()
+           .HasOne(n => n.FromUser)
+           .WithMany()
+           .HasForeignKey(t => t.FromUserId)
+           .OnDelete(DeleteBehavior.NoAction);
+       
+       modelBuilder.Entity<Notification>()
+           .HasOne(n => n.ToUser)
+           .WithMany()
+           .HasForeignKey(t => t.ToUserId)
            .OnDelete(DeleteBehavior.Cascade);
    }
 }

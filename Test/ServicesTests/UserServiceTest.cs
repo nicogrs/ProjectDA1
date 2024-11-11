@@ -235,7 +235,8 @@ public class UserServiceTest
         };
         _service.CreateUser(_user);
         _service.AddElementToPaperBin(_user.Email,task);
-        _service.RestoreElement(task.Id,_user.Email);
+        Assert.AreEqual(task.IsDeleted,true);
+        _service.RestoreElement(task,_user.Email);
         Assert.AreEqual(task.IsDeleted,false);
     }
     

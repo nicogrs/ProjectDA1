@@ -14,5 +14,5 @@ public interface IUserService
     public List<IDeleteable> GetDeletedElements(string userEmail);
     public void AddElementToPaperBin(string email, IDeleteable element);
     public void DeleteElementFromPaperbin(string email, IDeleteable element);
-    public void RestoreElement(int elementId, string email);
+    public void RestoreElement(IDeleteable element, string userEmail);
 }

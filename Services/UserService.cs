@@ -124,16 +124,22 @@ public class UserService : IUserService
         user.PaperBin.DeleteElementFromPaperbin(element);
         _userDatabase.Update(user);
     }
-    
+
+    public void RestoreElement(int elementId, string email)
+    {
+        throw new NotImplementedException();
+    }
+
     public List<IDeleteable> GetDeletedElements(string userEmail)
     {
         var user = GetUserByEmail(userEmail);
         return user.PaperBin.Paperbin;
     }
 
-    public void RestoreElement(int elementId, string email)
+    public void RestoreElement(IDeleteable element, string userEmail)
     {
-        throw new NotImplementedException();
+        var user = GetUserByEmail(userEmail);
+        user.PaperBin.RestoreElementFromPaperbin(element);
     }
     
 }

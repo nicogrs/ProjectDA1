@@ -19,7 +19,7 @@ public class EpicDatabaseRepository : IRepository<Epic>
 
     public Epic? Find(Func<Epic, bool> filter)
     {
-        throw new NotImplementedException();
+        return _context.Epic.Where(filter).FirstOrDefault();
     }
 
     public IList<Epic> FindAll()

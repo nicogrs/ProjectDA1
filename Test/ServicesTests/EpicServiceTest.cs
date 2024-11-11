@@ -26,6 +26,34 @@ public class EpicServiceTest
     [TestMethod]
     public void CreateEpicTest()
     {
+
+        Epic epic = new Epic
+        {
+            Title = "Test",
+            Description = "DescriptionTest",
+            ExpirationDate = DateTime.Now.AddDays(1),
+        };
+        var result = epicService.CreateEpic(epic);
+        Assert.AreEqual(epic, result);
+    }
+
+    [TestMethod]
+    public void GetEpicByIdTest()
+    {
+        Epic epic = new Epic
+        {
+            Title = "Test",
+            Description = "DescriptionTest",
+            ExpirationDate = DateTime.Now.AddDays(1),
+        };
+        epicService.CreateEpic(epic);
+        var result = epicService.GetEpicById(epic.Id);
+        Assert.AreEqual(result, epic);
+    }
+
+    [TestMethod]
+    public void AddEpicToTask()
+    {
         Task task = new Task
         {
             Name = "Test",
@@ -36,9 +64,7 @@ public class EpicServiceTest
             Title = "Test",
             Description = "DescriptionTest",
             ExpirationDate = DateTime.Now.AddDays(1),
-            Tasks = new List<Task>{task}
         };
-        var result = epicService.CreateEpic(epic);
-        Assert.AreEqual(epic, result);
+        epicService.AddTaskToEpic(epic.Id, task);
     }
 }

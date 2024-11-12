@@ -1,0 +1,156 @@
+
+@using Dominio
+@using Interfaces
+@using Services
+@using Task = Dominio.Task
+@inject PanelService PlService
+@inject TaskService TkService
+@inject IUserService UService
+@inject IEpicService Epicservice
+@inject NavigationManager Navigation
+@inject Session Session
+
+<div class="card mb-2 mt-4">
+    <div>
+        @if (Priority == Epic.Precedence.Urgent)
+        {
+        <div class="bg-danger card-header ">
+            <p class="card-title text-white w-100">@Title</p>
+        </div>
+        }
+        else if (Priority == Epic.Precedence.Medium)
+        { 
+            <div class="bg-info card-header">
+                <p class="card-title bg-info text-white">@Title</p>
+            </div>
+        }
+        else
+        {
+        <div class="bg-black card-header">
+            <p class="card-title bg-black text-white">@Title</p>
+        </div>
+        }
+    </div>
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <p class="card-text">Prioridad: @Priority.ToString()</p>
+            <p class="card-text">Vencimiento: @EndDate</p>
+        </div>
+        <div class="border-top-2">
+            <p class="card-text">Descripcion de la epica:<br/> @Description</p>
+        </div>
+       
+        }
+    </div>
+    <div class="card-footer">
+        <div class="d-flex">
+            <div class="form-group m-2">
+                <button class="btn btn-warning" type="submit" @onclick="ChangeTask">Modificar</button>
+            </div>
+            <div class="form-group m-2">
+                <button class="btn btn-danger" type="submit" @onclick="ShowModal">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (isModalVisible)
+{
+<div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="close" @onclick="CloseModal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            @if (UService.GetUserByEmail(Session.CurrentUser.Email).PaperBin.ElementsCount < 10)
+            {
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas enviar la tarea <strong>@selectedTask.Name
+                        </strong> a la papelera?</p>
+                </div>     
+            }
+            else
+            {
+                <div class="modal-body">
+                    <p>¡Tu papelera esta llena! ¿Estas seguro que quieres eliminar <strong>@selectedTask.Name
+                        por completo?</strong></p>
+                </div>    
+            }
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
+                <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public Epic.Precedence Priority { get; set; }
+    [Parameter]
+    public DateTime EndDate { get; set; }
+    [Parameter]
+    public string Description { get; set; }
+    [Parameter]
+    public int TaskId { get; set; }
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public string panelId { get; set; }
+    [Parameter]
+    public EventCallback OnTaskDeleted { get; set; }
+    [Parameter]
+    public List<Comment> Comments { get; set; }
+    
+    private Task selectedTask;
+    private bool isModalVisible;
+    private string messageNotSuccess;
+    
+
+    protected override void OnInitialized()
+    {
+        selectedTask = TkService.GetTaskById(TaskId);
+        Comments = TkService.GetCommentsFromTask(TaskId);
+    }
+
+    private void AddComment()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/{TaskId}/createComment");
+    }
+    private void ChangeTask()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/{Title}");
+    }
+    
+    
+    private void ShowModal()
+    {
+        isModalVisible = true;
+    }
+
+    private void CloseModal()
+    {
+        isModalVisible = false;
+    }
+
+    private void ConfirmDelete()
+    {
+        UService.AddElementToPaperBin(Session.CurrentUser.Email, selectedTask as IDeleteable);
+        CloseModal();
+        OnTaskDeleted.InvokeAsync();
+    }
+
+    private void CompleteComment(Comment comment)
+    {
+        Panel panel = PlService.GetPanelById(int.Parse(panelId));
+        panel.Tasks.Find(t => t.Name.Equals(Title)).MarkCommentAsResolved(Session.CurrentUser, comment);
+    }
+}

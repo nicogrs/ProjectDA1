@@ -17,7 +17,7 @@ public class EpicTest
 
         e = new Epic()
         {
-            Title = "Titulo de epica",
+            Name = "Titulo de epica",
             Priority = Epic.Precedence.Low,
             Description = "Descripcion de la epica",
             ExpirationDate = new DateTime(2030, 1, 1),
@@ -45,7 +45,7 @@ public class EpicTest
     [TestMethod]
     public void EpicCreate()
     {
-        Assert.AreEqual(e.Title, "Titulo de epica");
+        Assert.AreEqual(e.Name, "Titulo de epica");
         Assert.AreEqual(e.Priority,Epic.Precedence.Low);
         Assert.AreEqual(e.Description, "Descripcion de la epica");
         Assert.AreEqual(e.ExpirationDate, new DateTime(2030,1,1));

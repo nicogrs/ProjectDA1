@@ -4,7 +4,7 @@ using Task = Dominio.Task;
 
 namespace Services;
 
-public class EpicService
+public class EpicService : IEpicService
 {
     private readonly IRepository<Epic> _epicDatabase;
 
@@ -38,9 +38,10 @@ public class EpicService
         return epic;
     }
     
-    public Epic UpdateEpic(Epic epic){
+    public Epic UpdateEpic(Epic epic)
+    {
         var epicToUpdate = GetEpicById(epic.Id);
-        epicToUpdate.Title = epic.Title;
+        epicToUpdate.Name = epic.Name;
         epicToUpdate.Description = epic.Description;
         epicToUpdate.Tasks = epic.Tasks;
         epicToUpdate.Priority = epic.Priority;

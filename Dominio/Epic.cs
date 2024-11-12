@@ -5,7 +5,7 @@ namespace Dominio;
 public class Epic
 {
     public int Id { get; set; }
-    public string Title { get; set; }
+    public string Name { get; set; }
     public Precedence Priority { get; set; }
     public string Description { get; set; }
     public DateTime ExpirationDate { get; set; }

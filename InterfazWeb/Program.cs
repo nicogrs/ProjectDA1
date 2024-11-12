@@ -23,6 +23,9 @@ public class Program
         builder.Services.AddScoped<IRepository<Task>, TaskDatabaseRepository>();
         builder.Services.AddScoped<IRepository<Panel>, PanelDatabaseRepository>();
         builder.Services.AddScoped<IRepository<Notification>, NotificationDatabaseRepository>();
+        builder.Services.AddScoped<IRepository<Epic>, EpicDatabaseRepository>();
+        builder.Services.AddScoped<Epic>();
+        builder.Services.AddScoped<IEpicService, EpicService>();
         builder.Services.AddScoped<Notification>();
         builder.Services.AddScoped<INotificationService, NotificationService>();
         builder.Services.AddScoped<TeamService>();

@@ -29,7 +29,7 @@ public class EpicServiceTest
 
         Epic epic = new Epic
         {
-            Title = "Test",
+            Name = "Test",
             Description = "DescriptionTest",
             ExpirationDate = DateTime.Now.AddDays(1),
         };
@@ -42,7 +42,7 @@ public class EpicServiceTest
     {
         Epic epic = new Epic
         {
-            Title = "Test",
+            Name = "Test",
             Description = "DescriptionTest",
             ExpirationDate = DateTime.Now.AddDays(1),
         };
@@ -61,7 +61,7 @@ public class EpicServiceTest
         };
         Epic epic = new Epic
         {
-            Title = "Test",
+            Name = "Test",
             Description = "DescriptionTest",
             ExpirationDate = DateTime.Now.AddDays(1),
         };
@@ -80,7 +80,7 @@ public class EpicServiceTest
         };
         Epic epic = new Epic
         {
-            Title = "Test",
+            Name = "Test",
             Description = "DescriptionTest",
             ExpirationDate = DateTime.Now.AddDays(1),
             Tasks = new List<Task>{task}
@@ -95,7 +95,7 @@ public class EpicServiceTest
     {
         Epic epic = new Epic
         {
-            Title = "Test",
+            Name = "Test",
             Description = "DescriptionTest",
             ExpirationDate = DateTime.Now.AddDays(1),
         };
@@ -103,5 +103,26 @@ public class EpicServiceTest
         epic.Description = "UpdatedDescriptionTest";
         var updatedEpic = epicService.UpdateEpic(epic);
         Assert.AreNotEqual(updatedEpic.Description , "DescriptionTest");
+    }
+
+    [TestMethod]
+    public void GetEpicsByPanelId()
+    {
+        Panel p = new Panel
+        {
+            Name = "Test",
+            Description = "DescriptionTest",
+            Team = "Test"
+        };
+        Epic epic = new Epic
+        {
+            Name = "Test",
+            Description = "DescriptionTest",
+            ExpirationDate = DateTime.Now.AddDays(1),
+            FromPanel = p
+        };
+        epicService.CreateEpic(epic);
+        var result = epicService.GetEpicsByPanelId(p.Id);
+        CollectionAssert.Contains(result, epic);
     }
 }

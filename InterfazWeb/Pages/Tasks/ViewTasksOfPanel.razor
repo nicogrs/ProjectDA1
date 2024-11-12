@@ -13,6 +13,7 @@
     <div class="col d-flex">
         <button class="btn btn-primary me-2" type="submit" @onclick="CreateTask">Crear Tarea</button>
         <button class="btn btn-primary me-2" type="submit" @onclick="ExpiredTasks">Tareas Vencidas</button>
+        <button class="btn btn-primary me-2" type="submit" @onclick="GoToCreateEpic">Crear Epica</button>
         @if (Session.IsAdmin)
         {
             <button class="btn btn-primary" type="submit" @onclick="GoToImport">Importar tareas desde .csv</button>
@@ -82,6 +83,11 @@
     private void GoToImport()
     {
         Navigation.NavigateTo($"/{teamName}/{panelId}/TaskImport");
+    }
+    
+    private void GoToCreateEpic()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/createEpic");
     }
     
     public void ExpiredTasks()

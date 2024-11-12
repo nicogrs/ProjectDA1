@@ -1,10 +1,8 @@
-using System.IO.Enumeration;
 using Dominio;
 using Dominio.Services;
-using Microsoft.VisualBasic;
 
-namespace Test;
-using Dominio;
+namespace Test.ServicesTests;
+
 using Task = Dominio.Task;
 
 [TestClass]
@@ -12,6 +10,7 @@ public class TaskImportServiceTest
 {
     private CsvReader _csvReader;
     private List<string> filesToTest;
+    private List<string> xlsxFilesToTest;
     private List<Task> referenceTasks;
     
     
@@ -27,6 +26,10 @@ public class TaskImportServiceTest
             "Data/tareas.csv",
             "tareasValidDateTest.csv",
             "tareasValidLineTest.csv"
+        };
+        xlsxFilesToTest = new List<string>()
+        {
+            "tareas.xlsx"
         };
 
         for (int i = 0; i < filesToTest.Count; i++)
@@ -77,5 +80,21 @@ public class TaskImportServiceTest
             Assert.AreEqual(tasks[i].Description, referenceTasks[i].Description);
             Assert.AreEqual(tasks[i].ExpirationDate, referenceTasks[i].ExpirationDate);
         }
+    }
+
+    [TestMethod]
+    public void ReadXlsxTest()
+    {
+        XlsReader xlsxReader = new XlsReader();
+        string expectedResult =
+            "Título,Descripción,Fecha de vencimiento,ID de panel,ID de epica\n" +
+            "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2024,1,1\n" +
+            "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2024,1,1\n" +
+            "Terminar obligatorio,Terminar el obligatorio 2 de DA.,20/11/2024,1,2\n" +
+            "Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2024,2";
+        
+        string result = xlsxReader.ConvertXlsFileContentToCsv(xlsxFilesToTest[0]);
+        
+        Assert.AreEqual(expectedResult, result);
     }
 }

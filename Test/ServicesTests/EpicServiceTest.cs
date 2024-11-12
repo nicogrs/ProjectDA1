@@ -68,7 +68,26 @@ public class EpicServiceTest
         epicService.CreateEpic(epic);
         var result = epicService.AddTaskToEpic(epic.Id, task);
         CollectionAssert.Contains(result.Tasks, task);
-        
+    }
+    
+    [TestMethod]
+    public void RemoveTaskFormEpicTest()
+    {
+        Task task = new Task
+        {
+            Name = "Test",
+            Description = "TaskDescription"
+        };
+        Epic epic = new Epic
+        {
+            Title = "Test",
+            Description = "DescriptionTest",
+            ExpirationDate = DateTime.Now.AddDays(1),
+            Tasks = new List<Task>{task}
+        };
+        epicService.CreateEpic(epic);
+        var result = epicService.RemoveTaskFromEpic(epic.Id, task);
+        CollectionAssert.DoesNotContain(result.Tasks, task);
     }
     
     [TestMethod]

@@ -30,6 +30,11 @@ public class EpicService
         return epic;
     }
 
+    public Epic RemoveTaskFromEpic(int epicId, Task task)
+    {
+
+    }
+    
     public Epic UpdateEpic(Epic epic){
         var epicToUpdate = GetEpicById(epic.Id);
         epicToUpdate.Title = epic.Title;
@@ -40,5 +45,6 @@ public class EpicService
         _epicDatabase.Update(epic);
         return epicToUpdate;
     }
+
 
 }

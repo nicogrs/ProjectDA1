@@ -32,7 +32,10 @@ public class EpicService
 
     public Epic RemoveTaskFromEpic(int epicId, Task task)
     {
-
+        var epic = GetEpicById(epicId);
+        epic.RemoveTask(task);
+        UpdateEpic(epic);
+        return epic;
     }
     
     public Epic UpdateEpic(Epic epic){

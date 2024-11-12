@@ -29,5 +29,16 @@ public class EpicService
         UpdateEpic(epic);
         return epic;
     }
-    
+
+    public Epic UpdateEpic(Epic epic){
+        var epicToUpdate = GetEpicById(epic.Id);
+        epicToUpdate.Title = epic.Title;
+        epicToUpdate.Description = epic.Description;
+        epicToUpdate.Tasks = epic.Tasks;
+        epicToUpdate.Priority = epic.Priority;
+        epicToUpdate.Tasks = epic.Tasks;
+        _epicDatabase.Update(epic);
+        return epicToUpdate;
+    }
+
 }

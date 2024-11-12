@@ -65,7 +65,9 @@ public class EpicServiceTest
             Description = "DescriptionTest",
             ExpirationDate = DateTime.Now.AddDays(1),
         };
-        epicService.AddTaskToEpic(epic.Id, task);
+        epicService.CreateEpic(epic);
+        var result = epicService.AddTaskToEpic(epic.Id, task);
+        CollectionAssert.Contains(result.Tasks, task);
         
     }
     
@@ -80,7 +82,7 @@ public class EpicServiceTest
         };
         epicService.CreateEpic(epic);
         epic.Description = "UpdatedDescriptionTest";
-        var updatedepic = epicService.UpdateEpic(epic);
-        Assert.AreNotEqual(updatedepic.Description , epic.Description);
+        var updatedEpic = epicService.UpdateEpic(epic);
+        Assert.AreNotEqual(updatedEpic.Description , "DescriptionTest");
     }
 }

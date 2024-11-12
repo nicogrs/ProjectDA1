@@ -30,7 +30,9 @@ public class EpicDatabaseRepository : IRepository<Epic>
 
     public Epic? Update(Epic updatedEntity)
     {
-        throw new NotImplementedException();
+        _context.Epic.Update(updatedEntity);
+        _context.SaveChanges();
+        return updatedEntity;
     }
 
     public void Delete(int id)

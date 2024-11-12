@@ -15,7 +15,10 @@ public class Epic
     public Panel FromPanel { get; set; }
 
 
-
+    public Epic()
+    {
+        Tasks = new List<Task>();
+    }
 
     public enum Precedence
     {

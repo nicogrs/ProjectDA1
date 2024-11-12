@@ -4,15 +4,21 @@ using ClosedXML.Excel;
 
 public class XlsReader : TaskImportService
 {
-    public List<string> ConvertXlsFileContentToCsv(string filePath)
+
+    public string XlsToText(string filePath)
     {
-        List<string> lines = new List<string>();
+        return "";
+    }
+    
+    public string ConvertXlsFileContentToCsv(string filePath)
+    {
+        string content = "";
         
         // Ensure the file exists
         if (!File.Exists(filePath))
         {
             Console.WriteLine("File not found.");
-            return lines;
+            return content;
         }
         
         // Load the workbook
@@ -20,20 +26,34 @@ public class XlsReader : TaskImportService
         {
             var worksheet = workbook.Worksheet(1);
             var rows = worksheet.RangeUsed().RowsUsed().Skip(1); // Skip the header row
-
+            int columnCount = worksheet.Columns().Count();
+            
             foreach (var row in rows)
             {
-                string line = "";
+                string line = row.Cell(0).Value.ToString();
                 
-                for (int i = 0; i < 5; i++)
+                for (int i = 1; i < columnCount; i++)
                 {
-                  line += row.Cell(i).Value.ToString();  
+                  line += "," + row.Cell(i).Value.ToString();
                 }
-
-                lines.Add(line);
+                
+                line += Environment.NewLine;
+                content += line;
             }
         }
         
-        return lines;
+        return content;
     }
+    
+    public override List<string> SplitLine(string str)
+    {
+        return null;
+    }
+
+    public override List<string> MakeLineListFromContent(string content)
+    {
+        return content.Split('\n').ToList();
+    }
+    
+    
 }

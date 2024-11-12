@@ -8,8 +8,12 @@
 <PageTitle>Importar Tasks</PageTitle>
 
 <h4>Importar Tareas</h4>
+<h3>Importar desde .csv</h3>
+<InputFile Texto ref="csvInputFile" OnChange="HandleCsvFileSelected" accept=".csv" style="display: none" />
+<h3>Importar desde .csv</h3>
+<InputFile ref="xlsxInputFile" OnChange="HandleXlsxFileSelected" accept=".xlsx" style="display: none" />
 
-<InputFile OnChange="HandleFileSelected" accept=".csv" />
+
 
 @if (fileContent != null)
 {
@@ -32,6 +36,7 @@
         <th>Titulo</th>
         <th>Descripcion</th>
         <th>Fecha de vencimiento</th>
+        <th>Épica</th>
     </tr>
     </thead>
     <tbody>
@@ -44,6 +49,10 @@
         <td>@task.Title</td>
         <td>@task.Description</td>
         <td>@expDateToString(task.ExpirationDate)</td>
+        @if (task.Epic != null)
+            {<td>@task.Epic;</td>}
+        else
+            {<td>Sin épica.;</td>}
     </tr>
     }
     </tbody>
@@ -90,26 +99,58 @@
     }
     
     
-    private async System.Threading.Tasks.Task HandleFileSelected(InputFileChangeEventArgs e)
+    private async System.Threading.Tasks.Task HandleCsvFileSelected(InputFileChangeEventArgs e)
     {
         selectedFile = e.File;
+        
         ProcessCsvFile(selectedFile);
     }
+    
+    private async System.Threading.Tasks.Task HandleXlsxFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+        
+        ProcessXlsxFile(selectedFile);
+    }
+    
+    
+    private void ProcessCsvFile(IBrowserFile file)
+    {
+        contentFromCsvFile(file,fileContent);
 
-    private async void ProcessCsvFile(IBrowserFile file)
+        Dominio.Services.CsvReader csvReader = new Dominio.Services.CsvReader();
+        
+        tasks = csvReader.ReadTasksFromContent(fileContent,Session.CurrentUser);
+        
+        StateHasChanged();
+    }
+    
+    private void ProcessXlsxFile(IBrowserFile file)
+    {
+        Dominio.Services.XlsReader xlsReader = new Dominio.Services.XlsReader();
+
+        //string fileContent = xlsReader.ConvertXlsFileContentToCsv(file);
+
+        Dominio.Services.CsvReader csvReader = new Dominio.Services.CsvReader();
+        
+        tasks = csvReader.ReadTasksFromContent(fileContent,Session.CurrentUser);
+        
+        StateHasChanged();
+    }
+
+    public async void contentFromCsvFile(IBrowserFile file, string @destinationFile)
     {
         if (selectedFile == null)
+        {
+            destinationFile = "";
             return;
+        }
         
         using var stream = file.OpenReadStream();
         using var reader = new StreamReader(stream);
         fileContent = await reader.ReadToEndAsync();
-        
-        
-        Dominio.Services.TaskImportService taskImportService = new Dominio.Services.TaskImportService();
-        tasks = taskImportService.ReadTasksFromContent(fileContent,Session.CurrentUser);
 
-        StateHasChanged();
+        destinationFile = fileContent;
     }
 
     private string expDateToString(DateTime dt)

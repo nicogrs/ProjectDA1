@@ -10,7 +10,7 @@ using Task = Dominio.Task;
 [TestClass]
 public class TaskImportServiceTest
 {
-    private TaskImportService _taskImportService;
+    private CsvReader _csvReader;
     private List<string> filesToTest;
     private List<Task> referenceTasks;
     
@@ -55,7 +55,7 @@ public class TaskImportServiceTest
             ExpirationDate = new DateTime(2020, 06, 06)
         }
         };
-        _taskImportService = new TaskImportService();
+        _csvReader = new CsvReader();
     }
     
 
@@ -68,7 +68,7 @@ public class TaskImportServiceTest
                          $"{referenceTasks[1].Title},{referenceTasks[1].Description},{referenceTasks[1].ExpirationDate.ToShortDateString()},1\n" +
                          $"{referenceTasks[2].Title},{referenceTasks[2].Description},{referenceTasks[2].ExpirationDate.ToShortDateString()},1";
         
-        List<Task> tasks = _taskImportService.ReadTasksFromContent(content,new User(){Name = "User 1"});
+        List<Task> tasks = _csvReader.ReadTasksFromContent(content,new User(){Name = "User 1"});
 
         int taskListElementCount = tasks.Count;
         for (int i = 0; i < taskListElementCount; i++)

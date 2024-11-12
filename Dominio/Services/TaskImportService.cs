@@ -1,6 +1,6 @@
 namespace Dominio.Services;
 
-public class TaskImportService
+public abstract class TaskImportService
 {
     private StreamReader reader;
     private StreamWriter writer;
@@ -8,24 +8,7 @@ public class TaskImportService
     private List<string> errors;
     
 
-    private void ProcessLines(List<string> linesOfLoadedFile)
-    {
-        foreach (string line in linesOfLoadedFile)
-        {
-            if (IsLineValid(line))
-            {
-                List<string> splitLine = SplitString(line);
-                Task newTask = TaskFromStringList(splitLine);
-                tasks.Add(newTask);
-            }
-            else
-            {
-                ProcessError(line);
-            }
-        }
-    }
-
-    private void MakeErrorFile(string errorFileName)
+    public void MakeErrorFile(string errorFileName)
     {
         //directorio interfaz 
         string directory = Directory.GetCurrentDirectory();
@@ -50,17 +33,37 @@ public class TaskImportService
     {
         tasks = new List<Task>();
         errors = new List<string>();
-        List<string> linesOfContent = content.Split('\n').ToList();
+
+        List<string> linesOfContent = MakeLineListFromContent(content);
 
         ProcessLines(linesOfContent);
         
         MakeErrorFile($"ErroresImport-{user.Name}.txt");
         return tasks;
     }
+
+    public abstract List<string> MakeLineListFromContent(string content);
     
-    private void ProcessError(string line)
+    public void ProcessLines(List<string> linesOfLoadedFile)
     {
-        List<string> separatedLine = SplitString(line);
+        foreach (string line in linesOfLoadedFile)
+        {
+            if (IsLineValid(line))
+            {
+                List<string> splitLine = SplitLine(line);
+                Task newTask = TaskFromStringList(splitLine);
+                tasks.Add(newTask);
+            }
+            else
+            {
+                ProcessError(line);
+            }
+        }
+    }
+    
+    public void ProcessError(string line)
+    {
+        List<string> separatedLine = SplitLine(line);
         bool correctColumnAmount = separatedLine.Count == 4;
 
         if (!correctColumnAmount)
@@ -69,35 +72,28 @@ public class TaskImportService
             return;
         }
         
-        if (!StringIsValidDate(separatedLine[2]))
+        if (!IsStringValidDate(separatedLine[2]))
         {
             LogError(line,"Formato de fecha incorrecto.");
             return;
         }
         
-        if (!IsPanelIdValid(separatedLine[3]))
+        if (!IsStringPanelIdValid(separatedLine[3]))
         {
             LogError(line,"Id de panel incorrecto.");
             return;
         }
     }
 
-    private void LogError(string line, string errorMessage)
+    public void LogError(string line, string errorMessage)
     {
         string currentTime = DateTime.Now.ToString("yyyy-mm-dd HH:mm:ss");
         string error = $"{line} --- {errorMessage} --- {currentTime}";
         errors.Add(error);
     }
-    
-    private List<string> SplitString(string str)
-    {
-        string[] strArr = str.Split(",");
-        
-        List<string> toReturn = strArr.ToList();
-        
-        return toReturn;
-    }
-    private Task TaskFromStringList(List<string> strList)
+
+    public abstract List<string> SplitLine(string str);
+    public Task TaskFromStringList(List<string> strList)
     {
         Task task = new Task();
         task.Title = strList[0];
@@ -109,7 +105,7 @@ public class TaskImportService
 
         return task;
     }
-    private DateTime StringToDate(string strDate)
+    public DateTime StringToDate(string strDate)
     {
         string[] dateArray = strDate.Split("/");
         DateTime date = new DateTime(int.Parse(dateArray[2]), int.Parse(dateArray[1]), int.Parse(dateArray[0]));
@@ -118,22 +114,29 @@ public class TaskImportService
     }
 
 
-    private bool IsLineValid(string line)
+    public bool IsLineValid(string line)
     {
-        List<string> elements = SplitString(line);
-        if (elements.Count != 4)
+        List<string> elements = SplitLine(line);
+
+        if (!HasCorrectElementCount(elements))
             return false;
         
-        bool isDateValid = StringIsValidDate(elements[2]);
-        bool isPanelIdValid = IsPanelIdValid(elements[3]);
+        bool isDateValid = IsStringValidDate(elements[2]);
+        bool isPanelIdValid = IsStringPanelIdValid(elements[3]);
         
         return isDateValid && isPanelIdValid;
     }
-    private bool IsPanelIdValid(string panelId)
+
+    public bool HasCorrectElementCount(List<string> elements)
+    {
+        return (elements.Count <= 5 && elements.Count >= 4);
+    }
+    
+    public bool IsStringPanelIdValid(string panelId)
     {
         return int.TryParse(panelId, out int _);
     }
-    private bool StringIsValidDate(string str)
+    public bool IsStringValidDate(string str)
     {
         if (!str.Contains('/'))
             return false;
@@ -156,7 +159,7 @@ public class TaskImportService
         
         return areNumbersValid;
     }
-    private bool AreNumbersValid(int day, int month, int year)
+    public bool AreNumbersValid(int day, int month, int year)
     {
         bool isDayValid = day >= 1 && day <= 31;
         bool isMonthValid = month >= 1 && month <= 12;

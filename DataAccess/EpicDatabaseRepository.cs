@@ -25,7 +25,7 @@ public class EpicDatabaseRepository : IRepository<Epic>
 
     public IList<Epic> FindAll()
     {
-        throw new NotImplementedException();
+        return _context.Epic.ToList();
     }
 
     public Epic? Update(Epic updatedEntity)

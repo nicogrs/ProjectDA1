@@ -1,3 +1,4 @@
+using System.Collections;
 using Dominio;
 using Interfaces;
 using Task = Dominio.Task;
@@ -49,6 +50,10 @@ public class EpicService : IEpicService
         _epicDatabase.Update(epic);
         return epicToUpdate;
     }
-
-
+    
+    public List<Epic> GetEpicsByPanelId(int pId)
+    {
+        var epics = _epicDatabase.FindAll();
+        return epics.Where(x => x.FromPanelId == pId).ToList();
+    }
 }

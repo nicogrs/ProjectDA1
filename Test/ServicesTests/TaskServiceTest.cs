@@ -114,21 +114,23 @@ public class TaskServiceTest
         Assert.AreEqual(1, panelId);
     }
 
-    /*[TestMethod]
-    public void GetPanelIdByTaskTest()
+    [TestMethod]
+    public void AddEffort_PositiveTime()
     {
-        var panel1 = new Panel{Name = "Panel 1",Id = 1};
-        var task1 = new Task{Name = "Task 1", ExpirationDate = DateTime.Now.AddHours(+1)};
-        panel1.Tasks.Add(task1);
-        team.Panels.Add(panel1);
-        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
-        _mockPanelService.Setup(x => x.GetPanelById(panel1.Id)).Returns(panel1);
-        _mockPanelService.Setup(x => x.GetAllPanelsFromTeam(team.Name)).Returns(team.Panels);
-        var id = taskService.GetPanelIdByTask(team.Name, task1.Id);
-        Assert.AreEqual(id, panel1.Id);
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            InvertedEffort = 0
+        };
+        _taskRepository.Add(task1);
+        _taskService.AddEffort(task1.Id, 5);
+        var updatedTask = _taskRepository.Find(x => x.Id == task1.Id);
+        Assert.AreEqual(5, updatedTask.InvertedEffort);
     }
 
-    [TestMethod]
+    /*[TestMethod]
     public void AddEffort_PositiveTime()
     {
         var panel1 = new Panel { Name = "Panel 1", Id = 1 };

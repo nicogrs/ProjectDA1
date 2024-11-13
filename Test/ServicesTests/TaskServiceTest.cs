@@ -30,18 +30,6 @@ public class TaskServiceTest
 
         _taskRepository = new TaskDatabaseRepository(_context);
         _taskService = new TaskService(_taskRepository);
-        
-        _mockTeamService = new Mock<ITeamService>();
-        _mockPanelService = new Mock<IPanelService>();
-       // taskService = new TaskService(_mockPanelService.Object, _mockTeamService.Object);
-        team = new Team
-        {
-            Name = "Team Example",
-            CreatedOn = new DateTime(2020, 05, 05),
-            TasksDescription = "Tareas sobre desarrollo",
-            MaxUsers = 5,
-            MembersCount = 1
-        };
     }
     
     [TestCleanup]

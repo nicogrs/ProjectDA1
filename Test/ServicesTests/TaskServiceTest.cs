@@ -50,18 +50,6 @@ public class TaskServiceTest
         _context.Database.EnsureDeleted();
     }
     
-    /*[TestMethod]
-    public void GetExpiredTasksFromPanels()
-    {
-        var panel1 = new Panel{Name = "Panel 1"};
-        var task1 = new Task{Name = "Task 1", ExpirationDate = DateTime.Now.AddHours(-1)};
-        panel1.Tasks.Add(task1);
-        team.Panels.Add(panel1);
-        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
-        var expiredTasks = taskService.GetAllExpiredTasks(panel1.Id);
-        CollectionAssert.AreEquivalent(expiredTasks, new List<Task>{task1});
-    }*/
-    
     [TestMethod]
     public void GetExpiredTasksFromPanels()
     {
@@ -69,13 +57,29 @@ public class TaskServiceTest
         var task1 = new Task
         {
             Name = "Task 1",
-            Description = "This is a test task description", // Asegúrate de que Description tenga un valor
+            Description = "This is a test task description",
             ExpirationDate = DateTime.Now.AddHours(-1),
             PanelId = panelId
         };
         _taskRepository.Add(task1);
         var expiredTasks = _taskService.GetAllExpiredTasks(panelId);
         CollectionAssert.AreEqual(new List<Task> { task1 }, expiredTasks);
+    }
+
+    [TestMethod]
+    public void GetNonExpiredTasksFromPanel()
+    {
+        var panelId = 1;
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "This is a test task description",
+            ExpirationDate = DateTime.Now.AddHours(+1),
+            PanelId = panelId
+        };
+        _taskRepository.Add(task1);
+        var nonExpiredTasks = _taskService.GetNonExpiredTasks(panelId);
+        CollectionAssert.AreEqual(new List<Task> { task1 }, nonExpiredTasks);
     }
 
     /*[TestMethod]
@@ -90,7 +94,7 @@ public class TaskServiceTest
         var nonExpiredTasks = taskService.GetNonExpiredTasks(panel1.Id);
         CollectionAssert.AreEquivalent(nonExpiredTasks, new List<Task>{task1});
     }
-    
+
     [TestMethod]
     public void GetTaskByIdTest()
     {
@@ -132,7 +136,7 @@ public class TaskServiceTest
 
         Assert.AreEqual(5, task1.InvertedEffort);
     }
-    
+
     [TestMethod]
     public void AddEffort_ZeroTime()
     {
@@ -147,7 +151,7 @@ public class TaskServiceTest
 
         Assert.AreEqual(10, task1.InvertedEffort);
     }
-    
+
     [TestMethod]
     public void AddEffort_NegativeTime()
     {
@@ -162,7 +166,7 @@ public class TaskServiceTest
 
         Assert.AreEqual(10, task1.InvertedEffort);
     }
-    
+
     [TestMethod]
     public void AddEffort_AccumulateInvertedEffort()
     {

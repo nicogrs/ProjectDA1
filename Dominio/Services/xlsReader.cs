@@ -25,14 +25,14 @@ public class XlsReader : TaskImportService
         using (var workbook = new XLWorkbook(filePath))
         {
             var worksheet = workbook.Worksheet(1);
-            var rows = worksheet.RangeUsed().RowsUsed().Skip(1); // Skip the header row
+            var rows = worksheet.RangeUsed().RowsUsed();
             int columnCount = worksheet.Columns().Count();
             
             foreach (var row in rows)
             {
-                string line = row.Cell(0).Value.ToString();
+                string line = row.Cell(1).Value.ToString();
                 
-                for (int i = 1; i < columnCount; i++)
+                for (int i = 2; i <= columnCount; i++)
                 {
                   line += "," + row.Cell(i).Value.ToString();
                 }

@@ -57,9 +57,11 @@ public class TaskService : ITaskService
 
     public void AddEffort(int taskId, int time)
     {
-        
+        if (time <= 0) return; 
+        var task = GetTaskById(taskId);
+        if (task != null)
+        {
+            task.InvertedEffort += time;
+        }
     }
-
-    
-
 }

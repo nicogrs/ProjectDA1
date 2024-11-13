@@ -1,5 +1,9 @@
 using Interfaces;
 using Services;
+using System.Data;
+using Azure.Core;
+using DataAccess;
+using Test.Context;
 
 namespace Test;
 using Dominio;
@@ -8,15 +12,25 @@ using Moq;
 [TestClass]
 public class TaskServiceTest
 {
-    
     private Team team;
-    private TaskService taskService;
+    private TaskService _taskService;
+    private TeamService _teamService;
+    private PanelService _panelService;
+    private IRepository<Task> _taskRepository;
+    private SqlContext _context;
+    
     Mock<ITeamService> _mockTeamService;
     Mock<IPanelService> _mockPanelService;
     
     [TestInitialize]
     public void Setup()
     {
+        SqlContextFactory sqlContextFactory = new SqlContextFactory();
+        _context = sqlContextFactory.CreateMemoryContext();
+
+        _taskRepository = new TaskDatabaseRepository(_context);
+        _taskService = new TaskService(_taskRepository);
+        
         _mockTeamService = new Mock<ITeamService>();
         _mockPanelService = new Mock<IPanelService>();
        // taskService = new TaskService(_mockPanelService.Object, _mockTeamService.Object);
@@ -28,6 +42,12 @@ public class TaskServiceTest
             MaxUsers = 5,
             MembersCount = 1
         };
+    }
+    
+    [TestCleanup]
+    public void CleanUp()
+    {
+        _context.Database.EnsureDeleted();
     }
     
     [TestMethod]
@@ -70,7 +90,6 @@ public class TaskServiceTest
     }
 
     [TestMethod]
-
     public void GetPanelIdByTaskTest()
     {
         var panel1 = new Panel{Name = "Panel 1",Id = 1};
@@ -87,7 +106,6 @@ public class TaskServiceTest
     [TestMethod]
     public void AddEffort_PositiveTime()
     {
-
         var panel1 = new Panel { Name = "Panel 1", Id = 1 };
         var task1 = new Task { Name = "Task 1", ExpirationDate = DateTime.Now.AddHours(+1), InvertedEffort = 0 };
         panel1.Tasks.Add(task1);

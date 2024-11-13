@@ -82,20 +82,22 @@ public class TaskServiceTest
         CollectionAssert.AreEqual(new List<Task> { task1 }, nonExpiredTasks);
     }
 
-    /*[TestMethod]
-    public void GetNonExpiredTasksFromPanel()
+    [TestMethod]
+    public void GetTaskByIdTest()
     {
-        var panel1 = new Panel{Name = "Panel 1",Id = 1};
-        var task1 = new Task{Name = "Task 1", ExpirationDate = DateTime.Now.AddHours(+1)};
-        panel1.Tasks.Add(task1);
-        team.Panels.Add(panel1);
-        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
-        _mockPanelService.Setup(x => x.GetPanelById(panel1.Id)).Returns(panel1);
-        var nonExpiredTasks = taskService.GetNonExpiredTasks(panel1.Id);
-        CollectionAssert.AreEquivalent(nonExpiredTasks, new List<Task>{task1});
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "This is a test task description",
+            ExpirationDate = DateTime.Now.AddHours(+1),
+        };
+        _taskRepository.Add(task1);
+        
+        var task = _taskService.GetTaskById(task1.Id);
+        Assert.AreEqual(task1, task);
     }
 
-    [TestMethod]
+    /*[TestMethod]
     public void GetTaskByIdTest()
     {
         var panel1 = new Panel{Name = "Panel 1",Id = 1};

@@ -81,7 +81,6 @@ public class UserService : IUserService
         {
             if (user.IsUserValid() && _passwordService.IsPasswordValid(user.Password))
             {
-                Console.WriteLine("entro a update");
                 _userDatabase.UpdateUser(user);
                 return true;
             }

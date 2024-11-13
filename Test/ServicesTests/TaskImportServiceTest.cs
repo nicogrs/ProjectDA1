@@ -36,11 +36,7 @@ public class TaskImportServiceTest
         {
             filesToTest[i] = Path.Combine(directory, filesToTest[i]);
         }
-        for (int i = 0; i < xlsxFilesToTest.Count; i++)
-        {
-  //          xlsxFilesToTest[i] = Path.Combine(directory, xlsxFilesToTest[i]);
-//            xlsxFilesToTest[i] = Path.
-        }
+
         
         referenceTasks = new List<Task>()
         {
@@ -92,14 +88,15 @@ public class TaskImportServiceTest
     {
         XlsReader xlsxReader = new XlsReader();
         string expectedResult =
-            "Título,Descripción,Fecha de vencimiento,ID de panel,ID de epica\n" +
-            "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2024,1,1\n" +
-            "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2024,1,1\n" +
-            "Terminar obligatorio,Terminar el obligatorio 2 de DA.,20/11/2024,1,2\n" +
-            "Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2024,2,\n";
+            "Título,Descripción,Fecha de vencimiento,ID de panel,ID de epica\r\n" +
+            "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2024,1,1\r\n" +
+            "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2024,1,1\r\n" +
+            "Terminar obligatorio,Terminar el obligatorio 2 de DA.,20/11/2024,1,2\r\n" +
+            "Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2024,2,\r\n";
         
-        Console.WriteLine("Converting at "+xlsxFilesToTest[0]);
+        
         string result = xlsxReader.ConvertXlsFileContentToCsv(xlsxFilesToTest[0]);
+
         
         Assert.AreEqual(expectedResult, result);
     }

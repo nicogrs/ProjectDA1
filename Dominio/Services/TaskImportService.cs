@@ -64,8 +64,8 @@ public abstract class TaskImportService
     public void ProcessError(string line)
     {
         List<string> separatedLine = SplitLine(line);
-        bool correctColumnAmount = separatedLine.Count == 4;
-
+        bool correctColumnAmount = separatedLine.Count is 4 or 5;
+        
         if (!correctColumnAmount)
         {
             LogError(line,"Cantidad incorrecta de columnas.");

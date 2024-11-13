@@ -8,11 +8,12 @@
 <PageTitle>Importar Tasks</PageTitle>
 
 <h4>Importar Tareas</h4>
-<h3>Importar desde .csv</h3>
+@*<h3>Importar desde .csv</h3>
 <InputFile Texto ref="csvInputFile" OnChange="HandleCsvFileSelected" accept=".csv" style="display: none" />
 <h3>Importar desde .csv</h3>
 <InputFile ref="xlsxInputFile" OnChange="HandleXlsxFileSelected" accept=".xlsx" style="display: none" />
-
+*@
+<InputFile OnChange="HandleCsvFileSelected" accept=".csv"/>
 
 
 @if (fileContent != null)
@@ -50,9 +51,13 @@
         <td>@task.Description</td>
         <td>@expDateToString(task.ExpirationDate)</td>
         @if (task.Epic != null)
-            {<td>@task.Epic;</td>}
-        else
-            {<td>Sin épica.;</td>}
+         {
+             <td>@task.Epic.Id </td>
+         }
+         else
+         {
+             <td>Sin datos de epica</td>
+         }
     </tr>
     }
     </tbody>
@@ -84,7 +89,7 @@
     
     private IBrowserFile? selectedFile;
     private string? fileContent;
-    private List<Task> tasks;
+    private List<Task> tasks = new List<Task>();
     private HashSet<Task> SelectedTasks = new HashSet<Task>();
     private Panel panel;
     private string message;
@@ -96,6 +101,8 @@
         {
             Navigation.NavigateTo("/error");
         }
+
+        fileContent = "";
     }
     
     
@@ -116,12 +123,15 @@
     
     private void ProcessCsvFile(IBrowserFile file)
     {
-        contentFromCsvFile(file,fileContent);
+        ContentFromCsvFile(file);
 
         Dominio.Services.CsvReader csvReader = new Dominio.Services.CsvReader();
-        
-        tasks = csvReader.ReadTasksFromContent(fileContent,Session.CurrentUser);
-        
+
+        if (fileContent != null)
+        {
+            tasks = csvReader.ReadTasksFromContent(fileContent, Session.CurrentUser);
+        }
+
         StateHasChanged();
     }
     
@@ -138,19 +148,17 @@
         StateHasChanged();
     }
 
-    public async void contentFromCsvFile(IBrowserFile file, string @destinationFile)
+    public async void ContentFromCsvFile(IBrowserFile file)
     {
         if (selectedFile == null)
         {
-            destinationFile = "";
+            Console.WriteLine("Null file.");
             return;
         }
         
         using var stream = file.OpenReadStream();
         using var reader = new StreamReader(stream);
         fileContent = await reader.ReadToEndAsync();
-
-        destinationFile = fileContent;
     }
 
     private string expDateToString(DateTime dt)
@@ -182,7 +190,7 @@
         
         message=$"{SelectedTasks.Count} Tareas agregadas exitosamente a {panel.Name}.";
         fileContent = "";
-        tasks = null;
+        tasks = new List<Task>();
     }
 
     private void GoToPanel()

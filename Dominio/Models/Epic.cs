@@ -10,7 +10,8 @@ public class Epic
     public string Description { get; set; }
     public DateTime ExpirationDate { get; set; }
     public List<Task> Tasks { get; set; }
-
+    
+    public int Id {get; set;}
 
 
     public enum Precedence

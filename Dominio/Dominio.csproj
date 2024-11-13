@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Dominio</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Remove="obj\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Remove="obj\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="obj\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Interfaces\" />
+    </ItemGroup>
+    
+</Project>

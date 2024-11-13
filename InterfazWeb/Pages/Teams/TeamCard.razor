@@ -1,0 +1,130 @@
+@using Dominio
+@using Interfaces
+@inject NavigationManager Navigation
+@inject Session Session
+@inject ITeamService TmService
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">@Title</h4>
+        <p class="card-text">
+            <strong>Fecha de creación:</strong> @Date 
+        </p>
+        <p class="card-text">
+            <strong>Miembros:</strong> @CantMembers/ @MaxMembers
+        </p>
+        <p class="card-text">
+            <strong>Descripción de tareas:</strong> @Description
+        </p>
+    </div>
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert alert-warning" role="alert">
+            @message
+        </div>
+    }
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 mt-2 form-group">
+                <button class="btn btn-primary w-100" @onclick="GoToTeam">Paneles</button>
+            </div>
+            @if(Session.IsAdmin){
+            <div class="col-lg-12 col-md-12 col-sm-12 mt-2 form-group">
+                <button class="btn btn-danger w-100" @onclick="CheckDeleteCondition">Borrar</button>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 mt-2 form-group">
+                <button class="btn btn-secondary w-100" @onclick="ModifyTeam">Modificar</button>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@if (isModalVisible)
+{
+<div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="close" @onclick="CloseModal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar el equipo <strong>@Title</strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
+                <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public string Description { get; set; }
+    [Parameter]
+    public int CantMembers { get; set; }
+    [Parameter]
+    public int MaxMembers { get; set; }    
+    [Parameter]
+    public DateTime Date { get; set; }
+    [Parameter]
+    public Team TeamObject { get; set; }
+
+    [Parameter]
+    public EventCallback OnTeamDeleted { get; set; }
+
+    private string message = "";
+    
+    private bool isModalVisible = false;
+    
+    private void CheckDeleteCondition()
+    {
+        if (TeamObject.Panels.Count > 0)
+        {
+            message = "Error: El equipo tiene paneles asociados.";
+        }
+        else
+        {
+            message = "";
+            ShowModal();
+        }
+    }
+    
+    private void ShowModal()
+    {
+        isModalVisible = true;
+    }
+
+    private void CloseModal()
+    {
+        isModalVisible = false;
+    }
+
+    private void ConfirmDelete()
+    {
+        TmService.DeleteTeam(Title);
+        CloseModal();
+        OnTeamDeleted.InvokeAsync();
+    }
+    
+    private void GoToTeam()
+    {
+        Navigation.NavigateTo($"/{Title}/panel");
+    }
+    private void DeleteTeam()
+    {
+        Navigation.NavigateTo($"/{Title}/delete");
+    }
+    private void ModifyTeam()
+    {
+        Navigation.NavigateTo($"/{Title}/modify");
+    }
+}

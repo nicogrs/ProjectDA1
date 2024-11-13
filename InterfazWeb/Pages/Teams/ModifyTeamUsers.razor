@@ -1,0 +1,252 @@
+﻿@page "/{teamName}/modifyUsers"
+@using Dominio
+@using Interfaces
+@inject ITeamService TmService
+@inject IUserService UService
+@inject Session Session
+@inject NavigationManager Navigation
+<PageTitle>Modificar Usuarios del Equipo</PageTitle>
+<h3>Modificar usuarios del equipo</h3>
+
+<div class="row w-100">
+    <div class="d-flex justify-content-between align-items-center">
+        @if(deletingUsers){
+            <div class="col-4 mb-3">
+                <button class="btn btn-primary" type="submit" @onclick="Add">Agregar Usuarios</button>
+            </div>
+        }
+        @if (addingUsers)
+        {
+            <div class="col-4 mb-3">
+                <button class="btn btn-primary" type="submit" @onclick="Delete">Eliminar Usuarios</button>
+            </div>
+        }
+        <div class="col-4 mb-3 d-flex justify-content-end">
+            <button class="btn btn-secondary" type="submit" @onclick="GoBack">Volver</button>
+        </div>
+    </div>
+</div>
+
+
+@if (addingUsers || deletingUsers)
+{
+    string thead;
+    if (addingUsers)
+    {
+        thead = "Agregar Usuario";
+        userList = usersNotInTeam;
+    }
+    else
+    {
+        thead = "Borrar Usuario";
+        userList = usersInTeam;
+    }
+
+    <div class="d-flex justify-content-center align-items-center">
+    <table class="table table-bordered w-75">
+        <thead>
+        <tr>
+            <th>@thead</th>
+            <th>Nombre</th>
+            <th>Mail</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (User user in userList)
+        {
+            <tr>
+                <td>
+                    @if (addingUsers)
+                    {
+                        <input type="checkbox" @onchange="e => ToggleSelectionAdd(user, e.Value)"/>
+                    }
+                    else
+                    {
+                        <input type="checkbox" @onchange="e => ToggleSelectionDelete(user, e.Value)"/>
+                    }
+                </td>
+                <td>@user.Name</td>
+                <td>@user.Email</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    </div>
+    @if (SelectedUsersAdd.Count > 0 && addingUsers)
+    {
+        <h4>Usuarios a agregar al equipo: (@SelectedUsersAdd.Count)</h4>
+        <ul>
+            @foreach (User user in SelectedUsersAdd)
+            {
+                <li>@user.Name (@user.Email)</li>
+            }
+        </ul>
+        
+        <button class="btn btn-success" @onclick="AddSelectedUsers">Agregar usuarios</button>
+    }
+    
+    @if (SelectedUsersDelete.Count > 0 && deletingUsers)
+    {
+        <h4>Usuarios a quitar del equipo: (@SelectedUsersDelete.Count)</h4>
+        <ul>
+            @foreach (User user in SelectedUsersDelete)
+            {
+                <li>@user.Name (@user.Email)</li>
+            }
+        </ul>
+        
+        <button class="btn btn-primary" @onclick="DeleteSelectedUsers">Quitar usuarios</button>
+    }
+    
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert alert-info" role="alert">
+            @message
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(warningMessage))
+    {
+        <div class="alert alert-warning" role="alert">
+            @warningMessage
+        </div>
+    }
+    
+}
+
+@code {
+
+    [Parameter]
+    public string teamName { get; set; }
+    
+    private bool deletingUsers;
+    private bool addingUsers = true;
+    
+    private List<User> allUsers;
+    private List<User> userList;
+    private List<User> usersInTeam;
+    private List<User> usersNotInTeam;
+    public List<User> SelectedUsersAdd;
+    public List<User> SelectedUsersDelete;
+    
+    private string message;
+    private string warningMessage;
+
+    protected override void OnInitialized()
+    {
+        if (!Session.IsAdmin)
+        {
+            Navigation.NavigateTo("/error");
+        }
+
+        UpdateUserLists();
+    }
+
+    private void ToggleSelectionAdd(User user, object isSelected)
+    {
+        bool selected = (bool)isSelected;
+        if (selected)
+        {
+            SelectedUsersAdd.Add(user);
+        }
+        else
+        {
+            SelectedUsersAdd.Remove(user);
+        }
+    }
+    
+    private void ToggleSelectionDelete(User user, object isSelected)
+    {
+        bool selected = (bool)isSelected;
+        if (selected)
+        {
+            SelectedUsersDelete.Add(user);
+        }
+        else
+        {
+            SelectedUsersDelete.Remove(user);
+        }
+    }
+    
+    private void Delete()
+    {
+        deletingUsers = true;
+        addingUsers = false;
+        message = null;
+        UpdateUserLists();
+    }
+
+    private void Add()
+    {
+        deletingUsers = false;
+        addingUsers = true;
+        message = null;
+        UpdateUserLists();
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"{teamName}/modify");
+    }
+    
+    private void AddSelectedUsers()
+    {
+        Team team = TmService.GetTeamByName(teamName);
+        if (SelectedUsersAdd.Count + team.MembersCount > team.MaxUsers)
+        {
+            warningMessage = "La cantidad de usuarios seleccionada y los miembros actuales " +
+                             "del equipo superan la capacidad maxima.";
+            return;
+        }
+
+        warningMessage = "";
+
+        foreach (User user in SelectedUsersAdd)
+        {
+            team.TeamMembers.Add(user);
+            team.MembersCount++;
+        }
+        
+        message=$"{SelectedUsersAdd.Count} Usuarios agregados exitosamente a {team.Name}.";
+        UpdateUserLists();
+    }
+    
+    private void DeleteSelectedUsers()
+    {
+        Team team = TmService.GetTeamByName(teamName);
+        if (SelectedUsersDelete.Count == team.MembersCount)
+        {
+            warningMessage = "El equipo no puede quedar sin miembros";
+            return;
+        }
+        
+        foreach (User user in SelectedUsersDelete)
+        {
+            TmService.RemoveUserFromTeam(teamName, user.Email);
+        }
+        
+        message=$"{SelectedUsersDelete.Count} Usuarios borrados exitosamente de {teamName}.";
+        UpdateUserLists();
+    }
+
+    private void UpdateUserLists()
+    {
+        warningMessage = "";
+        usersInTeam = new List<User>();
+        usersNotInTeam = new List<User>();
+        SelectedUsersAdd = new List<User>();
+        SelectedUsersDelete = new List<User>();
+
+        allUsers = UService.GetAllUsers();
+        foreach (var user in allUsers)
+        {
+            if (TmService.UserExistsInTeam(user.Email, teamName))
+            {
+                usersInTeam.Add(user);
+            }
+            else
+            {
+                usersNotInTeam.Add(user);
+            }
+        }
+    }
+}

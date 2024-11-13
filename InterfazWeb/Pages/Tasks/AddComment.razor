@@ -1,0 +1,81 @@
+@page "/{teamName}/{panelId}/{taskId}/createComment"
+@using Dominio
+@using Services
+@inject TaskService TskService
+@inject NavigationManager Navigation
+@inject Session Session
+
+<PageTitle>Add Comment</PageTitle>
+<h3>Agregar Comentario</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success mb-2" role="alert">
+        @message
+    </div>
+}
+<EditForm Model="modelAddComment" OnValidSubmit="HandleCreate">
+    <DataAnnotationsValidator/>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="w-75">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="w-75">
+                    <div class="form-group">
+                        <label id="content">Comentario</label>
+                        <InputText class="form-control" @bind-Value="@modelAddComment.Content" id="content"></InputText>
+                        <ValidationMessage For="@(() => modelAddComment.Content)"/>
+                    </div>
+                    <div class="form-group mt-3">
+                        <button class="btn btn-primary" type="submit">Agregar Comentario</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+    </div>
+</EditForm>
+<div class="col-4">
+    <button class="btn btn-secondary" type="submit" @onclick="GoBack">Volver</button>
+</div>
+
+@code{
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public string panelId { get; set; }
+    [Parameter]
+    public string taskId { get; set; }
+    
+    private Comment modelAddComment;
+    private List<User> users;
+    private string message;
+    
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser==null)
+        {
+        Navigation.NavigateTo("/error");
+        }
+        modelAddComment = new Comment();
+    }
+
+    private void HandleCreate()
+    {
+     
+        Comment c = new Comment
+        {
+            Content = modelAddComment.Content,
+            CreatedById = Session.CurrentUser.Id,
+            CreatedBy = Session.CurrentUser,      
+            Resolved = false                      
+        };
+        TskService.AddCommentToTask(int.Parse(taskId),c);
+       // Dominio.Task taskToComment = TskService.GetNonExpiredTasks(int.Parse(panelId)).Find(t => t.Name == title);
+       // taskToComment.AddComment(Session.CurrentUser, modelAddComment.Content);
+        message = "Comentario agregado con éxito";
+        modelAddComment.Content = "";
+    }
+    
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
+    }
+}

@@ -1,0 +1,213 @@
+@page "/teams/create"
+@using System.Transactions
+@using Dominio
+@using Interfaces
+@inject ITeamService TmService
+@inject IUserService UService
+@inject NavigationManager Navigation
+@inject Session Session
+
+
+<PageTitle>CreateTeam</PageTitle>
+<h3>Agregar Equipo</h3>
+@if (!string.IsNullOrEmpty(messageSuccess))
+{
+    <div class="alert alert-success" role="alert">
+        @messageSuccess
+    </div>
+}
+@if (!string.IsNullOrEmpty(messageNotSuccess))
+{
+    <div class="alert alert-danger" role="alert">
+        @messageNotSuccess
+    </div>
+}
+<EditForm Model="modelCreateTeam" OnValidSubmit="HandleCreate">
+    <DataAnnotationsValidator/>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="w-50">
+            <div class="form-group mb-3">
+                <label id="name">Nombre</label>
+                <InputText class="form-control" @bind-Value="@modelCreateTeam.Name" id="name" required></InputText>
+                <ValidationMessage For="@(() => modelCreateTeam.Name)"/>
+            </div>
+            <div class="form-group mb-3">
+                <label id="userAmount">Cantidad de Usuarios</label>
+                <InputNumber class="form-control" @bind-Value="@modelCreateTeam.MaxUsers" id="userAmount"></InputNumber>
+                <ValidationMessage For="@(() => modelCreateTeam.MaxUsers)"/>
+            </div>
+            <div class="form-group mb-3">
+                <label id="tasksDescription">Descripción de tareas</label>
+                <InputText class="form-control" required @bind-Value="@modelCreateTeam.TasksDescription" id="tasksDescription"></InputText>
+                <ValidationMessage For="@(() => modelCreateTeam.TasksDescription)"/>
+            </div>
+            @if (users != null && users.Any() && users.Count > 1)
+            {
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Agregar</th>
+                        <th>Nombre</th>
+                        <th>mail</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (User user in users)
+                    {
+                        if (user.Email != Session.CurrentUser.Email)
+                        {
+                            <tr>
+                                <td>
+                                    <input type="checkbox" @onchange="e => ToggleSelection(user, e.Value)"/>
+                                </td>
+                                <td>@user.Name</td>
+                                <td>@user.Email</td>
+                            </tr>
+                        }
+                    }
+                    </tbody>
+                </table>
+            }
+            
+            @if (SelectedUsers.Count > 0)
+            {
+                <h4>Usuarios a agregar: (@SelectedUsers.Count)</h4>
+                <ul>
+                    @foreach (User user in SelectedUsers)
+                    {
+                    <li>@user.Name (@user.Email)</li>
+                    }
+                </ul>
+            }
+            
+            
+            <div class="form-group mb-3">
+                <button class="btn btn-primary" type="submit">Crear Equipo</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+<div class="col-4 mb-3">
+    <button class="btn btn-secondary" type="submit" @onclick="GoBack">Volver</button>
+</div>
+
+@code{
+    Team modelCreateTeam = new Team();
+    private List<User> users;
+    private string searchTerm = "";
+    private List<User> filteredUsers = new List<User>();
+
+    private string messageSuccess;
+    private string messageNotSuccess;
+    public List<User> SelectedUsers;
+    private Panel p;
+    public List<Panel> panels;
+    private bool created;
+    
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        
+        if (!Session.IsAdmin)
+        {
+            Navigation.NavigateTo("/error");
+        }
+        users = UService.GetAllUsers();
+        SelectedUsers = new List<User> { Session.CurrentUser };
+        modelCreateTeam.MaxUsers = 1;
+    }
+    
+    private void OnSearchInput(ChangeEventArgs e)
+    {
+        searchTerm = e.Value.ToString();
+        FilterUsers();
+    }
+    
+    private void FilterUsers()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            filteredUsers.Clear();
+            return;
+        }
+        
+        filteredUsers = users
+            .Where(user => user.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
+                           user.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+    
+    private void ToggleUserSelection(string email, object isSelected)
+    {
+        if ((bool)isSelected)
+        {
+            SelectedUsers.Add(UService.GetUserByEmail(email));
+        }
+    }
+    
+    private void HandleCreate()
+    {
+        if (SelectedUsers.Count > modelCreateTeam.MaxUsers)
+        {
+            messageNotSuccess = "Cantidad de usuarios seleccionados superan el limite.";
+            return;
+        }
+        
+        Team t = new Team
+        {
+            Name = modelCreateTeam.Name,
+            CreatedOn = DateTime.Now,
+            TeamMembers = SelectedUsers,
+            MembersCount = SelectedUsers.Count,
+            TasksDescription = modelCreateTeam.TasksDescription,
+            Panels = new List<Panel>(),
+            MaxUsers = modelCreateTeam.MaxUsers
+        };
+        created = TmService.CreateTeam(t);
+        if (created)
+        {
+            messageSuccess = "Equipo creado con éxito.";
+            GoBack();
+        }
+        else
+        {
+            if (TmService.TeamExists(t.Name))
+            {
+                messageNotSuccess = "El equipo no fue creado, ya existe uno con el mismo nombre.";
+            }
+        }
+
+    }
+    
+    private void ToggleSelection(User user, object isSelected)
+    {
+        bool selected = (bool)isSelected;
+        if (selected)
+        {
+            SelectedUsers.Add(user);
+        }
+        else
+        {
+            SelectedUsers.Remove(user);
+        }
+    }
+    
+    
+    
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/account/teams");
+    }
+
+    private void ClearContents()
+    {
+        modelCreateTeam.Name = "";
+        modelCreateTeam.MaxUsers = 1;
+        SelectedUsers = new List<User>()
+        {
+            Session.CurrentUser
+        };
+        messageNotSuccess = "";
+    }
+}

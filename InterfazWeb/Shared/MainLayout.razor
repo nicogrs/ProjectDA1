@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject Session Session
 
 <PageTitle>InterfazWeb</PageTitle>
 
@@ -9,7 +10,9 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            @if (Session.CurrentUser != null){
+                <NotificationMenu/>
+            } 
         </div>
 
         <article class="content px-4">

@@ -1,0 +1,53 @@
+@page "/{teamName}/{panelid}/expiredtasks"
+@using Services
+@inject TaskService TkService
+@inject NavigationManager Navigation
+@inject Session Session
+
+<PageTitle>Tareas Vencidas</PageTitle>
+
+<h3>Tareas vencidas del equipo @teamName</h3>
+
+<div class="row">
+    @if (Tasks.Count != 0)
+    {
+    foreach (var task in Tasks)
+    {
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="w-75">
+            <ExpiredTaskCard Title="@task.Name"
+                      Description="@task.Description"
+                      Precedence="@task.Precedence"
+                      EndDate="@task.ExpirationDate"
+                      Comments="@task.Comments"
+                      teamName="@teamName"
+                      Task="@task"/>
+        </div>
+    </div>
+    }
+    }
+    else
+    {
+    <p>Panel sin tareas.</p>
+    }
+    </div>
+
+@code {
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public string panelId { get; set; }
+    
+    private List<Dominio.Task> Tasks;
+    
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+
+        Tasks = TkService.GetAllExpiredTasks(int.Parse(panelId));
+    }
+    
+}

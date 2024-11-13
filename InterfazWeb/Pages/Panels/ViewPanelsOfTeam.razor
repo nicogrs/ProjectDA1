@@ -1,0 +1,71 @@
+@page "/{teamName}/panel"
+@using Dominio
+@using Interfaces
+@using Services
+@inject ITeamService TmService
+@inject IPanelService PnService
+@inject NavigationManager Navigation
+@inject Session Session
+
+<PageTitle>ViewPanels</PageTitle>
+
+<h3 class="mb-4">Paneles del equipo @teamName</h3>
+<div class="row">
+    <div class="col-4 mb-4">
+        <button class="btn btn-primary" type="submit" @onclick="CreatePanel">Crear Panel</button>
+    </div>
+    <div class="col-4 mb-4"></div>
+    
+    @if (Panels.Count != 0)
+    {
+        foreach (var panel in Panels)
+        {
+            <div class="d-flex justify-content-center align-items-center mt-4 mb-2">
+                <div class="w-75">
+                    <PanelCard Title="@panel.Name"
+                               Description="@panel.Description"
+                               teamName="@teamName"
+                               panelId="@panel.Id.ToString()"
+                               OnPanelDeleted="LoadPanels"/>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Equipo sin paneles.</p>
+    }
+</div>
+
+
+@code {
+    [Parameter]
+    public string teamName { get; set; }
+    private List<Panel> Panels;
+    
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+
+       LoadPanels();
+    }
+
+    private void LoadPanels()
+    {
+        Panels = PnService.GetAllPanelsFromTeam(teamName);
+    }
+    
+    private void CreatePanel()
+    {
+        Navigation.NavigateTo($"/{teamName}/panels/create");
+    }
+    
+
+    public void ModifyTeam()
+    {
+        Navigation.NavigateTo($"/{teamName}/modify");
+    }
+}

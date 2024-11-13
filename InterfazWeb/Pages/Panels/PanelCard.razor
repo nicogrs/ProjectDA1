@@ -1,0 +1,114 @@
+@using Dominio
+@using Interfaces
+@inject NavigationManager Navigation
+@inject Session Session
+@inject IPanelService PnService
+@inject IUserService UService
+@inject ITeamService TmService
+
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">@Title</h4>
+    </div>
+    <div class="card-body">
+        <p class="card-text">@Description</p>
+    </div>
+    <div class="card-footer">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-3 col-md-12 col-sm-12 mt-2  form-group">
+                <button class=" btn btn-primary w-100" type="submit" @onclick="GoToPanel">Ir</button>
+            </div>
+            <div class="col-lg-3 col-md-12 col-sm-12 mt-2  form-group">
+                <button class="btn btn-warning w-100" type="submit" @onclick="ChangePanel">Modificar</button>
+            </div>
+            @if (Session.IsAdmin)
+            {
+                <div class="col-lg-3 col-md-12 col-sm-12 mt-2 form-group">
+                    <button class="btn btn-danger w-100" type="submit" @onclick="ShowModal">Eliminar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@if (isModalVisible)
+{
+<div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="close" @onclick="CloseModal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            @if (UService.GetUserByEmail(Session.CurrentUser.Email).PaperBin.ElementsCount < 10)
+            {
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas enviar el Panel <strong>@selectedPanel.Name
+                    </strong> a la papelera?</p>
+            </div>
+            }
+            else
+            {
+            <div class="modal-body">
+                <p>¡Tu papelera esta llena! ¿Estas seguro que quieres eliminar <strong>@selectedPanel.Name
+                        por completo?</strong></p>
+            </div>
+            }
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
+                <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+@code {
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public string Description { get; set; }
+    
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public string panelId { get; set; }
+    [Parameter]
+    public EventCallback OnPanelDeleted { get; set; }
+    public bool isModalVisible;
+    private Panel selectedPanel;
+
+    
+    protected override void OnInitialized()
+    {
+        selectedPanel = PnService.GetPanelById(int.Parse(panelId));
+    }
+    
+    private void GoToPanel()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
+    }
+    
+    private void ChangePanel()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/modify");
+    }
+    
+    private void ShowModal()
+    {
+        isModalVisible = true;
+    }
+
+    private void CloseModal()
+    {
+        isModalVisible = false;
+    }
+
+    private void ConfirmDelete()
+    {
+        UService.AddElementToPaperBin(Session.CurrentUser.Email, selectedPanel as IDeleteable);
+        CloseModal();
+        OnPanelDeleted.InvokeAsync();
+    }
+}

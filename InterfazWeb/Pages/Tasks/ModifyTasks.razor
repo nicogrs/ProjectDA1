@@ -1,0 +1,114 @@
+﻿@page "/{teamName}/{panelId}/{taskTitle}"
+@using Dominio
+@using Services
+@using Task = Dominio.Task
+@inject PanelService PlService
+@inject NavigationManager Navigation
+@inject Session Session
+
+<PageTitle>ModifyTask</PageTitle>
+<h3>Modificar Tareas</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success" role="alert">
+        @message
+    </div>
+}
+
+<EditForm Model="modelChangeTask" OnValidSubmit="HandleModify">
+    <DataAnnotationsValidator/>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="w-50">
+            <div class="form-group mt-4">
+                <label id="name">Titulo</label>
+                <InputText class="form-control" @bind-Value="@modelChangeTask.Name" id="name"></InputText>
+                <ValidationMessage For="@(() => modelChangeTask.Name)"/>
+            </div>
+
+            <div class="form-group mt-4">
+                <label for="lastName">Descripcion</label>
+                <InputText class="form-control" @bind-Value="@modelChangeTask.Description" id="description"></InputText>
+                <ValidationMessage For="@(() => modelChangeTask.Description)"/>
+            </div>
+        @if(Session.IsAdmin){
+            <div class="form-group mt-4">
+                <label for="birthDate">Fecha de expiración</label>
+                <InputDate class="form-control" id="birthDate" @bind-Value="@modelChangeTask.ExpirationDate" min=@DateTime.Today.ToString()></InputDate>
+                <ValidationMessage For="@(() => modelChangeTask.ExpirationDate)"/>
+            </div>
+
+            <div class="form-group mt-4">
+                <label id="userAmount">Prioridad</label>
+                <InputSelect class="form-control" @bind-Value="modelChangeTask.Precedence" id="userAmount">
+                    @foreach (var priority in Enum.GetValues(typeof(Task.Priority)))
+                    {
+                    <option value="@priority">@priority.ToString()</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => modelChangeTask.Precedence)"/>
+            </div>
+        }
+            <div class="mt-2">
+                <div class="form-group mt-4">
+                    <button class="btn btn-primary" type="submit">Modificar Tarea</button>
+                </div>
+                <div class="col-4 mt-4">
+                    <button class="btn btn-secondary" type="button" @onclick="GoBack">Volver</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public string panelId { get; set; }
+    [Parameter]
+    public string taskTitle { get; set; }
+    Task modelChangeTask = new Task();
+    Task toModify = new Task();
+    Panel panel = new Panel();
+    private string message;
+    private Task.Priority selectedPriority;
+
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo($"/error");
+        }
+        panel = PlService.GetPanelById(int.Parse(panelId));
+        toModify = panel.Tasks.FirstOrDefault(t => t.Name == taskTitle);
+        modelChangeTask.Description = toModify.Description;
+        modelChangeTask.Name = toModify.Description;
+        modelChangeTask.Precedence = toModify.Precedence;
+        modelChangeTask.ExpirationDate = toModify.ExpirationDate;
+    }
+
+    private void HandleModify()
+    {
+        if (!String.IsNullOrEmpty(modelChangeTask.Name))
+        {
+            toModify.Name = modelChangeTask.Name;
+        }
+
+        if (!String.IsNullOrEmpty(modelChangeTask.Description))
+        {
+            toModify.Description = modelChangeTask.Description;
+        }
+        if (modelChangeTask.ExpirationDate != null)
+        {
+            toModify.ExpirationDate = modelChangeTask.ExpirationDate;
+        }
+        toModify.Precedence = modelChangeTask.Precedence;
+
+        message = "Tarea modificada";
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
+    }
+}

@@ -2,14 +2,21 @@
 
 public class User
 {
+    public User()
+    {
+        PaperBin = new Trash();
+    }
+
+    public int Id { get; set; }
     public string Name { get; set; }
     public string Surname { get; set; }
     public string Email { get; set; }
     public DateTime BirthDate { get; set; }
     public string Password { get; set; }
     public bool Admin { get; set; }
-    
-    public List<Team> Teams { get; set; }
+    public Trash PaperBin { get; set; }
+
+    public List<Team> UserTeams { get; set; } = new();
 
     public bool IsNameValid()
     {
@@ -30,14 +37,14 @@ public class User
     {
         return BirthDate != null && BirthDate < DateTime.Today && BirthDate.Year < DateTime.Now.Year;
     }
-    
+
     public bool IsUserValid()
     {
         return IsNameValid() && IsSurnameValid() && IsEmailValid() && IsBirthDateValid();
     }
+
     public bool IsUserAdmin()
     {
         return Admin;
     }
-
 }

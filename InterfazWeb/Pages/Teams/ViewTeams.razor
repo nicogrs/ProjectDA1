@@ -1,0 +1,58 @@
+@page "/account/teams"
+@using Dominio
+@using Interfaces
+@inject ITeamService TmService
+@inject Session Session
+@inject NavigationManager Navigation
+
+<PageTitle>Equipos</PageTitle>
+<h3>Equipos</h3>
+
+<div class="row">
+    @if (Teams.Count != 0)
+    {
+        foreach (var team in Teams)
+        {
+            <div class="col-lg-4 col-md-12 col-sm-12 mb-4">
+            <TeamCard OnTeamDeleted="RefreshTeams" TeamObject="@team" Title="@team.Name" Date="@team.CreatedOn" 
+                      CantMembers="@team.MembersCount" MaxMembers="@team.MaxUsers" Description="@team.TasksDescription"/>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No tienes equipos asignados.</p>
+    }
+</div>
+
+
+
+@code {
+    private List<Team> Teams;
+    
+    protected override void OnInitialized()
+    {
+        LoadTeams();
+    }
+
+    private void LoadTeams()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+        if (Session.IsAdmin)
+        {
+            Teams = TmService.GetAllTeams();
+        }
+        else
+        {
+            Teams = TmService.GetTeamsByUserEmail(Session.CurrentUser.Email);
+        }
+    }
+
+    public void RefreshTeams()
+    {
+        LoadTeams();
+    }
+}

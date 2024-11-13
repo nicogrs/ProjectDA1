@@ -1,0 +1,27 @@
+@page "/account/logout"
+@inject Session Session
+@inject NavigationManager Navigation
+<PageTitle>Logout</PageTitle>
+
+<h3>Cerrar Sesion</h3>
+
+<div class="form-group">
+    <p class="text">¿Seguro que quieres cerrar sesión?</p>
+    <button class="btn btn-primary" type="submit" @onclick="CloseSession">Cerrar Sesion</button>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/account/login");
+        }
+    }
+
+    private void CloseSession()
+    {
+        Session.Logout();
+        Navigation.NavigateTo("/account/login");
+    }
+}

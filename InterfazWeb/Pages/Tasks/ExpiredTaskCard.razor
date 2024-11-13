@@ -1,0 +1,88 @@
+
+@using Dominio
+@using Interfaces
+@using Services
+@using Task = Dominio.Task
+@inject IPanelService PlService
+@inject TaskService TkService
+@inject NavigationManager Navigation
+@inject Session Session
+
+<div class="card mb-2 mt-2">
+    <div>
+        @if (Precedence == Task.Priority.Urgent)
+        {
+        <div class="bg-danger card-header ">
+            <p class="card-title text-white w-100">@Title</p>
+        </div>
+        }
+        else if (Precedence == Task.Priority.Medium)
+        {
+        <div class="bg-info card-header">
+            <p class="card-title bg-info text-white">@Title</p>
+        </div>
+        }
+        else
+        {
+        <div class="bg-black card-header">
+            <p class="card-title bg-black text-white">@Title</p>
+        </div>
+        }
+    </div>
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <p class="card-text">Prioridad: @Precedence.ToString()</p>
+            <p class="card-text">Vencimiento: @EndDate</p>
+        </div>
+        <div>
+            <p class="card-text">Descripcion de la tarea:<br/> @Description</p>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="d-flex">
+            @if(Session.IsAdmin){
+                <div class="form-group m-2">
+                    <button class="btn btn-warning" type="submit" @onclick="ChangeTask">Modificar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    
+[Parameter]
+public string Title { get; set; }
+[Parameter]
+public Task.Priority Precedence { get; set; }
+[Parameter]
+public DateTime EndDate { get; set; }
+[Parameter]
+public string Description { get; set; }
+[Parameter]
+public string teamName { get; set; }
+[Parameter]
+public List<Comment> Comments { get; set; }
+[Parameter] 
+    public Task Task { get; set; }
+
+    string panelId { get; set; }
+
+protected override void OnInitialized()
+{
+Comments = Task.Comments;
+panelId = TkService.GetPanelIdByTask(teamName, Task.Id).ToString();
+}
+
+private void CompleteComment(Comment comment)
+{
+Task.MarkCommentAsResolved(Session.CurrentUser, comment);
+}
+
+private void ChangeTask()
+{
+    Navigation.NavigateTo($"/{teamName}/{panelId}/{Title}");
+}
+
+
+}

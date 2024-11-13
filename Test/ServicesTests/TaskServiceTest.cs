@@ -162,9 +162,7 @@ public class TaskServiceTest
         Assert.AreEqual(10, updatedTask.InvertedEffort);
     }
 
-
-
-    /*[TestMethod]
+    [TestMethod]
     public void AddEffort_AccumulateInvertedEffort()
     {
         var task1 = new Task
@@ -179,5 +177,5 @@ public class TaskServiceTest
         _taskService.AddEffort(task1.Id, 3);
         var updatedTask = _taskRepository.Find(x => x.Id == task1.Id);
         Assert.AreEqual(5, updatedTask.InvertedEffort);
-    }*/
+    }
 }

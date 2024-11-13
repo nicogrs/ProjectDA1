@@ -130,64 +130,52 @@ public class TaskServiceTest
         Assert.AreEqual(5, updatedTask.InvertedEffort);
     }
 
-    /*[TestMethod]
-    public void AddEffort_PositiveTime()
-    {
-        var panel1 = new Panel { Name = "Panel 1", Id = 1 };
-        var task1 = new Task { Name = "Task 1", ExpirationDate = DateTime.Now.AddHours(+1), InvertedEffort = 0 };
-        panel1.Tasks.Add(task1);
-        team.Panels.Add(panel1);
-        _mockTeamService.Setup(x => x.GetTeamByName(team.Name)).Returns(team);
-        _mockPanelService.Setup(x => x.GetPanelById(panel1.Id)).Returns(panel1);
-
-        taskService.AddEffort(task1.Id, 5);
-
-        Assert.AreEqual(5, task1.InvertedEffort);
-    }
-
     [TestMethod]
     public void AddEffort_ZeroTime()
     {
-        var panel1 = new Panel{Name = "Panel 1",Id = 1};
-        var task1 = new Task{Name = "Task 1", ExpirationDate = DateTime.Now.AddHours(+1), InvertedEffort = 10};
-        panel1.Tasks.Add(task1);
-        team.Panels.Add(panel1);
-        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
-        _mockPanelService.Setup(x => x.GetPanelById(panel1.Id)).Returns(panel1);
-
-        taskService.AddEffort(task1.Id, 0);
-
-        Assert.AreEqual(10, task1.InvertedEffort);
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            InvertedEffort = 10
+        };
+        _taskRepository.Add(task1);
+        _taskService.AddEffort(task1.Id, 0);
+        var updatedTask = _taskRepository.Find(x => x.Id == task1.Id);
+        Assert.AreEqual(10, updatedTask.InvertedEffort);
     }
 
-    [TestMethod]
+    /*[TestMethod]
     public void AddEffort_NegativeTime()
     {
-        var panel1 = new Panel{Name = "Panel 1",Id = 1};
-        var task1 = new Task{Name = "Task 1", ExpirationDate = DateTime.Now.AddHours(+1), InvertedEffort = 10};
-        panel1.Tasks.Add(task1);
-        team.Panels.Add(panel1);
-        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
-        _mockPanelService.Setup(x => x.GetPanelById(panel1.Id)).Returns(panel1);
-
-        taskService.AddEffort(task1.Id, -5);
-
-        Assert.AreEqual(10, task1.InvertedEffort);
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            InvertedEffort = 10
+        };
+        _taskRepository.Add(task1);
+        _taskService.AddEffort(task1.Id, -5);
+        var updatedTask = _taskRepository.Find(x => x.Id == task1.Id);
+        Assert.AreEqual(10, updatedTask.InvertedEffort);
     }
 
     [TestMethod]
     public void AddEffort_AccumulateInvertedEffort()
     {
-        var panel1 = new Panel{Name = "Panel 1",Id = 1};
-        var task1 = new Task{Name = "Task 1", ExpirationDate = DateTime.Now.AddHours(+1), InvertedEffort = 0};
-        panel1.Tasks.Add(task1);
-        team.Panels.Add(panel1);
-        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
-        _mockPanelService.Setup(x => x.GetPanelById(panel1.Id)).Returns(panel1);
-
-        taskService.AddEffort(task1.Id, 3);
-        taskService.AddEffort(task1.Id, 2);
-
-        Assert.AreEqual(5, task1.InvertedEffort);
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            InvertedEffort = 0
+        };
+        _taskRepository.Add(task1);
+        _taskService.AddEffort(task1.Id, 2);
+        _taskService.AddEffort(task1.Id, 3);
+        var updatedTask = _taskRepository.Find(x => x.Id == task1.Id);
+        Assert.AreEqual(5, updatedTask.InvertedEffort);
     }*/
 }

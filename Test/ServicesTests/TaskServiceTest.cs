@@ -145,8 +145,8 @@ public class TaskServiceTest
         var updatedTask = _taskRepository.Find(x => x.Id == task1.Id);
         Assert.AreEqual(10, updatedTask.InvertedEffort);
     }
-
-    /*[TestMethod]
+    
+    [TestMethod]
     public void AddEffort_NegativeTime()
     {
         var task1 = new Task
@@ -162,7 +162,9 @@ public class TaskServiceTest
         Assert.AreEqual(10, updatedTask.InvertedEffort);
     }
 
-    [TestMethod]
+
+
+    /*[TestMethod]
     public void AddEffort_AccumulateInvertedEffort()
     {
         var task1 = new Task

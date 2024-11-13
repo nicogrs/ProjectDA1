@@ -1,26 +1,18 @@
 using Interfaces;
 using Services;
-using System.Data;
-using Azure.Core;
 using DataAccess;
 using Test.Context;
-
 namespace Test;
 using Dominio;
-using Moq;
+
 
 [TestClass]
 public class TaskServiceTest
 {
-    private Team team;
     private TaskService _taskService;
-    private TeamService _teamService;
-    private PanelService _panelService;
     private IRepository<Task> _taskRepository;
     private SqlContext _context;
     
-    Mock<ITeamService> _mockTeamService;
-    Mock<IPanelService> _mockPanelService;
     
     [TestInitialize]
     public void Setup()

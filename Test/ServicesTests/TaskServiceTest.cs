@@ -130,5 +130,19 @@ public class TaskServiceTest
         Assert.AreEqual(10, task1.InvertedEffort);
     }
     
-    
+    [TestMethod]
+    public void AddEffort_AccumulateInvertedEffort()
+    {
+        var panel1 = new Panel{Name = "Panel 1",Id = 1};
+        var task1 = new Task{Name = "Task 1", ExpirationDate = DateTime.Now.AddHours(+1), InvertedEffort = 0};
+        panel1.Tasks.Add(task1);
+        team.Panels.Add(panel1);
+        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
+        _mockPanelService.Setup(x => x.GetPanelById(panel1.Id)).Returns(panel1);
+
+        taskService.AddEffort(task1.Id, 3);
+        taskService.AddEffort(task1.Id, 2);
+
+        Assert.AreEqual(5, task1.InvertedEffort);
+    }
 }

@@ -13,11 +13,22 @@ public class TaskImportServiceTest
     private List<string> filesToTest;
     private List<string> xlsxFilesToTest;
     private List<Task> referenceTasks;
+    private List<string> errorLinesToProcess;
     
     
     [TestInitialize]
     public void Setup()
     {
+        errorLinesToProcess = new List<string>()
+        {
+            //"titulo,descripcion,Fecha de vencimiento,ID de panel,ID de epica"
+            "correcta,descripcion,31/12/2025,1,1",
+            "incorrecta,menos columnas,31/12/2025",
+            "incorrecta,columnas de mas,31/12/2025,1,1,1",
+            "incorrecta,Fecha incorrecta,31/1/2/2025,1,1",
+            "incorrecta,Id columna incorrecto,31/12/2025,one,1",
+        };
+        
         string directory = Directory.GetCurrentDirectory();
         directory = $"../Data/{directory}";
         
@@ -135,5 +146,123 @@ public class TaskImportServiceTest
         
         Assert.AreEqual(expectedResult, _taskImportService.errors[0]);
         Assert.AreEqual(1, _taskImportService.errors.Count);
+    }
+
+    [TestMethod]
+    public void IsStringValidDateTest1()
+    {
+        List<string> validDates = new List<string>()
+        {
+            "01/01/2024",
+            "01/01/2000",
+            "31/12/2024",
+            "07/08/2024"
+        };
+
+        foreach (string date in validDates)
+        {
+            Assert.IsTrue(_taskImportService.IsStringValidDate(date));
+        }
+    }
+
+    [TestMethod]
+    public void IsStringValidDateTest2()
+    {
+        List<string> invalidDates = new List<string>()
+        {
+            "00/01/2024",
+            "32/01/2024",
+            "31/12/1999",
+            "01/00/2000",
+            "01/13/2000",
+            "-01/01/2024"
+        };
+        
+        foreach (string date in invalidDates)
+        {
+            Assert.IsFalse(_taskImportService.IsStringValidDate(date));
+        }
+    }
+    
+    [TestMethod]
+    public void IsStringValidDateTest3()
+    {
+        List<string> invalidDates = new List<string>()
+        {
+            "01/01/01/2024",
+            "01/02",
+            "01",
+            "01-01-2024",
+            "one/01/2024",
+            "01/january/2024",
+            "01/01/twenty-twenty-two"
+        };
+        
+        foreach (string date in invalidDates)
+        {
+            Assert.IsFalse(_taskImportService.IsStringValidDate(date));
+        }
+    }
+
+    [TestMethod]
+    public void ProcessErrorTest1()
+    {
+        _taskImportService.errors = new List<string>();
+        
+        _taskImportService.ProcessError(errorLinesToProcess[0]);
+        
+        Assert.AreEqual(0, _taskImportService.errors.Count);
+    }
+    
+    [TestMethod]
+    public void ProcessErrorTest2()
+    {
+        _taskImportService.errors = new List<string>();
+        string expectedErrorMessage = "Cantidad incorrecta de columnas.";
+        
+        _taskImportService.ProcessError(errorLinesToProcess[1]);
+        
+        Assert.AreEqual(1, _taskImportService.errors.Count);
+        bool contieneError = _taskImportService.errors[0].Contains(expectedErrorMessage);
+        Assert.IsTrue(contieneError);
+    }
+    
+    [TestMethod]
+    public void ProcessErrorTest3()
+    {
+        _taskImportService.errors = new List<string>();
+        string expectedErrorMessage = "Cantidad incorrecta de columnas.";
+        
+        _taskImportService.ProcessError(errorLinesToProcess[2]);
+        
+        Assert.AreEqual(1, _taskImportService.errors.Count);
+        bool contieneError = _taskImportService.errors[0].Contains(expectedErrorMessage);
+        Assert.IsTrue(contieneError);
+    }
+    
+    [TestMethod]
+    public void ProcessErrorTest4()
+    {
+        _taskImportService.errors = new List<string>();
+        string expectedErrorMessage = "Formato de fecha incorrecto.";
+        
+        _taskImportService.ProcessError(errorLinesToProcess[3]);
+        
+        Assert.AreEqual(1, _taskImportService.errors.Count);
+        bool contieneError = _taskImportService.errors[0].Contains(expectedErrorMessage);
+        Assert.IsTrue(contieneError);
+    }
+    
+    [TestMethod]
+    public void ProcessErrorTest5()
+    {
+        _taskImportService.errors = new List<string>();
+        string expectedErrorMessage = "Id de panel incorrecto.";
+        
+        _taskImportService.ProcessError(errorLinesToProcess[4]);
+        
+        Assert.AreEqual(1, _taskImportService.errors.Count);
+        bool contieneError = _taskImportService.errors[0].Contains(expectedErrorMessage);
+        Assert.IsTrue(contieneError);
     }
 }

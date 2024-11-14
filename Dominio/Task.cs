@@ -9,6 +9,7 @@ public class Task : IDeleteable
     public DateTime ExpirationDate { get; set; }
     public List<Comment> Comments { get; set; }
     public Epic Epic { get; set; }
+    public string Description { get; set; }
     public int ExpectedEffort { get; set; }
     public int InvertedEffort { get; set; }
     public bool Ended { get; set; }

@@ -73,6 +73,16 @@ public class TaskService : ITaskService
 
     public string EffortStatus(int taskId)
     {
-        return "";
+        var task = GetTaskById(taskId);
+        string s = "";
+        if (task.Ended)
+        {
+            int effort = EffortComparated(taskId);
+            if (effort < 0) s = "Subestimada";
+            if (effort > 0) s = "Sobreestimada";
+            if (effort == 0) s = "OK";
+        }
+        return s;
+
     }
 }

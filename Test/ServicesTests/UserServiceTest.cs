@@ -124,7 +124,7 @@ public class UserServiceTest
         Assert.IsNotNull(userFromService);
     }
     
-    /*[TestMethod]
+    [TestMethod]
     public void ResetUserPassword()
     {
         _service.CreateUser(_user1);
@@ -247,6 +247,6 @@ public class UserServiceTest
         Assert.AreEqual(task.IsDeleted,true);
         _service.RestoreElement(task,_user1.Email);
         Assert.AreEqual(task.IsDeleted,false);
-    }*/
+    }
     
 }

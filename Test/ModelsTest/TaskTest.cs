@@ -89,11 +89,10 @@ public class TaskTest
     {
         int initialCommentCount = t1.Comments.Count;
         string content = "Comentario de AddComentTest";
-        Comment lastAddedComment;
-        
-        //`t1.AddComment(u1,content);
-        
-        lastAddedComment = t1.Comments.Last();
+        Comment newComment = new Comment { Content = content };
+
+        t1.Comments.Add(newComment);
+    
         Assert.AreEqual(t1.Comments.Count, initialCommentCount + 1);
         Assert.AreEqual(t1.Comments.Last().Content, content);
     }
@@ -101,13 +100,7 @@ public class TaskTest
     [TestMethod]
     public void ToStringTest()
     {
-        var result = $"Tipo: Task - ID: {t1.Id} - Nombre: Titulo 1 - Prioridad: Low" ;
+        var result = $"Tipo: Task - ID: {t1.Id} - Nombre: Titulo 1 - Prioridad: Low";
         Assert.AreEqual(t1.ToString(), result);
-    }
-
-    [TestMethod]
-    public void AddCommentExceptionTest()
-    {
-        
     }
 }

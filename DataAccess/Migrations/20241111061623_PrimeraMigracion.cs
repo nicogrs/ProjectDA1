@@ -181,7 +181,11 @@ namespace DataAccess.Migrations
                     Precedence = table.Column<int>(type: "int", nullable: false),
                     PanelId = table.Column<int>(type: "int", nullable: false),
                     ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EpicId = table.Column<int>(type: "int", nullable: false)
+                    EpicId = table.Column<int>(type: "int", nullable: false),
+                    Ended = table.Column<bool>(type:"bit", nullable:false),
+                    ExpectedEffort = table.Column<int>(type: "int", nullable: false),
+                    InvertedEffort = table.Column<int>(type: "int", nullable: false)
+                    
                 },
                 constraints: table =>
                 {

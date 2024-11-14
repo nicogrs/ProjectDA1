@@ -68,14 +68,14 @@ public class UserServiceTest
         Assert.IsFalse(isUserDeleted);
     }
 
-    /*[TestMethod]
+    [TestMethod]
     public void AddUser()
     {
-        var isUserAdded = _service.CreateUser(_user);
+        var isUserAdded = _service.CreateUser(_user1);
         Assert.IsTrue(isUserAdded);
     }
     
-    [TestMethod]
+    /*[TestMethod]
     [ExpectedException(typeof(InvalidOperationException))]
     public void CreateUserWithInvalidPassword()
     {

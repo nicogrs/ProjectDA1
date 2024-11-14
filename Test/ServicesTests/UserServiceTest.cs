@@ -83,15 +83,15 @@ public class UserServiceTest
         _service.CreateUser(_user1);
     }
 
-    /*[TestMethod]
+    [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void CreateUserWithInvalidName()
     {
-        _user.Name = "a";
-        _service.CreateUser(_user);
+        _user1.Name = "a";
+        _service.CreateUser(_user1);
     }
     
-    [TestMethod]
+    /*[TestMethod]
     [ExpectedException(typeof(InvalidOperationException))]
     public void CreateUserCatchException()
     {

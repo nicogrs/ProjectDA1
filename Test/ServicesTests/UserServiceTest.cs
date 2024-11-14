@@ -75,15 +75,15 @@ public class UserServiceTest
         Assert.IsTrue(isUserAdded);
     }
     
-    /*[TestMethod]
+    [TestMethod]
     [ExpectedException(typeof(InvalidOperationException))]
     public void CreateUserWithInvalidPassword()
     {
-        _user.Password = "123456";
-        _service.CreateUser(_user);
+        _user1.Password = "123456";
+        _service.CreateUser(_user1);
     }
 
-    [TestMethod]
+    /*[TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void CreateUserWithInvalidName()
     {

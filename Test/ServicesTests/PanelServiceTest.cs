@@ -79,10 +79,11 @@ public class PanelServiceTest
     }
     
     
-    /*[TestMethod]
-    public void GetAllPanelsFromTeamTestException()
+    [TestMethod]
+    public void GetAllPanelsFromTeamTest_NoPanels()
     {
         var teamPanels = panelService.GetAllPanelsFromTeam(team.Name);
-    }*/
+        Assert.AreEqual(0, teamPanels.Count);
+    }
 
 }

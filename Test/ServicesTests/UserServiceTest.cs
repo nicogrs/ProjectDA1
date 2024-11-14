@@ -100,15 +100,15 @@ public class UserServiceTest
         _service.CreateUser(_user1);
     }
 
-    /*[TestMethod]
+    [TestMethod]
     [ExpectedException(typeof(InvalidOperationException))]
     public void AddExistingUser()
     {
-         _service.CreateUser(_user);
-         _service.CreateUser(_user);
+         _service.CreateUser(_user1);
+         _service.CreateUser(_user1);
     }
     
-    [TestMethod]
+    /*[TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void AddInvalidUser()
     {

@@ -108,15 +108,15 @@ public class UserServiceTest
          _service.CreateUser(_user1);
     }
     
-    /*[TestMethod]
+    [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void AddInvalidUser()
     {
-        _user.Name = "a";
-        var isInvalidUserAdded = _service.CreateUser(_user);
+        _user1.Name = "a";
+        var isInvalidUserAdded = _service.CreateUser(_user1);
     }
     
-    [TestMethod]
+    /*[TestMethod]
     public void GetUserByEmail()
     {
         _service.CreateUser(_user);

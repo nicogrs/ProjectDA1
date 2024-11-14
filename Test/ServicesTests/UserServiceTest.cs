@@ -13,7 +13,8 @@ using Dominio;
 public class UserServiceTest
 {
     private UserService _service;
-    private User _user;
+    private User _user1;
+    private User _user2;
     private IRepository<User> _userRepository;
     private SqlContext _context;
     
@@ -26,11 +27,20 @@ public class UserServiceTest
         _userRepository = new UserDatabaseRepository(_context);
         _service = new UserService(_userRepository);
         
-        _user = new User        
+        _user1 = new User        
         {
             Name = "Carlos",
             Surname = "Lopez",
             Email = "carlos@gmail.com",
+            BirthDate = new DateTime(1980, 1, 1),
+            Password = "TestPass$1"
+        };
+        
+        _user2 = new User        
+        {
+            Name = "Paco",
+            Surname = "Lopez",
+            Email = "paco@gmail.com",
             BirthDate = new DateTime(1980, 1, 1),
             Password = "TestPass$1"
         };

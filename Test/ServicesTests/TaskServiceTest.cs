@@ -164,16 +164,22 @@ public class TaskServiceTest
     {
         var task1 = new Task
         {
+            Name = "Task 1",
+            Description = "description",
             ExpectedEffort = 10,
             InvertedEffort = 5
         };
         var task2 = new Task
         {
+            Name = "Task 2",
+            Description = "description",
             ExpectedEffort = 5,
             InvertedEffort = 10
         };
         var task3 = new Task
         {
+            Name = "Task 3",
+            Description = "description",
             ExpectedEffort = 10,
             InvertedEffort = 10
         };

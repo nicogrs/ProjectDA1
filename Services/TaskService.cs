@@ -67,7 +67,8 @@ public class TaskService : ITaskService
     
     public int EffortComparated(int taskId)
     {
-        return 0;
+        var task = GetTaskById(taskId);
+        return task.ExpectedEffort - task.InvertedEffort;
     }
 
     public string EffortStatus(int taskId)

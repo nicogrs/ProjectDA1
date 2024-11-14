@@ -92,7 +92,14 @@ public abstract class TaskImportService
         errors.Add(error);
     }
 
-    public abstract List<string> SplitLine(string str);
+    public List<string> SplitLine(string str)
+    {
+        string[] strArr = str.Split(",");
+        
+        List<string> toReturn = strArr.ToList();
+        
+        return toReturn;
+    }
     public Task TaskFromStringList(List<string> strList)
     {
         Task task = new Task();

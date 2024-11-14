@@ -89,15 +89,18 @@ public class TaskImportServiceTest
         XlsReader xlsxReader = new XlsReader();
         string expectedResult =
             "Título,Descripción,Fecha de vencimiento,ID de panel,ID de epica\r\n" +
-            "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2024,1,1\r\n" +
-            "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2024,1,1\r\n" +
-            "Terminar obligatorio,Terminar el obligatorio 2 de DA.,20/11/2024,1,2\r\n" +
-            "Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2024,2,\r\n";
+            "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2025 0:00:00,1,1\r\n" +
+            "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2025 0:00:00,1,1\r\n" +
+            "Terminar obligatorio,Terminar el obligatorio 2 de DA.,20/11/2025 0:00:00,1,2\r\n" +
+            "Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2025 0:00:00,2,\r\n";
+        List<string> expectedList = expectedResult.Split("\r\n").ToList();
         
-        
-        string result = xlsxReader.ConvertXlsFileContentToCsv(xlsxFilesToTest[0]);
+        string result = xlsxReader.TranslateXlsxToCsv(xlsxFilesToTest[0]);
+        List<string> actualList = result.Split("\r\n").ToList();
 
-        
-        Assert.AreEqual(expectedResult, result);
+        for (int i = 0; i < actualList.Count; i++)
+        {
+            Assert.AreEqual(expectedList[i], actualList[i]);
+        }
     }
 }

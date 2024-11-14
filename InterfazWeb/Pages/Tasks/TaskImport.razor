@@ -13,7 +13,7 @@
 <h3>Importar desde .csv</h3>
 <InputFile ref="xlsxInputFile" OnChange="HandleXlsxFileSelected" accept=".xlsx" style="display: none" />
 *@
-<InputFile OnChange="HandleCsvFileSelected" accept=".csv"/>
+<InputFile OnChange="HandleFileSelected" accept=".csv,.xlsx"/>
 
 
 @if (fileContent != null)
@@ -106,49 +106,50 @@
     }
     
     
-    private async System.Threading.Tasks.Task HandleCsvFileSelected(InputFileChangeEventArgs e)
+    private async System.Threading.Tasks.Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         selectedFile = e.File;
-        
-        ProcessCsvFile(selectedFile);
-    }
-    
-    private async System.Threading.Tasks.Task HandleXlsxFileSelected(InputFileChangeEventArgs e)
-    {
-        selectedFile = e.File;
-        
-        ProcessXlsxFile(selectedFile);
+
+        await ProcessFile(selectedFile);
     }
     
     
-    private void ProcessCsvFile(IBrowserFile file)
+    private async System.Threading.Tasks.Task ProcessFile(IBrowserFile file)
     {
-        ContentFromCsvFile(file);
+        string format = Path.GetExtension(selectedFile.Name);
 
-        Dominio.Services.CsvReader csvReader = new Dominio.Services.CsvReader();
-
-        if (fileContent != null)
+        if (format == ".csv")
         {
-            tasks = csvReader.ReadTasksFromContent(fileContent, Session.CurrentUser);
+            await GetContentFromCsv(file);
         }
-
+        else if (format == ".xlsx")
+        {
+            await GetContentFromXlsx(file);
+        }
+        else
+        {
+            Console.WriteLine("Format Error.");
+        }
+            
+        Dominio.Services.CsvReader csvReader = new Dominio.Services.CsvReader();
+        tasks = csvReader.ReadTasksFromContent(fileContent, Session.CurrentUser);
+        
         StateHasChanged();
     }
     
-    private void ProcessXlsxFile(IBrowserFile file)
+    
+    private async System.Threading.Tasks.Task GetContentFromXlsx(IBrowserFile file)
     {
         Dominio.Services.XlsReader xlsReader = new Dominio.Services.XlsReader();
-
-        //string fileContent = xlsReader.ConvertXlsFileContentToCsv(file);
-
-        Dominio.Services.CsvReader csvReader = new Dominio.Services.CsvReader();
-        
-        tasks = csvReader.ReadTasksFromContent(fileContent,Session.CurrentUser);
+    
+        using var stream = file.OpenReadStream();
+        fileContent = await xlsReader.TranslateXlsxToCsvFromStreamAsync(stream);
         
         StateHasChanged();
     }
+    
 
-    public async void ContentFromCsvFile(IBrowserFile file)
+    public async System.Threading.Tasks.Task GetContentFromCsv(IBrowserFile file)
     {
         if (selectedFile == null)
         {

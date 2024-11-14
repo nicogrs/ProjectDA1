@@ -4,24 +4,37 @@ using ClosedXML.Excel;
 
 public class XlsReader : TaskImportService
 {
-
-    public string XlsToText(string filePath)
+    public async Task<string> TranslateXlsxToCsvFromStreamAsync(Stream fileStream)
     {
-        return "";
+        string tempFilePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        try
+        {
+            // Write the stream to the temporary file
+            using (var fileStreamOut = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write))
+            {
+                await fileStream.CopyToAsync(fileStreamOut);
+            }
+            string crudeContent = TranslateXlsxToCsv(tempFilePath);
+            return RemoveTimeFromDateTime(crudeContent);
+        }
+        finally
+        {
+            if (File.Exists(tempFilePath))
+            {
+                File.Delete(tempFilePath);
+            }
+        }
     }
-    
-    public string ConvertXlsFileContentToCsv(string filePath)
+    public string TranslateXlsxToCsv(string filePath)
     {
         string content = "";
         
-        // Ensure the file exists
         if (!File.Exists(filePath))
         {
             Console.WriteLine("File not found.");
             return content;
         }
         
-        // Load the workbook
         using (var workbook = new XLWorkbook(filePath))
         {
             var worksheet = workbook.Worksheet(1);
@@ -44,11 +57,13 @@ public class XlsReader : TaskImportService
         
         return content;
     }
-    
-    public override List<string> SplitLine(string str)
+
+    public string RemoveTimeFromDateTime(string lines)
     {
-        return null;
+        return lines.Replace(" 0:00:00", "");
     }
+    
+    
 
     public override List<string> MakeLineListFromContent(string content)
     {

@@ -198,4 +198,57 @@ public class TaskServiceTest
 
         Assert.AreEqual(0, result3);
     }
+
+    [TestMethod]
+    public void EffortStatusTest()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpectedEffort = 5,
+            InvertedEffort = 10,
+            Ended = true
+        };
+        var task2 = new Task
+        {
+            Name = "Task 2",
+            Description = "description",
+            ExpectedEffort = 10,
+            InvertedEffort = 5,
+            Ended = true
+        };
+        var task3 = new Task
+        {
+            Name = "Task 3",
+            Description = "description",
+            ExpectedEffort = 10,
+            InvertedEffort = 10,
+            Ended = true
+        };
+        var task = new Task
+        {
+            Name = "Task",
+            Description = "description",
+            ExpectedEffort = 10,
+            InvertedEffort = 5,
+            Ended = false
+        };
+        
+        _taskRepository.Add(task1);
+        _taskRepository.Add(task2);
+        _taskRepository.Add(task3);
+        _taskRepository.Add(task);
+        
+        var status1 = _taskService.EffortStatus(task1.Id);
+        var status2 = _taskService.EffortStatus(task2.Id);
+        var status3 = _taskService.EffortStatus(task3.Id);
+        var status = _taskService.EffortStatus(task.Id);
+
+        Assert.AreEqual("Subestimada", status1);
+        Assert.AreEqual("Sobreestimada", status2);
+        Assert.AreEqual("OK", status3);
+        Assert.AreEqual(string.Empty, status);
+    }
+    
 }

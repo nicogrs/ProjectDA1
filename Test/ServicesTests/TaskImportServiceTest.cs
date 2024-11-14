@@ -265,4 +265,15 @@ public class TaskImportServiceTest
         bool contieneError = _taskImportService.errors[0].Contains(expectedErrorMessage);
         Assert.IsTrue(contieneError);
     }
+
+    [TestMethod]
+    public void RemoveTimeFromDateTimeTest()
+    {
+        XlsxToCsvAdapter adapter = new XlsxToCsvAdapter();
+        string originalDateTime = "01/01/2020 0:00:00";
+        
+        string expectedDate = adapter.RemoveTimeFromDateTime(originalDateTime);
+        
+        Assert.AreEqual(expectedDate, "01/01/2020");
+    }
 }

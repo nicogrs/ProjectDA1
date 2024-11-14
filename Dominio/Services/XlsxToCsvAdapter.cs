@@ -2,7 +2,7 @@ namespace Dominio.Services;
 using System;
 using ClosedXML.Excel;
 
-public class XlsReader : TaskImportService
+public class XlsxToCsvAdapter : TaskImportService
 {
     public async Task<string> TranslateXlsxToCsvFromStreamAsync(Stream fileStream)
     {
@@ -62,13 +62,5 @@ public class XlsReader : TaskImportService
     {
         return lines.Replace(" 0:00:00", "");
     }
-    
-    
-
-    public override List<string> MakeLineListFromContent(string content)
-    {
-        return content.Split('\n').ToList();
-    }
-    
     
 }

@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Dominio;
 using Dominio.Services;
 
@@ -8,7 +9,7 @@ using Task = Dominio.Task;
 [TestClass]
 public class TaskImportServiceTest
 {
-    private CsvReader _csvReader;
+    private TaskImportService _taskImportService;
     private List<string> filesToTest;
     private List<string> xlsxFilesToTest;
     private List<Task> referenceTasks;
@@ -59,7 +60,7 @@ public class TaskImportServiceTest
             ExpirationDate = new DateTime(2020, 06, 06)
         }
         };
-        _csvReader = new CsvReader();
+        _taskImportService = new TaskImportService();
     }
     
 
@@ -72,7 +73,7 @@ public class TaskImportServiceTest
                          $"{referenceTasks[1].Title},{referenceTasks[1].Description},{referenceTasks[1].ExpirationDate.ToShortDateString()},1\n" +
                          $"{referenceTasks[2].Title},{referenceTasks[2].Description},{referenceTasks[2].ExpirationDate.ToShortDateString()},1";
         
-        List<Task> tasks = _csvReader.ReadTasksFromContent(content,new User(){Name = "User 1"});
+        List<Task> tasks = _taskImportService.ReadTasksFromContent(content,new User(){Name = "User 1"});
 
         int taskListElementCount = tasks.Count;
         for (int i = 0; i < taskListElementCount; i++)
@@ -86,7 +87,7 @@ public class TaskImportServiceTest
     [TestMethod]
     public void ReadXlsxTest()
     {
-        XlsReader xlsxReader = new XlsReader();
+        XlsxToCsvAdapter xslxAdapter = new XlsxToCsvAdapter();
         string expectedResult =
             "Título,Descripción,Fecha de vencimiento,ID de panel,ID de epica\r\n" +
             "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2025 0:00:00,1,1\r\n" +
@@ -95,12 +96,44 @@ public class TaskImportServiceTest
             "Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2025 0:00:00,2,\r\n";
         List<string> expectedList = expectedResult.Split("\r\n").ToList();
         
-        string result = xlsxReader.TranslateXlsxToCsv(xlsxFilesToTest[0]);
+        string result = xslxAdapter.TranslateXlsxToCsv(xlsxFilesToTest[0]);
         List<string> actualList = result.Split("\r\n").ToList();
 
         for (int i = 0; i < actualList.Count; i++)
         {
             Assert.AreEqual(expectedList[i], actualList[i]);
         }
+    }
+
+    [TestMethod]
+    public void SplitLinesTest()
+    {
+        string combinedString = "1,2,3,4,5,6,7,8,9,10";
+        List<string> expectedResult = new List<string>();
+        for (int i = 1; i <= 10; i++)
+        {
+            expectedResult.Add(i.ToString());
+        }
+
+        List<string> result = TaskImportService.SplitLine(combinedString);
+        
+        Assert.AreEqual(expectedResult.Count, result.Count);
+        for (int i = 0; i < result.Count; i++)
+        {
+            Assert.AreEqual(expectedResult[i], result[i]);
+        }
+    }
+
+    [TestMethod]
+    public void LogErrorTest()
+    {
+        _taskImportService.errors = new List<string>();
+        DateTime errorTime = DateTime.Now;
+        string expectedResult = $"test line --- error message --- {errorTime:yyyy-mm-dd HH:mm:ss}";
+        
+        _taskImportService.LogError("test line", "error message");
+        
+        Assert.AreEqual(expectedResult, _taskImportService.errors[0]);
+        Assert.AreEqual(1, _taskImportService.errors.Count);
     }
 }

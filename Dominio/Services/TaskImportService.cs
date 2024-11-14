@@ -1,11 +1,11 @@
 namespace Dominio.Services;
 
-public abstract class TaskImportService
+public class TaskImportService
 {
     private StreamReader reader;
     private StreamWriter writer;
     private List<Task> tasks;
-    private List<string> errors;
+    public List<string> errors;
     
 
     public void MakeErrorFile(string errorFileName)
@@ -42,7 +42,10 @@ public abstract class TaskImportService
         return tasks;
     }
 
-    public abstract List<string> MakeLineListFromContent(string content);
+    public List<string> MakeLineListFromContent(string content)
+    {
+        return content.Split('\n').ToList();
+    }
     
     public void ProcessLines(List<string> linesOfLoadedFile)
     {
@@ -92,7 +95,7 @@ public abstract class TaskImportService
         errors.Add(error);
     }
 
-    public List<string> SplitLine(string str)
+    public static List<string> SplitLine(string str)
     {
         string[] strArr = str.Split(",");
         

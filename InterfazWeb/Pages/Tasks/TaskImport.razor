@@ -131,8 +131,8 @@
             Console.WriteLine("Format Error.");
         }
             
-        Dominio.Services.CsvReader csvReader = new Dominio.Services.CsvReader();
-        tasks = csvReader.ReadTasksFromContent(fileContent, Session.CurrentUser);
+        Dominio.Services.TaskImportService taskImportService = new Dominio.Services.TaskImportService();
+        tasks = taskImportService.ReadTasksFromContent(fileContent, Session.CurrentUser);
         
         StateHasChanged();
     }
@@ -140,10 +140,10 @@
     
     private async System.Threading.Tasks.Task GetContentFromXlsx(IBrowserFile file)
     {
-        Dominio.Services.XlsReader xlsReader = new Dominio.Services.XlsReader();
+        Dominio.Services.XlsxToCsvAdapter xlsxToCsvAdapter = new Dominio.Services.XlsxToCsvAdapter();
     
         using var stream = file.OpenReadStream();
-        fileContent = await xlsReader.TranslateXlsxToCsvFromStreamAsync(stream);
+        fileContent = await xlsxToCsvAdapter.TranslateXlsxToCsvFromStreamAsync(stream);
         
         StateHasChanged();
     }

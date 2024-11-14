@@ -91,16 +91,16 @@ public class UserServiceTest
         _service.CreateUser(_user1);
     }
     
-    /*[TestMethod]
+    [TestMethod]
     [ExpectedException(typeof(InvalidOperationException))]
     public void CreateUserCatchException()
     {
-        _user.Email = null;
-        _user.Password = "";
-        _service.CreateUser(_user);
+        _user1.Email = null;
+        _user1.Password = "";
+        _service.CreateUser(_user1);
     }
 
-    [TestMethod]
+    /*[TestMethod]
     [ExpectedException(typeof(InvalidOperationException))]
     public void AddExistingUser()
     {

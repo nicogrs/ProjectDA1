@@ -11,6 +11,7 @@ public class Task : IDeleteable
     public Epic Epic { get; set; }
     public int ExpectedEffort { get; set; }
     public int InvertedEffort { get; set; }
+    public bool Ended { get; set; }
     
     public enum Priority
     {

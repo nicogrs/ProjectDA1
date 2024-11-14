@@ -64,4 +64,14 @@ public class TaskService : ITaskService
             task.InvertedEffort += time;
         }
     }
+    
+    public int EffortComparated(int taskId)
+    {
+        return 0;
+    }
+
+    public string EffortStatus(int taskId)
+    {
+        return "";
+    }
 }

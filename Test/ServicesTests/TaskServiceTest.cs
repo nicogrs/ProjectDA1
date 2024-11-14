@@ -158,4 +158,38 @@ public class TaskServiceTest
         var updatedTask = _taskRepository.Find(x => x.Id == task1.Id);
         Assert.AreEqual(5, updatedTask.InvertedEffort);
     }
+
+    [TestMethod]
+    public void EffortComparatedTest()
+    {
+        var task1 = new Task
+        {
+            ExpectedEffort = 10,
+            InvertedEffort = 5
+        };
+        var task2 = new Task
+        {
+            ExpectedEffort = 5,
+            InvertedEffort = 10
+        };
+        var task3 = new Task
+        {
+            ExpectedEffort = 10,
+            InvertedEffort = 10
+        };
+        
+        _taskRepository.Add(task1);
+        _taskRepository.Add(task2);
+        _taskRepository.Add(task3);
+        
+        var result1 = _taskService.EffortComparated(task1.Id);
+        var result2 = _taskService.EffortComparated(task2.Id);
+        var result3 = _taskService.EffortComparated(task3.Id);
+
+        Assert.AreEqual(5, result1);
+
+        Assert.AreEqual(-5, result2);
+
+        Assert.AreEqual(0, result3);
+    }
 }

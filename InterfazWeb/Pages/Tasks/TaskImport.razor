@@ -8,15 +8,11 @@
 <PageTitle>Importar Tasks</PageTitle>
 
 <h4>Importar Tareas</h4>
-@*<h3>Importar desde .csv</h3>
-<InputFile Texto ref="csvInputFile" OnChange="HandleCsvFileSelected" accept=".csv" style="display: none" />
-<h3>Importar desde .csv</h3>
-<InputFile ref="xlsxInputFile" OnChange="HandleXlsxFileSelected" accept=".xlsx" style="display: none" />
-*@
+<h5>Archivos aceptados: .csv, .xlsx</h5> 
 <InputFile OnChange="HandleFileSelected" accept=".csv,.xlsx"/>
 
 
-@if (fileContent != null)
+@if (fileContent != "")
 {
     <p>Archivo cargado.</p>
 }

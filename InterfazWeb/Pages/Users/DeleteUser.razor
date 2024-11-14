@@ -1,9 +1,8 @@
 ﻿@page "/users/delete"
 @using Dominio
-@using Dominio.Data
-@inject IUserDatabase UDatabase
+@using Interfaces
 @inject IUserService UService
-@inject TeamService TmService
+@inject ITeamService TmService
 @inject Session Session
 @inject NavigationManager Navigation
 
@@ -70,7 +69,7 @@
         {
             Navigation.NavigateTo("/error");
         }
-        Users = UDatabase.GetUsers();
+        Users = UService.GetAllUsers();
     }
 
     private void OnChangeUser(ChangeEventArgs e)
@@ -107,7 +106,7 @@
             else
             {
                 TmService.RemoveUserFromAllTeams(modelDeleteUser.Email);
-                UDatabase.DeleteUser(modelDeleteUser.Email);
+                UService.DeleteUser(modelDeleteUser.Email);
                 messageNotSuccess = "";
                 messageSuccess = "Usuario eliminado.";
             }
@@ -119,7 +118,7 @@
         }
 
         modelDeleteUser = new User();
-        Users = UDatabase.GetUsers();
+        Users = UService.GetAllUsers();
     }
 
     private void CancelDelete()

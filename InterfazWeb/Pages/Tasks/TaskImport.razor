@@ -1,9 +1,10 @@
 @page "/{teamName}/{panelId}/TaskImportService"
 @using Dominio;
+@using Interfaces
 @using Task = Dominio.Task
 @inject NavigationManager Navigation;
 @inject Session Session;
-@inject PanelService PlService;
+@inject IPanelService PlService;
 
 <PageTitle>Importar Tasks</PageTitle>
 
@@ -43,7 +44,7 @@
         <td>
             <input type="checkbox" @onchange="e => ToggleSelection(task, e.Value)"/>
         </td>
-        <td>@task.Title</td>
+        <td>@task.Name</td>
         <td>@task.Description</td>
         <td>@expDateToString(task.ExpirationDate)</td>
         @if (task.Epic != null)
@@ -65,7 +66,7 @@
     <ul>
         @foreach (Task task in SelectedTasks)
         {
-            <li>@task.Title (@task.Description)</li>
+            <li>@task.Name (@task.Description)</li>
         }
     </ul>
 }
@@ -178,7 +179,7 @@
     
     private void GetSelectedTasks()
     {
-        panel = PlService.GetPanelById(teamName,int.Parse(panelId));
+        panel = PlService.GetPanelById(int.Parse(panelId));
 
         foreach (Task task in SelectedTasks)
         {

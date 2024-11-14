@@ -1,5 +1,6 @@
 ﻿@page "/{teamName}/{panelId}/{taskTitle}"
 @using Dominio
+@using Services
 @using Task = Dominio.Task
 @inject PanelService PlService
 @inject NavigationManager Navigation
@@ -20,8 +21,8 @@
         <div class="w-50">
             <div class="form-group mt-4">
                 <label id="name">Titulo</label>
-                <InputText class="form-control" @bind-Value="@modelChangeTask.Title" id="name"></InputText>
-                <ValidationMessage For="@(() => modelChangeTask.Title)"/>
+                <InputText class="form-control" @bind-Value="@modelChangeTask.Name" id="name"></InputText>
+                <ValidationMessage For="@(() => modelChangeTask.Name)"/>
             </div>
 
             <div class="form-group mt-4">
@@ -78,19 +79,19 @@
         {
             Navigation.NavigateTo($"/error");
         }
-        panel = PlService.GetPanelById(teamName, int.Parse(panelId));
-        toModify = panel.Tasks.FirstOrDefault(t => t.Title == taskTitle);
+        panel = PlService.GetPanelById(int.Parse(panelId));
+        toModify = panel.Tasks.FirstOrDefault(t => t.Name == taskTitle);
         modelChangeTask.Description = toModify.Description;
-        modelChangeTask.Title = toModify.Description;
+        modelChangeTask.Name = toModify.Description;
         modelChangeTask.Precedence = toModify.Precedence;
         modelChangeTask.ExpirationDate = toModify.ExpirationDate;
     }
 
     private void HandleModify()
     {
-        if (!String.IsNullOrEmpty(modelChangeTask.Title))
+        if (!String.IsNullOrEmpty(modelChangeTask.Name))
         {
-            toModify.Title = modelChangeTask.Title;
+            toModify.Name = modelChangeTask.Name;
         }
 
         if (!String.IsNullOrEmpty(modelChangeTask.Description))

@@ -1,3 +1,7 @@
+using DataAccess;
+using Interfaces;
+using Test.Context;
+
 namespace Test;
 using Dominio;
 using Moq;
@@ -5,15 +9,16 @@ using Moq;
 [TestClass]
 public class TrashTest
 {
-    Mock<IUserDatabase> mockUserDatabase;
+
     private IUserService _userService;
     private User _user;
-
     [TestInitialize]
     public void Setup()
     {
-        mockUserDatabase = new Mock<IUserDatabase>();
-        _userService = new UserService(mockUserDatabase.Object);
+
+
+        
+
         _user = new User
         {
             Name = "Carlos",
@@ -27,28 +32,29 @@ public class TrashTest
     }
     
     [TestMethod]
-    public void AddTaskToPaperBin()
+    public void AddElementToPaperBin()
     {
-        Task taskTest = new Task{Title = "Task 1"};
+        Task taskTest = new Task{Name = "Task 1"};
         _user.PaperBin.AddElementToPaperbin(taskTest);
         Assert.AreEqual(_user.PaperBin.ElementsCount, 1);
     }
     
     [TestMethod]
-    public void AddPanelToPaperBin()
+    public void RemoveElementFromPaperBin()
     {
-        Panel panelTest = new Panel{Name = "Panel 1"};
-        _user.PaperBin.AddElementToPaperbin(panelTest);
-        Assert.AreEqual(_user.PaperBin.ElementsCount, 1);
+        Task taskTest = new Task{Name = "Task 1"};
+        _user.PaperBin.AddElementToPaperbin(taskTest);
+        _user.PaperBin.DeleteElementFromPaperbin(taskTest);
+        Assert.AreEqual(_user.PaperBin.ElementsCount, 0);
     }
-
+    
     [TestMethod]
-    public void DeleteItem()
+    public void RestoreElementFromPaperBin()
     {
-        Panel panelTest = new Panel{Name = "Panel 1"};
-        _user.PaperBin.AddElementToPaperbin(panelTest);
-        _user.PaperBin.DeleteElementFromPaperbin(panelTest);
-        CollectionAssert.DoesNotContain(_user.PaperBin.Paperbin, panelTest);
-        
+        Task taskTest = new Task{Name = "Task 1"};
+        _user.PaperBin.AddElementToPaperbin(taskTest);
+        _user.PaperBin.RestoreElementFromPaperbin(taskTest);
+        Assert.AreEqual(_user.PaperBin.ElementsCount, 0);
     }
+    
 }

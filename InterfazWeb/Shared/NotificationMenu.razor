@@ -1,0 +1,63 @@
+@using Dominio
+@using Interfaces
+@inject Session Session
+@inject INotificationService NtService
+
+
+<div class="position-fixed top-0 end-0 p-2 d-flex justify-content-end">
+    <div class="dropdown">
+        <button @onclick="ShowModal" class="btn btn-light dropdown-toggle" type="button" aria-expanded="@isModalVisible">
+            <img src="notification-bell.svg" alt="NotificationMenu Icon" width="24" height="24"/>
+            @if (Notifications != null && Notifications.Count > 0)
+            {
+                <span class="badge bg-danger">@Notifications.Count</span>
+            }
+        </button>
+        
+        @if (isModalVisible){
+          
+            <ul class="dropdown-menu dropdown-menu-end show w-auto position-absolute"
+                aria-labelledby="notificationMenuButton"  style="max-width: 300x; right: 0; top: 100%;">
+                    @if (Notifications.Count > 0)
+                    {
+                        @foreach (var notification in Notifications)
+                        {
+                            <li class="dropdown-divider"><a class="dropdown-item-text">El usuario @notification.FromUser resolvió tu comentario</a></li>
+                            <div class="dropdown-divider"></div>
+                        }
+                        
+                    }
+                    else
+                    {
+                        <div class="dropdown-divider"></div>
+                        <li class="dropdown-item-text w-100">No tienes notificaciones.</li>
+                        <div class="dropdown-divider"></div>
+                    }
+                </ul>
+            }
+    </div>
+</div>
+
+
+@code {
+    [Parameter] 
+    public List<Notification> Notifications { get; set; }
+
+    private bool isModalVisible = false;
+    
+    protected override void OnInitialized()
+    {
+        LoadNotifications();
+    }
+
+    public void LoadNotifications()
+    {
+        Notifications = NtService.GetNotificationsByUserId(Session.CurrentUser.Id);
+    }
+    
+    private void ShowModal()
+    {
+        isModalVisible = !isModalVisible;
+    }
+    
+}

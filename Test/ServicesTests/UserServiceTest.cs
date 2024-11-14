@@ -116,20 +116,20 @@ public class UserServiceTest
         var isInvalidUserAdded = _service.CreateUser(_user1);
     }
     
-    /*[TestMethod]
+    [TestMethod]
     public void GetUserByEmail()
     {
-        _service.CreateUser(_user);
-        var userFromService = _service.GetUserByEmail(_user.Email);
+        _service.CreateUser(_user1);
+        var userFromService = _service.GetUserByEmail(_user1.Email);
         Assert.IsNotNull(userFromService);
     }
     
-    [TestMethod]
+    /*[TestMethod]
     public void ResetUserPassword()
     {
-        _service.CreateUser(_user);
-        var oldPassword = _user.Password;
-        var resetedPassword = _service.ResetUserPassword(_user.Email);
+        _service.CreateUser(_user1);
+        var oldPassword = _user1.Password;
+        var resetedPassword = _service.ResetUserPassword(_user1.Email);
         Assert.AreNotEqual(oldPassword, resetedPassword);
     }
     
@@ -137,20 +137,20 @@ public class UserServiceTest
     [ExpectedException(typeof(DataException))]
     public void InvalidUserResetPassword()
     {
-        var resetedPassword = _service.ResetUserPassword(_user.Email);
+        var resetedPassword = _service.ResetUserPassword(_user1.Email);
     }
 
     [TestMethod]
     public void UpdateUser()
     {
-        _service.CreateUser(_user);
+        _service.CreateUser(_user1);
         var updatedUser = new User
         {
-            Name = _user.Name,
+            Name = _user1.Name,
             Password = "NuevaPass1$",
-            Email = _user.Email,
-            Surname = _user.Surname,
-            BirthDate = _user.BirthDate
+            Email = _user1.Email,
+            Surname = _user1.Surname,
+            BirthDate = _user1.BirthDate
         };
         var isUserUpdated = _service.UpdateUser(updatedUser);
         Assert.IsTrue(isUserUpdated);
@@ -159,14 +159,14 @@ public class UserServiceTest
     [TestMethod]
     public void UpdateInvalidUser()
     {
-        _service.CreateUser(_user);
+        _service.CreateUser(_user1);
         var updatedUser = new User
         {
-            Name = _user.Name,
+            Name = _user1.Name,
             Password = "a",
-            Email = _user.Email,
-            Surname = _user.Surname,
-            BirthDate = _user.BirthDate
+            Email = _user1.Email,
+            Surname = _user1.Surname,
+            BirthDate = _user1.BirthDate
         };
         var isUserUpdated = _service.UpdateUser(updatedUser);
         Assert.IsFalse(isUserUpdated);
@@ -176,14 +176,14 @@ public class UserServiceTest
     [ExpectedException(typeof(InvalidDataException))]
     public void UpdateUserCatchException()
     {
-        _service.UpdateUser(_user);
+        _service.UpdateUser(_user1);
     }
     
     [TestMethod]
     public void DeleteUser()
     {
-        _service.CreateUser(_user);
-        var isUserDeleted = _service.DeleteUser(_user.Email);
+        _service.CreateUser(_user1);
+        var isUserDeleted = _service.DeleteUser(_user1.Email);
         Assert.IsTrue(isUserDeleted );
     }
     
@@ -202,9 +202,9 @@ public class UserServiceTest
             Name = "Test",
             Description = "DescriptionTest",
         };
-        _service.CreateUser(_user);
-        _service.AddElementToPaperBin(_user.Email,task);
-        Assert.AreEqual(_user.PaperBin.ElementsCount, 1);
+        _service.CreateUser(_user1);
+        _service.AddElementToPaperBin(_user1.Email,task);
+        Assert.AreEqual(_user1.PaperBin.ElementsCount, 1);
     }
     [TestMethod]
     public void DeleteElementFromPaperbinTest()
@@ -214,10 +214,10 @@ public class UserServiceTest
             Name = "Test",
             Description = "DescriptionTest",
         };
-        _service.CreateUser(_user);
-        _service.AddElementToPaperBin(_user.Email,task);
-        _service.DeleteElementFromPaperbin(_user.Email,task);
-        Assert.AreEqual(_user.PaperBin.ElementsCount, 0);
+        _service.CreateUser(_user1);
+        _service.AddElementToPaperBin(_user1.Email,task);
+        _service.DeleteElementFromPaperbin(_user1.Email,task);
+        Assert.AreEqual(_user1.PaperBin.ElementsCount, 0);
     }
     
     [TestMethod]
@@ -228,9 +228,9 @@ public class UserServiceTest
             Name = "Test",
             Description = "DescriptionTest",
         };
-        _service.CreateUser(_user);
-        _service.AddElementToPaperBin(_user.Email,task);
-        var elements = _service.GetDeletedElements(_user.Email);
+        _service.CreateUser(_user1);
+        _service.AddElementToPaperBin(_user1.Email,task);
+        var elements = _service.GetDeletedElements(_user1.Email);
         CollectionAssert.Contains(elements,task);
     }
     
@@ -242,10 +242,10 @@ public class UserServiceTest
             Name = "Test",
             Description = "DescriptionTest",
         };
-        _service.CreateUser(_user);
-        _service.AddElementToPaperBin(_user.Email,task);
+        _service.CreateUser(_user1);
+        _service.AddElementToPaperBin(_user1.Email,task);
         Assert.AreEqual(task.IsDeleted,true);
-        _service.RestoreElement(task,_user.Email);
+        _service.RestoreElement(task,_user1.Email);
         Assert.AreEqual(task.IsDeleted,false);
     }*/
     

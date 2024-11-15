@@ -250,5 +250,21 @@ public class TaskServiceTest
         Assert.AreEqual("OK", status3);
         Assert.AreEqual(string.Empty, status);
     }
+
+    [TestMethod]
+    public void ChangeStatusTest()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpectedEffort = 5,
+            InvertedEffort = 10,
+            Ended = false
+        };
+        _taskRepository.Add(task1);
+        _taskService.ChangeStatus(task1.Id);
+        Assert.IsTrue(task1.Ended);
+    }
     
 }

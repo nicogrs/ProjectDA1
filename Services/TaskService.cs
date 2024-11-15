@@ -88,6 +88,7 @@ public class TaskService : ITaskService
 
     public void ChangeStatus(int taskId)
     {
-        
+        var task = GetTaskById(taskId);
+        task.Ended = true;
     }
 }

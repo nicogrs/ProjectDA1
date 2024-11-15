@@ -16,7 +16,7 @@ public class TaskService : ITaskService
     {
         List<Task> expiredTasks = _taskDatabase.FindAll()
             .Where(x => x.ExpirationDate <= DateTime.Now
-                        && x.PanelId == panelId && x.IsDeleted == false).ToList();
+                        && x.PanelId == panelId && x.IsDeleted == false && x.Ended==false).ToList();
 
         return expiredTasks;
 
@@ -25,7 +25,7 @@ public class TaskService : ITaskService
     public List<Task> GetNonExpiredTasks(int panelId)
     {
         List<Task> expiredTasks = _taskDatabase.FindAll()
-            .Where(x => x.ExpirationDate > DateTime.Now
+            .Where(x => (x.ExpirationDate > DateTime.Now || (x.ExpirationDate <= DateTime.Now && x.Ended == true))
                         && x.PanelId == panelId && x.IsDeleted == false).ToList();
         return expiredTasks;
 
@@ -84,5 +84,11 @@ public class TaskService : ITaskService
         }
         return s;
 
+    }
+
+    public void ChangeStatus(int taskId)
+    {
+        var task = GetTaskById(taskId);
+        task.Ended = true;
     }
 }

@@ -39,9 +39,19 @@ public class TaskServiceTest
             Name = "Task 1",
             Description = "This is a test task description",
             ExpirationDate = DateTime.Now.AddHours(-1),
-            PanelId = panelId
+            PanelId = panelId,
+            Ended = false
+        };
+        var task2 = new Task
+        {
+            Name = "Task 1",
+            Description = "This is a test task description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            PanelId = panelId,
+            Ended = true
         };
         _taskRepository.Add(task1);
+        _taskRepository.Add(task2);
         var expiredTasks = _taskService.GetAllExpiredTasks(panelId);
         CollectionAssert.AreEqual(new List<Task> { task1 }, expiredTasks);
     }
@@ -55,11 +65,39 @@ public class TaskServiceTest
             Name = "Task 1",
             Description = "description",
             ExpirationDate = DateTime.Now.AddHours(+1),
-            PanelId = panelId
+            PanelId = panelId,
+            Ended = false
+        };
+        var task2 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(+1),
+            PanelId = panelId,
+            Ended = true
+        };
+        var task3 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            PanelId = panelId,
+            Ended = true
+        };
+        var task4 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            PanelId = panelId,
+            Ended = false
         };
         _taskRepository.Add(task1);
+        _taskRepository.Add(task2);
+        _taskRepository.Add(task3);
+        _taskRepository.Add(task4);
         var nonExpiredTasks = _taskService.GetNonExpiredTasks(panelId);
-        CollectionAssert.AreEqual(new List<Task> { task1 }, nonExpiredTasks);
+        CollectionAssert.AreEqual(new List<Task> { task1, task2, task3 }, nonExpiredTasks);
     }
 
     [TestMethod]
@@ -249,6 +287,22 @@ public class TaskServiceTest
         Assert.AreEqual("Sobreestimada", status2);
         Assert.AreEqual("OK", status3);
         Assert.AreEqual(string.Empty, status);
+    }
+
+    [TestMethod]
+    public void ChangeStatusTest()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpectedEffort = 5,
+            InvertedEffort = 10,
+            Ended = false
+        };
+        _taskRepository.Add(task1);
+        _taskService.ChangeStatus(task1.Id);
+        Assert.IsTrue(task1.Ended);
     }
     
 }

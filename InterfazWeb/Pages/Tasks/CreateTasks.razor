@@ -13,6 +13,12 @@
         @message
     </div>
 }
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+<div class="alert alert-danger" role="alert">
+    @message
+</div>
+}
 <EditForm Model="modelCreateTask" OnValidSubmit="HandleCreate">
     <DataAnnotationsValidator/>
     <div class="d-flex justify-content-center align-items-center">
@@ -62,6 +68,7 @@
     
     Task modelCreateTask = new Task();
     private string message;
+    private string errorMessage;
     
     protected override void OnInitialized()
     {
@@ -81,7 +88,7 @@
         if(!string.IsNullOrEmpty(modelCreateTask.Name) && modelCreateTask.ExpirationDate != null){
             if (modelCreateTask.ExpirationDate.Date <= DateTime.Today.Date)
             {
-                message = "La tarea debe expirar en al menos un dia.";
+                errorMessage = "La tarea debe expirar en al menos un dia.";
                 return;
             }
             Task t = new Task

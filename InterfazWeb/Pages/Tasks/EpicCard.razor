@@ -2,53 +2,49 @@
 @using Dominio
 @using Interfaces
 @using Services
-@using Task = Dominio.Task
-@inject PanelService PlService
-@inject TaskService TkService
+@inject IPanelService PlService
+@inject ITaskService TkService
 @inject IUserService UService
 @inject IEpicService Epicservice
 @inject NavigationManager Navigation
 @inject Session Session
 
-<div class="card mb-2 mt-4">
-    <div>
-        @if (Priority == Epic.Precedence.Urgent)
-        {
-        <div class="bg-danger card-header ">
-            <p class="card-title text-white w-100">@Title</p>
-        </div>
-        }
-        else if (Priority == Epic.Precedence.Medium)
-        { 
-            <div class="bg-info card-header">
-                <p class="card-title bg-info text-white">@Title</p>
+<div class="d-flex justify-content-center align-items-center">
+    <div class="w-75">
+        <div class="card epic-card my-3">
+            @if (EpicPriority == Epic.Precedence.Low)
+            {
+            <div class="card-header bg-danger">
+                <h5 class="text-white mb-0">EPICA: @EpicName</h5>
             </div>
-        }
-        else
-        {
-        <div class="bg-black card-header">
-            <p class="card-title bg-black text-white">@Title</p>
-        </div>
-        }
-    </div>
-    <div class="card-body">
-        <div class="d-flex justify-content-between">
-            <p class="card-text">Prioridad: @Priority.ToString()</p>
-            <p class="card-text">Vencimiento: @EndDate</p>
-        </div>
-        <div class="border-top-2">
-            <p class="card-text">Descripcion de la epica:<br/> @Description</p>
-        </div>
-       
-        }
-    </div>
-    <div class="card-footer">
-        <div class="d-flex">
-            <div class="form-group m-2">
-                <button class="btn btn-warning" type="submit" @onclick="ChangeTask">Modificar</button>
+            }
+            else if (EpicPriority == Epic.Precedence.Medium)
+            {
+            <div class="card-header bg-info">
+                <h5 class="text-white mb-0">EPICA: @EpicName</h5>
             </div>
-            <div class="form-group m-2">
-                <button class="btn btn-danger" type="submit" @onclick="ShowModal">Eliminar</button>
+            }
+            else
+            {
+            <div class="card-header bg-black">
+                <h5 class="text-white mb-0">EPICA: @EpicName</h5>
+            </div>
+            }
+
+            <div class="card-body">
+                <p class="card-text text-muted">Descripción:</p>
+                <p class="card-text">@EpicDescription</p>
+
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <span class="badge bg-secondary">Prioridad: @EpicPriority.ToString()</span>
+                    <span class="badge bg-info">Vence: @EpicEndDate.ToShortDateString()</span>
+                </div>
+            </div>
+
+            <div class="card-footer text-end">
+                <button class="btn btn-secondary me-2" type="submit" >Agregar Tareas</button>
+                <button class="btn btn-warning me-2" type="submit" @onclick="ChangeEpic">Modificar</button>
+                <button class="btn btn-danger me-2" type="submit" @onclick="ShowModal">Eliminar</button>
             </div>
         </div>
     </div>
@@ -69,14 +65,14 @@
             @if (UService.GetUserByEmail(Session.CurrentUser.Email).PaperBin.ElementsCount < 10)
             {
                 <div class="modal-body">
-                    <p>¿Estás seguro de que deseas enviar la tarea <strong>@selectedTask.Name
+                    <p>¿Estás seguro de que deseas enviar la tarea <strong>@EpicName
                         </strong> a la papelera?</p>
                 </div>     
             }
             else
             {
                 <div class="modal-body">
-                    <p>¡Tu papelera esta llena! ¿Estas seguro que quieres eliminar <strong>@selectedTask.Name
+                    <p>¡Tu papelera esta llena! ¿Estas seguro que quieres eliminar <strong>@EpicName
                         por completo?</strong></p>
                 </div>    
             }
@@ -91,43 +87,26 @@
 }
 
 @code {
-    [Parameter]
-    public string Title { get; set; }
-    [Parameter]
-    public Epic.Precedence Priority { get; set; }
-    [Parameter]
-    public DateTime EndDate { get; set; }
-    [Parameter]
-    public string Description { get; set; }
-    [Parameter]
-    public int TaskId { get; set; }
-    [Parameter]
-    public string teamName { get; set; }
-    [Parameter]
-    public string panelId { get; set; }
-    [Parameter]
-    public EventCallback OnTaskDeleted { get; set; }
-    [Parameter]
-    public List<Comment> Comments { get; set; }
+    [Parameter] public int EpicId { get; set; }
+    [Parameter] public string EpicName { get; set; }
+    [Parameter] public Epic.Precedence EpicPriority { get; set; }
+    [Parameter] public DateTime EpicEndDate { get; set; }
+    [Parameter] public string EpicDescription { get; set; }
+    [Parameter] public string EpicTeamName { get; set; }
+    [Parameter] public string EpicPanelId { get; set; }
+    [Parameter] public EventCallback EpicOnTaskDeleted { get; set; }
     
-    private Task selectedTask;
     private bool isModalVisible;
     private string messageNotSuccess;
     
 
     protected override void OnInitialized()
     {
-        selectedTask = TkService.GetTaskById(TaskId);
-        Comments = TkService.GetCommentsFromTask(TaskId);
     }
-
-    private void AddComment()
+    
+    private void ChangeEpic()
     {
-        Navigation.NavigateTo($"/{teamName}/{panelId}/{TaskId}/createComment");
-    }
-    private void ChangeTask()
-    {
-        Navigation.NavigateTo($"/{teamName}/{panelId}/{Title}");
+        Navigation.NavigateTo($"/{EpicTeamName}/{EpicPanelId}/{EpicId}");
     }
     
     
@@ -143,14 +122,8 @@
 
     private void ConfirmDelete()
     {
-        UService.AddElementToPaperBin(Session.CurrentUser.Email, selectedTask as IDeleteable);
         CloseModal();
-        OnTaskDeleted.InvokeAsync();
+        EpicOnTaskDeleted.InvokeAsync();
     }
-
-    private void CompleteComment(Comment comment)
-    {
-        Panel panel = PlService.GetPanelById(int.Parse(panelId));
-        panel.Tasks.Find(t => t.Name.Equals(Title)).MarkCommentAsResolved(Session.CurrentUser, comment);
-    }
+    
 }

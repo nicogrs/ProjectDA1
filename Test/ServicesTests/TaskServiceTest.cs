@@ -83,4 +83,5 @@ public class TaskServiceTest
         var id = taskService.GetPanelIdByTask(team.Name, task1.Id);
         Assert.AreEqual(id, panel1.Id);
     }
+    
 }

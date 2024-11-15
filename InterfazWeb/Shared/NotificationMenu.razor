@@ -2,7 +2,7 @@
 @using Interfaces
 @inject Session Session
 @inject INotificationService NtService
-
+@inject Notifications Nots
 
 <div class="position-fixed top-0 end-0 p-2 d-flex justify-content-end">
     <div class="dropdown">
@@ -17,12 +17,21 @@
         @if (isModalVisible){
           
             <ul class="dropdown-menu dropdown-menu-end show w-auto position-absolute"
-                aria-labelledby="notificationMenuButton"  style="max-width: 300x; right: 0; top: 100%;">
+                aria-labelledby="notificationMenuButton"  style=" right: 0; top: 100%;">
                     @if (Notifications.Count > 0)
                     {
                         @foreach (var notification in Notifications)
                         {
-                            <li class="dropdown-divider"><a class="dropdown-item-text">El usuario @notification.FromUser resolvió tu comentario</a></li>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <li class="me-3">
+                                    <a class="dropdown-item d-flex">
+                                        @notification.Text;
+                                    </a>
+                                </li>
+                                <button @onclick="() => DeleteNotification(notification)" class="btn d-flex me-3">
+                                    <img src="icons-cancelar.svg" alt="NotificationMenu Icon" width="24" height="24"/>
+                                </button>
+                            </div>
                             <div class="dropdown-divider"></div>
                         }
                         
@@ -47,17 +56,31 @@
     
     protected override void OnInitialized()
     {
-        LoadNotifications();
+        LoadNotifications(); 
+        Nots.OnChangeNotifications += UpdateNotifications;
     }
-
+    
     public void LoadNotifications()
     {
         Notifications = NtService.GetNotificationsByUserId(Session.CurrentUser.Id);
     }
     
+    private void UpdateNotifications()
+    {
+        LoadNotifications();
+        InvokeAsync(() => StateHasChanged());
+    }
+
+    
     private void ShowModal()
     {
         isModalVisible = !isModalVisible;
     }
-    
+
+    private void DeleteNotification(Notification notification)
+    {
+        NtService.DeleteNotification(notification);
+        LoadNotifications();
+    }
+
 }

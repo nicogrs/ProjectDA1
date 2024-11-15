@@ -1,5 +1,6 @@
 using Interfaces;
 using Dominio;
+using Microsoft.EntityFrameworkCore;
 using Task = Dominio.Task;
 
 namespace DataAccess;
@@ -22,17 +23,27 @@ public class TaskDatabaseRepository : IRepository<Task>
 
     public Task? Find(Func<Task, bool> filter)
     {
-        return _context.Tasks.Where(filter).FirstOrDefault();
+        return _context.Tasks.Include(t => t.Comments)
+            .ThenInclude(c => c.CreatedBy)
+            .Include(t => t.Comments)
+            .ThenInclude(c => c.ResolvedBy)
+            .Where(filter).FirstOrDefault();
     }
 
     public IList<Task> FindAll()
     {
-        return _context.Tasks.ToList();
+        return _context.Tasks.Include(t => t.Comments)
+            .ThenInclude(c => c.CreatedBy)
+            .Include(t => t.Comments)
+            .ThenInclude(c => c.ResolvedBy)
+            .ToList();
     }
 
     public Task? Update(Task updatedEntity)
     {
         var taskToUpdate = Find(task => task.Id == updatedEntity.Id);
+        taskToUpdate.Comments = updatedEntity.Comments;
+        taskToUpdate.IsDeleted = updatedEntity.IsDeleted;
         taskToUpdate.ExpirationDate = updatedEntity.ExpirationDate;
         taskToUpdate.Description = updatedEntity.Description;
         taskToUpdate.Precedence = updatedEntity.Precedence;

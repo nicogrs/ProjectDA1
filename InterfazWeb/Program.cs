@@ -35,11 +35,12 @@ public class Program
         builder.Services.AddScoped<TaskService>();
         builder.Services.AddScoped<ITaskService, TaskService>();
         builder.Services.AddScoped<Session>();
+        builder.Services.AddSingleton<Notifications>();
         
         builder.Services.AddDbContextFactory<SqlContext>(
             options => options.UseSqlServer(
                 builder.Configuration.GetConnectionString("DefaultConnection"),
-                providerOptions => providerOptions.EnableRetryOnFailure())
+                providerOptions => providerOptions.EnableRetryOnFailure()), ServiceLifetime.Scoped
         );
         
         var app = builder.Build();

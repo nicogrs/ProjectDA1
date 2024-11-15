@@ -1,0 +1,17 @@
+@page "/{teamName}/{panelId}/{taskId}/graphic"
+@using Dominio
+@using Services
+@inject TaskService TskService
+@inject NavigationManager Navigation
+@inject Session Session
+
+<h3>Gráfico Comparativo</h3>
+
+@code {
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public string panelId { get; set; }
+    [Parameter]
+    public string taskId { get; set; }
+}

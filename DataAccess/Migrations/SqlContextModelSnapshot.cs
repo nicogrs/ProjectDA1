@@ -274,11 +274,20 @@ namespace DataAccess.Migrations
                 {
                     b.HasBaseType("Dominio.IDeleteable");
 
+                    b.Property<bool>("Ended")
+                        .HasColumnType("bit");
+
                     b.Property<int>("EpicId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ExpectedEffort")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("InvertedEffort")
+                        .HasColumnType("int");
 
                     b.Property<int>("PanelId")
                         .HasColumnType("int");

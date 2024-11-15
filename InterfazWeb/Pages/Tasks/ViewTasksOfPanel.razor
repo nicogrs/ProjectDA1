@@ -1,6 +1,7 @@
 @page "/{teamName}/{panelId}/tasks"
 @using Dominio
 @using Interfaces
+@using InterfazWeb.Pages.Epics
 @inject ITaskService TkService
 @inject IEpicService EpicService
 @inject Session Session
@@ -11,6 +12,7 @@
 <div class="row d-flex justify-content-between align-items-center">
     <div class="col d-flex">
         <button class="btn btn-primary me-2" type="submit" @onclick="CreateTask">Crear Tarea</button>
+        <button class="btn btn-secondary me-2" type="submit" @onclick="GoToCreateEpic">Crear Epicas</button>
         <button class="btn btn-primary me-2" type="submit" @onclick="ExpiredTasks">Tareas Vencidas</button>
         @if (Session.IsAdmin)
         {
@@ -21,6 +23,23 @@
         <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver a Paneles</button>
     </div>
 
+</div>
+<div class="row">
+    @if (Epics.Count != 0)
+    {
+    foreach (var epic in Epics)
+    {
+    <EpicCard EpicId="@epic.Id"
+              EpicName="@epic.Name"
+              EpicPriority="@epic.Priority"
+              EpicEndDate="@epic.ExpirationDate"
+              EpicDescription="@epic.Description"
+              EpicTeamName="@teamName"
+              EpicPanelId="@panelId"
+              EpicOnTaskDeleted="RefreshTasks"
+    />
+    }
+    }
 </div>
 <div class="row">
     @if (Tasks.Count != 0)
@@ -50,23 +69,7 @@
         <p class="mt-5">Panel sin tareas.</p>
     }
 </div>
-<div class="row">
-    @if (Epics.Count != 0)
-    {
-        foreach (var epic in Epics)
-        {
-            <EpicCard EpicId="@epic.Id"
-                      EpicName="@epic.Name"
-                      EpicPriority="@epic.Priority"
-                      EpicEndDate="@epic.ExpirationDate"
-                      EpicDescription="@epic.Description"
-                      EpicTeamName="@teamName"
-                      EpicPanelId="@panelId"
-                      EpicOnTaskDeleted="RefreshTasks"
-                />
-        }
-    }
-    </div>
+
 @code {
     [Parameter] public string teamName { get; set; }
     [Parameter] public string panelId { get; set; }
@@ -93,6 +96,11 @@
     private void CreateTask()
     {
         Navigation.NavigateTo($"/{teamName}/{panelId}/create");
+    }
+    
+    private void GoToCreateEpic()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/createEpic");
     }
 
     private void GoToImport()

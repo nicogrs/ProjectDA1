@@ -2,7 +2,7 @@
 @using Dominio
 @using Services
 @using Task = Dominio.Task
-@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Charts
 @inject TaskService TskService
 @inject NavigationManager Navigation
 @inject Session Session
@@ -12,11 +12,21 @@
 <SfChart>
     <ChartPrimaryXAxis Title="Esfuerzo" ValueType="Syncfusion.Blazor.Charts.ValueType.Category" />
     <ChartPrimaryYAxis Title="Tiempo (horas)" ValueType="Syncfusion.Blazor.Charts.ValueType.Double" />
+    
     <ChartSeriesCollection>
-        <ChartSeries DataSource="" Type="ChartSeriesType.Column"
-                     XName="Esfuerzo" YName="Tiempo (horas)"  />
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Esfuerzo" YName="EsfuerzoEsperado" Name="Esfuerzo Esperado" Palette="@(new string[] { "#28a745" })" />
+
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Esfuerzo" YName="EsfuerzoInvertido" Name="Esfuerzo Invertido" Palette="@(new string[] { "#007bff" })" />
+
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Esfuerzo" YName="EsfuerzoFaltante" Name="Esfuerzo Faltante" Palette="@(new string[] { "#dc3545" })" />
     </ChartSeriesCollection>
 </SfChart>
+@if (!string.IsNullOrEmpty(status))
+{
+    <div class="alert alert-success" role="alert">
+        <p>La tarea fue: @status</p>
+    </div>
+}
 
 @code {
     [Parameter]
@@ -27,14 +37,31 @@
     public string taskId { get; set; }
 
     private Task task;
-    private int expectedEffort;
-    private int invertedEffort;
-    
+    private List<EffortData> effortData = new List<EffortData>();
+    private string status;
 
     protected override void OnInitialized()
     {
         task = TskService.GetTaskById(int.Parse(taskId));
-        expectedEffort = task.ExpectedEffort;
-        invertedEffort = task.InvertedEffort;
+        var expectedEffort = task.ExpectedEffort;
+        var invertedEffort = task.InvertedEffort;
+        var missingEffort = TskService.EffortComparated(int.Parse(taskId));
+        status = TskService.EffortStatus(int.Parse(taskId));
+
+        effortData.Add(new EffortData
+        {
+            Esfuerzo = "Esfuerzo",
+            EsfuerzoEsperado = expectedEffort,
+            EsfuerzoInvertido = invertedEffort,
+            EsfuerzoFaltante = Math.Max(0, missingEffort)
+        });
+    }
+
+    public class EffortData
+    {
+        public string Esfuerzo { get; set; }
+        public int EsfuerzoEsperado { get; set; }
+        public int EsfuerzoInvertido { get; set; }
+        public int EsfuerzoFaltante { get; set; }
     }
 }

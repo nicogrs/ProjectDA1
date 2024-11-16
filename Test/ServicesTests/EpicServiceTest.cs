@@ -162,11 +162,50 @@ public class EpicServiceTest
             Tasks = new List<Task>{task1,task2,task3}
         };
         epicService.CreateEpic(e);
-        var result = epicService.EffortExpected(e.Id);
-
         
+        var result = epicService.EffortExpected(e.Id);
         Assert.AreEqual(22, result); 
     }
     
-    
+    [TestMethod]
+    public void CalculateEpicValues_Inverted()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpectedEffort = 5,
+            InvertedEffort = 7,
+            Ended = true
+        };
+        var task2 = new Task
+        {
+            Name = "Task 2",
+            Description = "description",
+            ExpectedEffort = 10,
+            InvertedEffort = 7,
+            Ended = true
+        };
+        var task3 = new Task
+        {
+            Name = "Task 3",
+            Description = "description",
+            ExpectedEffort = 7,
+            InvertedEffort = 7,
+            Ended = true
+        };
+        Epic e = new Epic
+        {
+            Id=1,
+            Name = "Test",
+            Description = "DescriptionTest",
+            ExpirationDate = DateTime.Now.AddDays(1),
+            Tasks = new List<Task>{task1,task2,task3}
+        };
+        epicService.CreateEpic(e);
+        
+        var result = epicService.EffortInverted(e.Id);
+        Assert.AreEqual(21, result); 
+    }
+
 }

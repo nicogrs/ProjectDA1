@@ -106,6 +106,20 @@ public class EpicServiceTest
     }
 
     [TestMethod]
+    public void DeleteEpicByIdTest()
+    {
+        Epic epic = new Epic
+        {
+            Name = "Test",
+            Description = "DescriptionTest",
+            ExpirationDate = DateTime.Now.AddDays(1),
+        };
+        epicService.CreateEpic(epic);
+       var result = epicService.GetEpicById(epic.Id);
+       Assert.IsNull(result);
+    }
+    
+    [TestMethod]
     public void GetEpicsByPanelId()
     {
         Panel p = new Panel

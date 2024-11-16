@@ -173,7 +173,10 @@
 
     private void EndTask()
     {
-        
+        TkService.ChangeStatus(TaskId);
+        selectedTask = TkService.GetTaskById(TaskId);
+        Ended = selectedTask.Ended;
+        StateHasChanged();
     }
 
     private void ComparativeGraphic()

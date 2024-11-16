@@ -1,11 +1,22 @@
 @page "/{teamName}/{panelId}/{taskId}/graphic"
 @using Dominio
 @using Services
+@using Task = Dominio.Task
+@using Syncfusion.Blazor
 @inject TaskService TskService
 @inject NavigationManager Navigation
 @inject Session Session
 
 <h3>Gráfico Comparativo</h3>
+
+<SfChart>
+    <ChartPrimaryXAxis Title="Esfuerzo" ValueType="Syncfusion.Blazor.Charts.ValueType.Category" />
+    <ChartPrimaryYAxis Title="Tiempo (horas)" ValueType="Syncfusion.Blazor.Charts.ValueType.Double" />
+    <ChartSeriesCollection>
+        <ChartSeries DataSource="" Type="ChartSeriesType.Column"
+                     XName="Esfuerzo" YName="Tiempo (horas)"  />
+    </ChartSeriesCollection>
+</SfChart>
 
 @code {
     [Parameter]
@@ -14,4 +25,16 @@
     public string panelId { get; set; }
     [Parameter]
     public string taskId { get; set; }
+
+    private Task task;
+    private int expectedEffort;
+    private int invertedEffort;
+    
+
+    protected override void OnInitialized()
+    {
+        task = TskService.GetTaskById(int.Parse(taskId));
+        expectedEffort = task.ExpectedEffort;
+        invertedEffort = task.InvertedEffort;
+    }
 }

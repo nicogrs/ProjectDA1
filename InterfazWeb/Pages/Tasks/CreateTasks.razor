@@ -96,7 +96,8 @@
                 Precedence = selectedPriority,
                 Description = modelCreateTask.Description,
                 ExpirationDate = modelCreateTask.ExpirationDate,
-                ExpectedEffort = modelCreateTask.ExpectedEffort
+                ExpectedEffort = modelCreateTask.ExpectedEffort,
+                Ended = false
             };
             PlService.AddTaskToPanel(int.Parse(panelId), t);
             message="Tarea creada con éxito";

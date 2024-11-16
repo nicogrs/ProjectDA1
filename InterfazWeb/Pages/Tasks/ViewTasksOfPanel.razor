@@ -16,7 +16,7 @@
         <button class="btn btn-primary me-2" type="submit" @onclick="ExpiredTasks">Tareas Vencidas</button>
         @if (Session.IsAdmin)
         {
-            <button class="btn btn-primary" type="submit" @onclick="GoToImport">Importar tareas desde .csv</button>
+            <button class="btn btn-primary" type="submit" @onclick="GoToImport">Importar tareas desde archivo</button>
         }
     </div>
     <div class="col-auto">
@@ -105,7 +105,7 @@
 
     private void GoToImport()
     {
-        Navigation.NavigateTo($"/{teamName}/{panelId}/TaskImport");
+        Navigation.NavigateTo($"/{teamName}/{panelId}/TaskImportService");
     }
 
     public void ExpiredTasks()

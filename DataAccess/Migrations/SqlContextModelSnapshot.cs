@@ -77,19 +77,14 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FromPanelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("FromPanelId");
+                    b.HasKey("Id");
 
                     b.ToTable("Epic");
                 });
@@ -279,11 +274,20 @@ namespace DataAccess.Migrations
                 {
                     b.HasBaseType("Dominio.IDeleteable");
 
-                    b.Property<int?>("EpicId")
+                    b.Property<bool>("Ended")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("EpicId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ExpectedEffort")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("InvertedEffort")
+                        .HasColumnType("int");
 
                     b.Property<int>("PanelId")
                         .HasColumnType("int");
@@ -319,17 +323,6 @@ namespace DataAccess.Migrations
                     b.Navigation("ResolvedBy");
 
                     b.Navigation("Task");
-                });
-
-            modelBuilder.Entity("Dominio.Epic", b =>
-                {
-                    b.HasOne("Dominio.Panel", "FromPanel")
-                        .WithMany()
-                        .HasForeignKey("FromPanelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FromPanel");
                 });
 
             modelBuilder.Entity("Dominio.IDeleteable", b =>
@@ -401,15 +394,19 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Dominio.Task", b =>
                 {
-                    b.HasOne("Dominio.Epic", null)
+                    b.HasOne("Dominio.Epic", "Epic")
                         .WithMany("Tasks")
-                        .HasForeignKey("EpicId");
+                        .HasForeignKey("EpicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Dominio.Panel", "Panel")
                         .WithMany("Tasks")
                         .HasForeignKey("PanelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Epic");
 
                     b.Navigation("Panel");
                 });

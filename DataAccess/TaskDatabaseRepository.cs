@@ -47,8 +47,8 @@ public class TaskDatabaseRepository : IRepository<Task>
         taskToUpdate.ExpirationDate = updatedEntity.ExpirationDate;
         taskToUpdate.Description = updatedEntity.Description;
         taskToUpdate.Precedence = updatedEntity.Precedence;
-        taskToUpdate.Description = updatedEntity.Description;
         taskToUpdate.Name = updatedEntity.Name;
+        taskToUpdate.ExpectedEffort = updatedEntity.ExpectedEffort;
         _context.SaveChanges();
         return taskToUpdate;
     }

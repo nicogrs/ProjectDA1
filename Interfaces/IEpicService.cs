@@ -11,4 +11,9 @@ public interface IEpicService
     public Epic AddTaskToEpic(int epicId, Task task);
     public Epic RemoveTaskFromEpic(int epicId, Task task);
     public Epic UpdateEpic(Epic epic);
+    public int CalculateEpicValues(int epicId, Func<Task, int> valueSelector);
+    public int EffortInverted(int epicId);
+    public int EffortExpected(int epicId);
+    public int CompletedTasks(int epicId);
+    public int NotCompletedTasks(int epicId);
 }

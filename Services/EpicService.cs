@@ -56,4 +56,30 @@ public class EpicService : IEpicService
         var epics = _epicDatabase.FindAll();
         return epics.Where(x => x.FromPanelId == pId).ToList();
     }
+    
+    public int CalculateEpicValues(int epicId, Func<Task, int> valueSelector)
+    {
+        return 0;
+    }
+
+    public int EffortInverted(int epicId)
+    {
+        return CalculateEpicValues(epicId, task => task.InvertedEffort);
+    }
+
+    public int EffortExpected(int epicId)
+    {
+        return CalculateEpicValues(epicId, task => task.ExpectedEffort);
+    }
+
+    public int CompletedTasks(int epicId)
+    {
+        return CalculateEpicValues(epicId, task => task.Ended ? 1 : 0);
+    }
+
+    public int NotCompletedTasks(int epicId)
+    {
+        return CalculateEpicValues(epicId, task => !task.Ended ? 1 : 0);
+    }
+
 }

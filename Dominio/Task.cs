@@ -8,6 +8,7 @@ public class Task : IDeleteable
     public Panel Panel { get; set; }
     public DateTime ExpirationDate { get; set; }
     public List<Comment> Comments { get; set; }
+    public bool IsInEpic { get; set; }
     
     public enum Priority
     {

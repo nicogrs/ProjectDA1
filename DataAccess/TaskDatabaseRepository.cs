@@ -48,6 +48,7 @@ public class TaskDatabaseRepository : IRepository<Task>
         taskToUpdate.Description = updatedEntity.Description;
         taskToUpdate.Precedence = updatedEntity.Precedence;
         taskToUpdate.Description = updatedEntity.Description;
+        taskToUpdate.IsInEpic = updatedEntity.IsInEpic;
         taskToUpdate.Name = updatedEntity.Name;
         _context.SaveChanges();
         return taskToUpdate;

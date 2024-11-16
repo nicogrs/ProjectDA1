@@ -29,11 +29,7 @@
     {
     foreach (var epic in Epics)
     {
-    <EpicCard EpicId="@epic.Id"
-              EpicName="@epic.Name"
-              EpicPriority="@epic.Priority"
-              EpicEndDate="@epic.ExpirationDate"
-              EpicDescription="@epic.Description"
+    <EpicCard EpicId="@epic.Id.ToString()"
               EpicTeamName="@teamName"
               EpicPanelId="@panelId"
               EpicOnTaskDeleted="RefreshTasks"
@@ -57,6 +53,7 @@
                                   Comments="@task.Comments"
                                   teamName="@teamName"
                                   panelId="@panelId"
+                                  CanBeDeleted="@true"
                                   TaskId="@task.Id"
                                   OnTaskDeleted="RefreshTasks"/>
                     </div>
@@ -89,7 +86,8 @@
 
     private void RefreshTasks()
     {
-        Tasks = TkService.GetNonExpiredTasks(int.Parse(panelId));
+        Tasks = TkService.GetNonExpiredTasks(int.Parse(panelId))
+            .Where(t => t.IsInEpic == false).ToList();
         Epics = EpicService.GetEpicsByPanelId(int.Parse(panelId));
     }
 

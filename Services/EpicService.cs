@@ -26,6 +26,7 @@ public class EpicService : IEpicService
     public Epic AddTaskToEpic(int epicId, Task task)
     {
         var epic = GetEpicById(epicId);
+        task.IsInEpic = true;
         epic.AddTask(task);
         UpdateEpic(epic);
         return epic;
@@ -34,6 +35,7 @@ public class EpicService : IEpicService
     public Epic RemoveTaskFromEpic(int epicId, Task task)
     {
         var epic = GetEpicById(epicId);
+        task.IsInEpic = false;
         epic.RemoveTask(task);
         UpdateEpic(epic);
         return epic;

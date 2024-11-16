@@ -285,6 +285,9 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsInEpic")
+                        .HasColumnType("bit");
+
                     b.Property<int>("PanelId")
                         .HasColumnType("int");
 

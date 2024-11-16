@@ -21,13 +21,17 @@
         <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Esfuerzo" YName="EsfuerzoFaltante" Name="Esfuerzo Faltante" Palette="@(new string[] { "#dc3545" })" />
     </ChartSeriesCollection>
 </SfChart>
-@if (!string.IsNullOrEmpty(status))
+@if (task.Ended)
 {
     <div class="alert alert-success" role="alert">
         <p>La tarea fue: @status</p>
     </div>
 }
-
+<div class="mt-2">
+    <div class="col-4 mt-4">
+        <button class="btn btn-secondary" type="button" @onclick="GoBack">Volver</button>
+    </div>
+</div>
 @code {
     [Parameter]
     public string teamName { get; set; }
@@ -63,5 +67,10 @@
         public int EsfuerzoEsperado { get; set; }
         public int EsfuerzoInvertido { get; set; }
         public int EsfuerzoFaltante { get; set; }
+    }
+    
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
     }
 }

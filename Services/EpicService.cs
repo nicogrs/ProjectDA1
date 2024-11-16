@@ -59,7 +59,13 @@ public class EpicService : IEpicService
     
     public int CalculateEpicValues(int epicId, Func<Task, int> valueSelector)
     {
-        return 0;
+        int totalValue = 0;
+        var epic = GetEpicById(epicId);
+        foreach (var task in epic.Tasks)
+        {
+            totalValue += valueSelector(task);
+        }
+        return totalValue;
     }
 
     public int EffortInverted(int epicId)

@@ -37,6 +37,8 @@ public class EpicDatabaseRepository : IRepository<Epic>
 
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        var epic = Find(e => e.Id == id);
+        _context.Epic.Remove(epic);
+        _context.SaveChanges();
     }
 }

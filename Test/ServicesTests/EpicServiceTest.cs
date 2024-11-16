@@ -114,7 +114,9 @@ public class EpicServiceTest
             Description = "DescriptionTest",
             ExpirationDate = DateTime.Now.AddDays(1),
         };
-        epicService.CreateEpic(epic);
+        var epicCreated = epicService.CreateEpic(epic);
+        Assert.AreEqual(epicCreated, epic);
+        epicService.DeleteEpicById(epic.Id);
        var result = epicService.GetEpicById(epic.Id);
        Assert.IsNull(result);
     }

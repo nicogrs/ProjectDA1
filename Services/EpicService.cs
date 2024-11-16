@@ -31,7 +31,11 @@ public class EpicService : IEpicService
         UpdateEpic(epic);
         return epic;
     }
-
+    public void DeleteEpicById(int epicId)
+    {
+        _epicDatabase.Delete(epicId);
+    }
+    
     public Epic RemoveTaskFromEpic(int epicId, Task task)
     {
         var epic = GetEpicById(epicId);

@@ -113,7 +113,7 @@
     
     private void ChangeEpic()
     {
-        Navigation.NavigateTo($"/{EpicTeamName}/{EpicPanelId}/edit/{EpicId}");
+        Navigation.NavigateTo($"/{EpicTeamName}/{EpicPanelId}/EditEpic/{EpicId}");
     }
     
     
@@ -129,7 +129,7 @@
 
     private void ConfirmDelete()
     {
-        EpicService.
+        EpicService.DeleteEpicById(selectedEpic.Id);
         CloseModal();
         EpicOnTaskDeleted.InvokeAsync(); 
     }

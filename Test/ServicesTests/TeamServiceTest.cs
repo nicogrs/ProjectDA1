@@ -62,7 +62,6 @@ public class TeamServiceTest
     [TestMethod]
     public void CreateTeamAlreadyExists()
     {
-      //  _mockTeamDataBase.Setup(x => x.GetTeams()).Returns(new List<Team>() {team});
         _teamService.CreateTeam(team);
         var isTeamCreated = _teamService.CreateTeam(team);
         Assert.IsFalse(isTeamCreated);
@@ -196,13 +195,25 @@ public class TeamServiceTest
     [TestMethod]
     public void DeleteTeamOk()
     {
-        Team team1 = new Team { Name = "Team 1" };
-        Team team2 = new Team { Name = "Team 2" };
+        Team team1 = new Team {             
+            Name = "Team Example",
+            CreatedOn = new DateTime(2020, 05, 05),
+            TasksDescription = "Tareas sobre desarrollo",
+            MaxUsers = 5,
+            MembersCount = 1
+        };
+        Team team2 = new Team {            
+            Name = "Team Example2",
+            CreatedOn = new DateTime(2020, 05, 05),
+            TasksDescription = "Tareas sobre economia",
+            MaxUsers = 7,
+            MembersCount = 1
+        };
         _teamService.CreateTeam(team1);
         _teamService.CreateTeam(team2);
         _teamService.DeleteTeam(team1.Name);
         var allTeams = _teamService.GetAllTeams();
-        CollectionAssert.AreEquivalent(allTeams, new List<Team> {team1, team2 });
+        CollectionAssert.AreEquivalent(allTeams, new List<Team> {team2 });
         
     }
 

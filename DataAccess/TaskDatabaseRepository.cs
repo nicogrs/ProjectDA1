@@ -42,15 +42,7 @@ public class TaskDatabaseRepository : IRepository<Task>
     public Task? Update(Task updatedEntity)
     {
         var taskToUpdate = Find(task => task.Id == updatedEntity.Id);
-        taskToUpdate.Comments = updatedEntity.Comments;
-        taskToUpdate.IsDeleted = updatedEntity.IsDeleted;
-        taskToUpdate.ExpirationDate = updatedEntity.ExpirationDate;
-        taskToUpdate.Description = updatedEntity.Description;
-        taskToUpdate.Precedence = updatedEntity.Precedence;
-        taskToUpdate.Description = updatedEntity.Description;
-        taskToUpdate.IsInEpic = updatedEntity.IsInEpic;
-        taskToUpdate.Name = updatedEntity.Name;
-        taskToUpdate.ExpectedEffort = updatedEntity.ExpectedEffort;
+        taskToUpdate = updatedEntity;
         _context.SaveChanges();
         return taskToUpdate;
     }

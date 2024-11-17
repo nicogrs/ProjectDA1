@@ -1,5 +1,6 @@
 using Dominio;
 using Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess;
 
@@ -21,12 +22,12 @@ public class TeamDatabaseRepository : IRepository<Team>
 
     public Team? Find(Func<Team, bool> filter)
     {
-        return _context.Teams.Where(filter).FirstOrDefault();
+        return _context.Teams.Include(t => t.TeamMembers).Where(filter).FirstOrDefault();
     }
 
     public IList<Team> FindAll()
     {
-        return _context.Teams.ToList();
+        return _context.Teams.Include(t => t.TeamMembers).ToList();
     }
 
     public Team? Update(Team updatedEntity)

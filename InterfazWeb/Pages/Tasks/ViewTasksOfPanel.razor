@@ -1,9 +1,9 @@
 @page "/{teamName}/{panelId}/tasks"
+@using Dominio
 @using Interfaces
-@using Services
-@inject IPanelService PnService
-@inject ITeamService TmService
-@inject TaskService TkService
+@using InterfazWeb.Pages.Epics
+@inject ITaskService TkService
+@inject IEpicService EpicService
 @inject Session Session
 @inject NavigationManager Navigation
 <PageTitle>Task</PageTitle>
@@ -12,6 +12,7 @@
 <div class="row d-flex justify-content-between align-items-center">
     <div class="col d-flex">
         <button class="btn btn-primary me-2" type="submit" @onclick="CreateTask">Crear Tarea</button>
+        <button class="btn btn-secondary me-2" type="submit" @onclick="GoToCreateEpic">Crear Epicas</button>
         <button class="btn btn-primary me-2" type="submit" @onclick="ExpiredTasks">Tareas Vencidas</button>
         @if (Session.IsAdmin)
         {
@@ -24,6 +25,19 @@
 
 </div>
 <div class="row">
+    @if (Epics.Count != 0)
+    {
+    foreach (var epic in Epics)
+    {
+    <EpicCard EpicId="@epic.Id.ToString()"
+              EpicTeamName="@teamName"
+              EpicPanelId="@panelId"
+              EpicOnTaskDeleted="RefreshTasks"
+    />
+    }
+    }
+</div>
+<div class="row">
     @if (Tasks.Count != 0)
     {
         foreach (var task in Tasks)
@@ -31,7 +45,7 @@
             if (task.ExpirationDate > DateTime.Today)
             {
                 <div class="d-flex justify-content-center align-items-center">
-                    <div class="w-75">
+                    <div class="w-100">
                         <TaskCard Title="@task.Name"
                                   Description="@task.Description"
                                   Precedence="@task.Precedence"
@@ -39,6 +53,7 @@
                                   Comments="@task.Comments"
                                   teamName="@teamName"
                                   panelId="@panelId"
+                                  CanBeDeleted="@true"
                                   TaskId="@task.Id"
                                   OnTaskDeleted="RefreshTasks"/>
                     </div>
@@ -53,46 +68,55 @@
 </div>
 
 @code {
-    [Parameter]
-    public string teamName { get; set; }
-    [Parameter]
-    public string panelId { get; set; }
-    
+    [Parameter] public string teamName { get; set; }
+    [Parameter] public string panelId { get; set; }
+
     private List<Dominio.Task> Tasks;
-    
+    private List<Epic> Epics;
+
     protected override void OnInitialized()
     {
         if (Session.CurrentUser == null)
         {
             Navigation.NavigateTo("/error");
         }
+
         RefreshTasks();
     }
 
     private void RefreshTasks()
     {
-        Tasks = TkService.GetNonExpiredTasks(int.Parse(panelId));
+        Tasks = TkService.GetNonExpiredTasks(int.Parse(panelId))
+            .Where(t => t.IsInEpic == false).ToList();
+        Epics = EpicService.GetEpicsByPanelId(int.Parse(panelId));
     }
-    
+
     private void CreateTask()
     {
         Navigation.NavigateTo($"/{teamName}/{panelId}/create");
+    }
+    
+    private void GoToCreateEpic()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/createEpic");
     }
 
     private void GoToImport()
     {
         Navigation.NavigateTo($"/{teamName}/{panelId}/TaskImportService");
     }
-    
+
     public void ExpiredTasks()
     {
         Navigation.NavigateTo($"/{teamName}/{panelId}/expiredtasks");
     }
-    
+
     private void GoBack()
     {
         Navigation.NavigateTo($"/{teamName}/panel");
     }
     
-    
+
 }
+        
+ 

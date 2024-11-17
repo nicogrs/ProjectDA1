@@ -1,8 +1,9 @@
-﻿@page "/{teamName}/{panelId}/{taskTitle}"
+﻿@page "/{teamName}/{panelId}/{TaskId}"
 @using Dominio
+@using Interfaces
 @using Services
 @using Task = Dominio.Task
-@inject PanelService PlService
+@inject ITaskService TkService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -66,10 +67,9 @@
     [Parameter]
     public string panelId { get; set; }
     [Parameter]
-    public string taskTitle { get; set; }
+    public string TaskId { get; set; }
     Task modelChangeTask = new Task();
     Task toModify = new Task();
-    Panel panel = new Panel();
     private string message;
     private Task.Priority selectedPriority;
 
@@ -79,10 +79,10 @@
         {
             Navigation.NavigateTo($"/error");
         }
-        panel = PlService.GetPanelById(int.Parse(panelId));
-        toModify = panel.Tasks.FirstOrDefault(t => t.Name == taskTitle);
+
+        toModify = TkService.GetTaskById(int.Parse(TaskId));
         modelChangeTask.Description = toModify.Description;
-        modelChangeTask.Name = toModify.Description;
+        modelChangeTask.Name = toModify.Name;
         modelChangeTask.Precedence = toModify.Precedence;
         modelChangeTask.ExpirationDate = toModify.ExpirationDate;
     }
@@ -103,7 +103,7 @@
             toModify.ExpirationDate = modelChangeTask.ExpirationDate;
         }
         toModify.Precedence = modelChangeTask.Precedence;
-
+        TkService.UpdateTask(toModify);
         message = "Tarea modificada";
     }
 

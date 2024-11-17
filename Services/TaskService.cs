@@ -43,6 +43,11 @@ public class TaskService : ITaskService
         _taskDatabase.Update(task);
     }
 
+    public Task UpdateTask(Task task)
+    {
+         return _taskDatabase.Update(task);
+    }
+    
     public List<Comment> GetCommentsFromTask(int taskId)
     {
         var task = GetTaskById(taskId);

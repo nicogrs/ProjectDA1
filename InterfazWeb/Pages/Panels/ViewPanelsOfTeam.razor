@@ -14,6 +14,9 @@
     <div class="col-4 mb-4">
         <button class="btn btn-primary" type="submit" @onclick="CreatePanel">Crear Panel</button>
     </div>
+    <div class="col-8 text-end mb-4">
+        <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver a Equipos</button>
+    </div>
     <div class="col-4 mb-4"></div>
     
     @if (Panels.Count != 0)
@@ -63,9 +66,9 @@
         Navigation.NavigateTo($"/{teamName}/panels/create");
     }
     
-
-    public void ModifyTeam()
+    private void GoBack()
     {
-        Navigation.NavigateTo($"/{teamName}/modify");
+        Navigation.NavigateTo($"/account/teams");
     }
+    
 }

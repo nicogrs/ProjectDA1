@@ -25,6 +25,9 @@ public class Program
         builder.Services.AddScoped<IRepository<Task>, TaskDatabaseRepository>();
         builder.Services.AddScoped<IRepository<Panel>, PanelDatabaseRepository>();
         builder.Services.AddScoped<IRepository<Notification>, NotificationDatabaseRepository>();
+        builder.Services.AddScoped<IRepository<Epic>, EpicDatabaseRepository>();
+        builder.Services.AddScoped<Epic>();
+        builder.Services.AddScoped<IEpicService, EpicService>();
         builder.Services.AddScoped<Notification>();
         builder.Services.AddScoped<INotificationService, NotificationService>();
         builder.Services.AddScoped<TeamService>();
@@ -34,11 +37,12 @@ public class Program
         builder.Services.AddScoped<TaskService>();
         builder.Services.AddScoped<ITaskService, TaskService>();
         builder.Services.AddScoped<Session>();
+        builder.Services.AddSingleton<Notifications>();
         
         builder.Services.AddDbContextFactory<SqlContext>(
             options => options.UseSqlServer(
                 builder.Configuration.GetConnectionString("DefaultConnection"),
-                providerOptions => providerOptions.EnableRetryOnFailure())
+                providerOptions => providerOptions.EnableRetryOnFailure()), ServiceLifetime.Scoped
         );
         
         builder.Services.AddSyncfusionBlazor();

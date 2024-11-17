@@ -12,9 +12,16 @@ public class CommentCreateTest
     [TestInitialize]
     public void Setup()
     {
-        u1 = new User();
-        u2 = new User();
-        c = new Comment();
+        u1 = new User { Id = 1, Name = "User1" };
+        u2 = new User { Id = 2, Name = "User2" };
+        c = new Comment
+        {
+            CreatedBy = u1,
+            Content = "ComentarioPrueba",
+            Resolved = false,
+            ResolvedBy = null,
+            ResolvedTime = default(DateTime)
+        };
     }
 
     [TestMethod]

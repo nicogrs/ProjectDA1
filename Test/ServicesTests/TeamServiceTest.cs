@@ -4,17 +4,18 @@ using Test.Context;
 
 namespace Test;
 using Dominio;
-using Moq;
 using Interfaces;
 
 [TestClass]
 public class TeamServiceTest
 {
     private Team team;
+    private User user;
     private TeamService _teamService;
-    Mock<IUserService> _mockUserService;
+    private UserService _userService;
     private IRepository<Team> _teamRepository;
     private SqlContext _context;
+    private IRepository<User> _userRepository;
     
     [TestInitialize]
     public void Setup()
@@ -23,8 +24,9 @@ public class TeamServiceTest
         _context = sqlContextFactory.CreateMemoryContext();
         
         _teamRepository = new TeamDatabaseRepository(_context);
-        //_mockUserService = new Mock<IUserService>();
-        _teamService = new TeamService(_teamRepository , _mockUserService.Object);
+        _userRepository = new UserDatabaseRepository(_context);
+        _userService = new UserService(_userRepository);
+        _teamService = new TeamService(_teamRepository , _userService);
         team = new Team
         {
             Name = "Team Example",
@@ -32,6 +34,14 @@ public class TeamServiceTest
             TasksDescription = "Tareas sobre desarrollo",
             MaxUsers = 5,
             MembersCount = 1
+        };
+        user = new User
+        {
+            Name = "Carlos",
+            Surname = "Lopez",
+            Email = "carlos@gmail.com",
+            BirthDate = new DateTime(1980, 1, 1),
+            Password = "TestPass$1"
         };
     }
     
@@ -51,7 +61,6 @@ public class TeamServiceTest
     [TestMethod]
     public void CreateTeamAlreadyExists()
     {
-      //  _mockTeamDataBase.Setup(x => x.GetTeams()).Returns(new List<Team>() {team});
         _teamService.CreateTeam(team);
         var isTeamCreated = _teamService.CreateTeam(team);
         Assert.IsFalse(isTeamCreated);
@@ -71,7 +80,7 @@ public class TeamServiceTest
             BirthDate = new DateTime(1980, 1, 1),
             Password = "TestPass$1"
         };
-        _mockUserService.Setup(x => x.GetUserByEmail(user.Email)).Returns(user);
+        _userService.CreateUser(user);
         var isUserAdded = _teamService.AddUserToTeam(team.Name, user.Email);
         Assert.IsTrue(isUserAdded);
     }
@@ -88,7 +97,7 @@ public class TeamServiceTest
             Password = "TestPass$1"
         };
         _teamService.CreateTeam(team);
-        _mockUserService.Setup(x => x.GetUserByEmail(user.Email)).Returns(user);
+        _userService.CreateUser(user);
         _teamService.AddUserToTeam(team.Name, user.Email);
         var isUserAdded = _teamService.AddUserToTeam(team.Name, user.Email);
         Assert.IsFalse(isUserAdded);
@@ -105,7 +114,7 @@ public class TeamServiceTest
             BirthDate = new DateTime(1980, 1, 1),
             Password = "TestPass$1"
         };
-        _mockUserService.Setup(x => x.GetUserByEmail(user.Email)).Returns(user);
+        _userService.CreateUser(user);
         _teamService.AddUserToTeam(team.Name, user.Email);
         var isUserDeleted = _teamService.RemoveUserFromTeam(team.Name, user.Email);
         Assert.IsTrue(isUserDeleted);
@@ -116,7 +125,6 @@ public class TeamServiceTest
     {
         _teamService.CreateTeam(team);
         var userEmail = "user@email.com";
-        _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns((User)null);
         var isUserDeleted = _teamService.RemoveUserFromTeam(team.Name, userEmail);
         Assert.IsFalse(isUserDeleted);
     }
@@ -139,13 +147,36 @@ public class TeamServiceTest
     public void RemoveUserFromAllTeams()
     {
         var userEmail = "user@email.com";
-        var user = new User { Email = userEmail };
-        team.TeamMembers.Add(user);
-    //    _mockTeamDataBase.Setup(x => x.GetTeams()).Returns(() => new List<Team> { team });
-        _mockUserService.Setup(x => x.GetUserByEmail(userEmail)).Returns(user);
-        var isUserRemoved = _teamService.RemoveUserFromAllTeams(userEmail);
-         Assert.IsTrue(isUserRemoved);
+        User user1 = new User
+        {
+            Name = "Carlos",
+            Surname = "Lopez",
+            Email = userEmail,
+            BirthDate = new DateTime(1980, 1, 1),
+            Password = "TestPass$1"
+        };
         
+        Team team1 = new Team {             
+            Name = "Team Example",
+            CreatedOn = new DateTime(2020, 05, 05),
+            TasksDescription = "Tareas sobre desarrollo",
+            MaxUsers = 5,
+            MembersCount = 1
+        };
+        Team team2 = new Team {            
+            Name = "Team Example2",
+            CreatedOn = new DateTime(2020, 05, 05),
+            TasksDescription = "Tareas sobre economia",
+            MaxUsers = 7,
+            MembersCount = 1
+        };
+        _teamService.CreateTeam(team1);
+        _teamService.CreateTeam(team2);
+        _userService.CreateUser(user1);
+        team1.TeamMembers.Add(user1);
+        team2.TeamMembers.Add(user1);
+        var isUserRemoved = _teamService.RemoveUserFromAllTeams(userEmail);
+        Assert.IsTrue(isUserRemoved);
     }
     
     
@@ -176,25 +207,59 @@ public class TeamServiceTest
     [TestMethod]
     public void GetTeamsByUserEmailTest()
     {
-        Team team1 = new Team { Name = "Team 1" };
-        Team team2 = new Team { Name = "Team 2" };
-        var user = new User { Email = "user@email.com" };
-        team1.TeamMembers.Add(user);
-        team2.TeamMembers.Add(user);
-        var teamsByUserEmail = _teamService.GetTeamsByUserEmail(user.Email);
+        Team team1 = new Team {             
+            Name = "Team Example",
+            CreatedOn = new DateTime(2020, 05, 05),
+            TasksDescription = "Tareas sobre desarrollo",
+            MaxUsers = 5,
+            MembersCount = 1
+        };
+        Team team2 = new Team {            
+            Name = "Team Example2",
+            CreatedOn = new DateTime(2020, 05, 05),
+            TasksDescription = "Tareas sobre economia",
+            MaxUsers = 7,
+            MembersCount = 1
+        };
+        User user1 = new User
+        {
+            Name = "Carlos",
+            Surname = "Lopez",
+            Email = "carlos@gmail.com",
+            BirthDate = new DateTime(1980, 1, 1),
+            Password = "TestPass$1"
+        };
+        _teamService.CreateTeam(team1);
+        _teamService.CreateTeam(team2);
+        team1.TeamMembers.Add(user1);
+        team2.TeamMembers.Add(user1);
+        var teamsByUserEmail = _teamService.GetTeamsByUserEmail(user1.Email);
         CollectionAssert.AreEquivalent(teamsByUserEmail, new List<Team> { team1, team2 });
     }
     
     [TestMethod]
     public void DeleteTeamOk()
     {
-        Team team1 = new Team { Name = "Team 1" };
-        Team team2 = new Team { Name = "Team 2" };
+        Team team1 = new Team {             
+            Name = "Team Example",
+            CreatedOn = new DateTime(2020, 05, 05),
+            TasksDescription = "Tareas sobre desarrollo",
+            MaxUsers = 5,
+            MembersCount = 1
+        };
+        Team team2 = new Team {            
+            Name = "Team Example2",
+            CreatedOn = new DateTime(2020, 05, 05),
+            TasksDescription = "Tareas sobre economia",
+            MaxUsers = 7,
+            MembersCount = 1
+        };
         _teamService.CreateTeam(team1);
         _teamService.CreateTeam(team2);
         _teamService.DeleteTeam(team1.Name);
         var allTeams = _teamService.GetAllTeams();
-        CollectionAssert.AreEquivalent(allTeams, new List<Team> {team1, team2 });
+        CollectionAssert.AreEquivalent(allTeams, new List<Team> {team2 });
+        
     }
 
     

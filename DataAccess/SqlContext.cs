@@ -12,6 +12,7 @@ public class SqlContext : DbContext
    public DbSet<Trash> Trashes { get; set; }
    public DbSet<Comment> Comments { get; set; }
    public DbSet<Notification> Notifications { get; set; }
+   public DbSet<Epic> Epic { get; set; }
 
    public SqlContext(DbContextOptions<SqlContext> options) : base(options)
    {

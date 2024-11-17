@@ -76,7 +76,7 @@ else
     
     protected override void OnInitialized()
     {
-        if (Session.IsAdmin)
+        if (Session.CurrentUser != null)
         {
             unUser = UService.GetUserByEmail(unEmail);
             if (unUser != null)
@@ -144,6 +144,6 @@ else
     
     private void GoBack()
     {
-        Navigation.NavigateTo("/users");
+        Navigation.NavigateTo("/");
     }
 }

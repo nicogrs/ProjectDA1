@@ -199,11 +199,9 @@
         }
 
         warningMessage = "";
-
         foreach (User user in SelectedUsersAdd)
         {
-            team.TeamMembers.Add(user);
-            team.MembersCount++;
+         TmService.AddUserToTeam(teamName, user.Email);
         }
         
         message=$"{SelectedUsersAdd.Count} Usuarios agregados exitosamente a {team.Name}.";

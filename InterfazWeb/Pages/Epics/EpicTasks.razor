@@ -1,0 +1,71 @@
+@page "/{teamName}/{panelId}/view/{EpicId}"
+@using Dominio
+@using Interfaces
+@using Services
+@using Task = Dominio.Task
+@using InterfazWeb.Pages.Tasks
+@inject IEpicService EpicService
+@inject ITaskService TkService
+@inject IUserService UService
+@inject Notifications Notifications
+@inject INotificationService NtfService
+@inject NavigationManager Navigation
+@inject Session Session
+<PageTitle>Tareas de Epica</PageTitle>
+
+<div class="row">
+    <div class="col-12 text-end mb-4">
+        <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver a Tareas</button>
+    </div>
+</div>
+
+@foreach (var task in selectedEpic.Tasks)
+{
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="w-100">
+            <TaskCard Title="@task.Name"
+                      Description="@task.Description"
+                      Precedence="@task.Precedence"
+                      EndDate="@task.ExpirationDate"
+                      Comments="@task.Comments"
+                      teamName="@teamName"
+                      panelId="@panelId"
+                      CanBeDeleted="@false"
+                      TaskId="@task.Id"
+                      OnTaskDeleted="RefreshTasks"/>
+        </div>
+    </div>
+
+}
+
+@code {
+    [Parameter] public string EpicId { get; set; }
+    [Parameter] public string teamName { get; set; }
+    [Parameter] public string panelId { get; set; }
+
+    private bool isModalVisible;
+    private List<Dominio.Task> Tasks;
+    private Epic selectedEpic;
+
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+
+        RefreshTasks();
+    }
+
+    private void RefreshTasks()
+    {
+        selectedEpic = EpicService.GetEpicById(int.Parse(EpicId));
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
+    }
+    
+}
+        

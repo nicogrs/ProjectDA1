@@ -1,5 +1,6 @@
 @page "/{teamName}/{panelId}/{taskId}/createComment"
 @using Dominio
+@using Interfaces
 @using Services
 @inject TaskService TskService
 @inject NavigationManager Navigation
@@ -68,8 +69,6 @@
             Resolved = false                      
         };
         TskService.AddCommentToTask(int.Parse(taskId),c);
-       // Dominio.Task taskToComment = TskService.GetNonExpiredTasks(int.Parse(panelId)).Find(t => t.Name == title);
-       // taskToComment.AddComment(Session.CurrentUser, modelAddComment.Content);
         message = "Comentario agregado con éxito";
         modelAddComment.Content = "";
     }

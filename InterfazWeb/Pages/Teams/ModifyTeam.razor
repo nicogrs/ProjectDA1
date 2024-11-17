@@ -97,13 +97,10 @@
                                  "elegir un numero mayor o quitar usuarios del equipo.";
             return;
         }
-        
-        Team newTeam = new Team
-        {
-            TasksDescription = modelChangeTeam.TasksDescription,
-            MaxUsers = modelChangeTeam.MaxUsers
-        };
-        var modified = TmService.UpdateTeam(selectedTeam.Name, newTeam);
+
+        selectedTeam.TasksDescription = modelChangeTeam.TasksDescription;
+        selectedTeam.MaxUsers = modelChangeTeam.MaxUsers;
+        var modified = TmService.UpdateTeam(selectedTeam.Name, selectedTeam);
         Console.WriteLine(modified);
         if (modified)
         {

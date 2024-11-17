@@ -54,19 +54,19 @@
 
         effortData.Add(new EffortData
         {
-            Esfuerzo = "Esfuerzo",
-            EsfuerzoEsperado = expectedEffort,
-            EsfuerzoInvertido = invertedEffort,
-            EsfuerzoFaltante = Math.Max(0, missingEffort)
+            Effort = "Esfuerzo",
+            SpectedEffort = expectedEffort,
+            InvertedEffort = invertedEffort,
+            MissingEfort = Math.Max(0, missingEffort)
         });
     }
 
     public class EffortData
     {
-        public string Esfuerzo { get; set; }
-        public int EsfuerzoEsperado { get; set; }
-        public int EsfuerzoInvertido { get; set; }
-        public int EsfuerzoFaltante { get; set; }
+        public string Effort { get; set; }
+        public int SpectedEffort { get; set; }
+        public int InvertedEffort { get; set; }
+        public int MissingEfort { get; set; }
     }
     
     private void GoBack()

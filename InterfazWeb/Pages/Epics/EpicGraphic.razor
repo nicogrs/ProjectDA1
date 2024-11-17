@@ -13,13 +13,13 @@
     <ChartPrimaryYAxis Title="Tiempo (horas)" ValueType="Syncfusion.Blazor.Charts.ValueType.Double" />
 
     <ChartSeriesCollection>
-        <ChartSeries DataSource="@EffortData" Type="ChartSeriesType.Column" XName="Epic" YName="EsfuerzoEsperado" Name="Esfuerzo Estimado"
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Epic" YName="EsfuerzoEsperado" Name="Esfuerzo Estimado"
                      Palette="@(new string[] { "#007bff" })" />
 
-        <ChartSeries DataSource="@EffortData" Type="ChartSeriesType.Column" XName="Epic" YName="EsfuerzoInvertido" Name="Esfuerzo Invertido"
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Epic" YName="EsfuerzoInvertido" Name="Esfuerzo Invertido"
                      Palette="@(new string[] { "#28a745" })" />
 
-        <ChartSeries DataSource="@EffortData" Type="ChartSeriesType.Column" XName="Epic" YName="EsfuerzoRestante" Name="Esfuerzo Restante"
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Epic" YName="EsfuerzoRestante" Name="Esfuerzo Restante"
                      Palette="@(new string[] { "#dc3545" })" />
     </ChartSeriesCollection>
 </SfChart>
@@ -30,10 +30,10 @@
     <ChartPrimaryYAxis Title="Cantidad" ValueType="Syncfusion.Blazor.Charts.ValueType.Double" />
 
     <ChartSeriesCollection>
-        <ChartSeries DataSource="@TaskStatusData" Type="ChartSeriesType.Column" XName="Status" YName="Completed" Name="Tareas Finalizadas"
+        <ChartSeries DataSource="@endedData" Type="ChartSeriesType.Column" XName="Status" YName="Completed" Name="Tareas Finalizadas"
                      Palette="@(new string[] { "#28a745" })" />
 
-        <ChartSeries DataSource="@TaskStatusData" Type="ChartSeriesType.Column" XName="Status" YName="NotCompleted" Name="Tareas No Finalizadas"
+        <ChartSeries DataSource="@endedData" Type="ChartSeriesType.Column" XName="Status" YName="NotCompleted" Name="Tareas No Finalizadas"
                      Palette="@(new string[] { "#dc3545" })" />
     </ChartSeriesCollection>
 </SfChart>
@@ -52,11 +52,50 @@
     [Parameter]
     public string panelId { get; set; }
 
-    
+    private List<EffortData> effortData = new List<EffortData>();
+    private List<EndedData> endedData = new List<EndedData>();
 
     protected override void OnInitialized()
     {
+        int epic = int.Parse(epicId);
+        var totalExpectedEffort = EService.EffortExpected(epic);
+        var totalInvertedEffort = EService.EffortInverted(epic);
+        var totalRemainingEffort = Math.Max(0, totalExpectedEffort - totalInvertedEffort);
         
+        var totalEndedTasks = EService.CompletedTasks(epic);
+        var totalNonEndedTasks = EService.NotCompletedTasks(epic);
+        
+        effortData.Add(new EffortData
+        {
+            Effort = "Esfuerzo",
+            SpectedEffort = totalExpectedEffort,
+            InvertedEffort = totalInvertedEffort,
+            MissingEfort = totalRemainingEffort
+        });
+        
+        endedData.Add(new EndedData
+        {
+            Ended = "Tareas terminadas",
+            Completed = totalEndedTasks,
+            NotCompleted = totalNonEndedTasks
+        });
+    }
+    
+    public class EffortData
+    {
+        public string Effort { get; set; }
+        public int SpectedEffort { get; set; }
+        public int InvertedEffort { get; set; }
+        public int MissingEfort { get; set; }
+    }
+    
+    
+
+    public class EndedData
+    {
+        public string Ended { get; set; }
+        public int Completed { get; set; }
+        public int NotCompleted { get; set; }
     }
     
     private void GoBack()

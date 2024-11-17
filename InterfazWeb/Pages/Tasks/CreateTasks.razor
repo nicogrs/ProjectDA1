@@ -104,8 +104,8 @@
                 Description = modelCreateTask.Description,
                 ExpirationDate = modelCreateTask.ExpirationDate,
                 ExpectedEffort = modelCreateTask.ExpectedEffort,
+                InvertedEffort = 0,
                 Ended = false
-                //Epic = null
             };
             PlService.AddTaskToPanel(int.Parse(panelId), t);
             message="Tarea creada con éxito";

@@ -1,11 +1,10 @@
-@page "/{teamName}/{panelId}/{taskId}/graphic"
-@using Dominio
+@page "/{teamName}/{panelId}/{taskId}/taskGraphic" 
 @using Services
 @using Task = Dominio.Task
 @using Syncfusion.Blazor.Charts
 @inject TaskService TskService
 @inject NavigationManager Navigation
-@inject Session Session
+
 
 <h3>Gráfico Comparativo</h3>
 
@@ -14,11 +13,11 @@
     <ChartPrimaryYAxis Title="Tiempo (horas)" ValueType="Syncfusion.Blazor.Charts.ValueType.Double" />
     
     <ChartSeriesCollection>
-        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Esfuerzo" YName="EsfuerzoEsperado" Name="Esfuerzo Esperado" Palette="@(new string[] { "#28a745" })" />
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Effort" YName="SpectedEffort" Name="Esfuerzo Esperado" Fill="#28a745" />
 
-        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Esfuerzo" YName="EsfuerzoInvertido" Name="Esfuerzo Invertido" Palette="@(new string[] { "#007bff" })" />
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Effort" YName="InvertedEffort" Name="Esfuerzo Invertido" Fill="#007bff" />
 
-        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Esfuerzo" YName="EsfuerzoFaltante" Name="Esfuerzo Faltante" Palette="@(new string[] { "#dc3545" })" />
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Effort" YName="MissingEfort" Name="Esfuerzo Faltante" Fill="#dc3545" />
     </ChartSeriesCollection>
 </SfChart>
 @if (task.Ended)

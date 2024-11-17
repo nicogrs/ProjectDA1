@@ -8,7 +8,14 @@ public class Task : IDeleteable
     public Panel Panel { get; set; }
     public DateTime ExpirationDate { get; set; }
     public List<Comment> Comments { get; set; }
+
     public bool IsInEpic { get; set; }
+
+    public Epic Epic { get; set; }
+    public int ExpectedEffort { get; set; }
+    public int InvertedEffort { get; set; }
+    public bool Ended { get; set; }
+
     
     public enum Priority
     {

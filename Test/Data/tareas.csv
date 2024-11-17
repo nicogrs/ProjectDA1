@@ -1,3 +1,5 @@
-Título,Descripción,Fecha de vencimiento,ID de panel
-Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2024,1
-Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2024,1
+Título,Descripción,Fecha de vencimiento,ID de panel,ID de epica
+Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2025,1,1
+Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2025,1,1
+Terminar obligatorio,Terminar el obligatorio 2 de DA.,20/11/2025,1,2
+Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2025,2

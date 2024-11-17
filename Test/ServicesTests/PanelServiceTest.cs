@@ -70,8 +70,8 @@ public class PanelServiceTest
     [TestMethod]
     public void GetAllPanelsFromTeamTest()
     {
-        var panel1 = new Panel{Name = "Panel 1"};
-        var panel2 = new Panel{Name = "Panel 2"};
+        var panel1 = new Panel { Name = "Panel 1", Team = team.Name };
+        var panel2 = new Panel { Name = "Panel 2", Team = team.Name };
         panelService.AddPanel(panel1);
         panelService.AddPanel(panel2);
         var teamPanels = panelService.GetAllPanelsFromTeam(team.Name);
@@ -80,10 +80,10 @@ public class PanelServiceTest
     
     
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
-    public void GetAllPanelsFromTeamTestException()
+    public void GetAllPanelsFromTeamTest_NoPanels()
     {
         var teamPanels = panelService.GetAllPanelsFromTeam(team.Name);
+        Assert.AreEqual(0, teamPanels.Count);
     }
 
 }

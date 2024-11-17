@@ -23,7 +23,7 @@ public class TeamServiceTest
         _context = sqlContextFactory.CreateMemoryContext();
         
         _teamRepository = new TeamDatabaseRepository(_context);
-        _mockUserService = new Mock<IUserService>();
+        //_mockUserService = new Mock<IUserService>();
         _teamService = new TeamService(_teamRepository , _mockUserService.Object);
         team = new Team
         {

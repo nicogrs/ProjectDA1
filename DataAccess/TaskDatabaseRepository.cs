@@ -50,6 +50,7 @@ public class TaskDatabaseRepository : IRepository<Task>
         taskToUpdate.Description = updatedEntity.Description;
         taskToUpdate.IsInEpic = updatedEntity.IsInEpic;
         taskToUpdate.Name = updatedEntity.Name;
+        taskToUpdate.ExpectedEffort = updatedEntity.ExpectedEffort;
         _context.SaveChanges();
         return taskToUpdate;
     }

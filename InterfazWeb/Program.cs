@@ -4,6 +4,7 @@ using Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Services;
 using Task = Dominio.Task;
+using Syncfusion.Blazor;
 
 namespace InterfazWeb;
 
@@ -15,6 +16,7 @@ public class Program
         // Add services to the container.
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor();
+        
         
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<PasswordService>();
@@ -43,7 +45,10 @@ public class Program
                 providerOptions => providerOptions.EnableRetryOnFailure()), ServiceLifetime.Scoped
         );
         
+        builder.Services.AddSyncfusionBlazor();
+        
         var app = builder.Build();
+        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("OBL_License");
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())

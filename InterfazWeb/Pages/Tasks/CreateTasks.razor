@@ -23,35 +23,41 @@
     <DataAnnotationsValidator/>
     <div class="d-flex justify-content-center align-items-center">
         <div class="w-50">
-        <div class="form-group mt-4">
-            <label id="name">Nombre</label>
-            <InputText required class="form-control" @bind-Value="@modelCreateTask.Name" id="name"></InputText>
-            <ValidationMessage For="@(() => modelCreateTask.Name)"/>
-        </div>
-        <div class="form-group mt-4">
-            <label id="priority">Prioridad</label>
-            <select class="form-control" Value="@selectedPriority" id="priority">
-                @foreach (var priority in Enum.GetValues(typeof(Task.Priority)))
-                {
-                    <option value="@priority">@priority.ToString()</option>
-                }
-            </select>
-            <ValidationMessage For="@(() => modelCreateTask.Precedence)"/>
-        </div>
-        <div class="form-group mt-4">
-            <label for="description">Descripcion</label>
-            <InputText class="form-control" @bind-Value="@modelCreateTask.Description" required id="description"></InputText>
-            <ValidationMessage For="@(() => modelCreateTask.Description)"/>
-        </div>
+            <div class="form-group mt-4">
+                <label id="name">Nombre</label>
+                <InputText required class="form-control" @bind-Value="@modelCreateTask.Name" id="name"></InputText>
+                <ValidationMessage For="@(() => modelCreateTask.Name)"/>
+            </div>
+            <div class="form-group mt-4">
+                <label id="priority">Prioridad</label>
+                <select class="form-control" Value="@selectedPriority" id="priority">
+                    @foreach (var priority in Enum.GetValues(typeof(Task.Priority)))
+                    {
+                        <option value="@priority">@priority.ToString()</option>
+                    }
+                </select>
+                <ValidationMessage For="@(() => modelCreateTask.Precedence)"/>
+            </div>
+            <div class="form-group mt-4">
+                <label for="description">Descripcion</label>
+                <InputText class="form-control" @bind-Value="@modelCreateTask.Description" required id="description"></InputText>
+                <ValidationMessage For="@(() => modelCreateTask.Description)"/>
+            </div>
 
-        <div class="form-group mt-4">
-            <label for="birthDate">Fecha de expiración</label>
-            <InputDate class="form-control" id="birthDate" @bind-Value="@modelCreateTask.ExpirationDate" required min="@DateTime.Today.AddDays(1)"></InputDate>
-            <ValidationMessage For="@(() => modelCreateTask.ExpirationDate)"/>
-        </div>
-        <div class="form-group mt-4">
-            <button class="btn btn-primary" type="submit">Crear Tarea</button>
-        </div>
+            <div class="form-group mt-4">
+                <label for="birthDate">Fecha de expiración</label>
+                <InputDate class="form-control" id="birthDate" @bind-Value="@modelCreateTask.ExpirationDate" required min="@DateTime.Today.AddDays(1)"></InputDate>
+                <ValidationMessage For="@(() => modelCreateTask.ExpirationDate)"/>
+            </div>
+            
+            <div class="form-group mt-4">
+                <label for="birthDate">Esfuerzo estimado</label>
+                <InputNumber class="form-control" id="birthDate" @bind-Value="@modelCreateTask.ExpectedEffort" required min="1"></InputNumber>
+                <ValidationMessage For="@(() => modelCreateTask.ExpectedEffort)"/>
+            </div>
+            <div class="form-group mt-4">
+                <button class="btn btn-primary" type="submit">Crear Tarea</button>
+            </div>
         </div>
     </div>
 </EditForm>
@@ -96,10 +102,12 @@
                 Name = modelCreateTask.Name,
                 Precedence = selectedPriority,
                 Description = modelCreateTask.Description,
-                ExpirationDate = modelCreateTask.ExpirationDate
+                ExpirationDate = modelCreateTask.ExpirationDate,
+                ExpectedEffort = modelCreateTask.ExpectedEffort,
+                Ended = false
+                //Epic = null
             };
             PlService.AddTaskToPanel(int.Parse(panelId), t);
-           // PlService.GetPanelById(int.Parse(panelId)).AddTask(t);
             message="Tarea creada con éxito";
             ClearContents();
         }

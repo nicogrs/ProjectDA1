@@ -75,7 +75,6 @@
             @if (!Ended)
             {
                 <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2"  type="submit" @onclick="AddComment">Agregar Comentario</button>
-                <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2"  type="submit" @onclick="AddHours">Agregar Horas Invertidas</button>
                 <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-warning me-2"  type="submit" @onclick="ChangeTask">Modificar</button>
                 <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-warning me-2"  type="submit" @onclick="EndTask">Terminar Tarea</button>
             }
@@ -170,10 +169,7 @@
         Navigation.NavigateTo($"/{teamName}/{panelId}/{TaskId}/createComment");
     }
 
-    private void AddHours()
-    {
-        Navigation.NavigateTo($"/{teamName}/{panelId}/{TaskId}/addHours");
-    }
+   
     
     private void ChangeTask()
     {

@@ -15,22 +15,6 @@ namespace DataAccess.Migrations
                 name: "IDeleteableSequence");
 
             migrationBuilder.CreateTable(
-                name: "Epic",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Priority = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Epic", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Teams",
                 columns: table => new
                 {
@@ -170,6 +154,29 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Epic",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Priority = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FromPanelId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Epic", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Epic_Panels_FromPanelId",
+                        column: x => x.FromPanelId,
+                        principalTable: "Panels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tasks",
                 columns: table => new
                 {
@@ -181,13 +188,11 @@ namespace DataAccess.Migrations
                     Precedence = table.Column<int>(type: "int", nullable: false),
                     PanelId = table.Column<int>(type: "int", nullable: false),
                     ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-<<<<<<< HEAD:DataAccess/Migrations/20241116230200_PrimeraMigracion.cs
                     IsInEpic = table.Column<bool>(type: "bit", nullable: false),
+                    ExpectedEffort = table.Column<int>(type: "int", nullable: false),
+                    InvertedEffort = table.Column<int>(type: "int", nullable: false),
+                    Ended = table.Column<bool>(type: "bit", nullable: false),
                     EpicId = table.Column<int>(type: "int", nullable: true)
-=======
-                    EpicId = table.Column<int>(type: "int", nullable: false)
-                    
->>>>>>> 33129727ad1d6bdf042b644ed2c96376f0d7033f:DataAccess/Migrations/20241112020324_PrimeraMigracion.cs
                 },
                 constraints: table =>
                 {
@@ -196,8 +201,7 @@ namespace DataAccess.Migrations
                         name: "FK_Tasks_Epic_EpicId",
                         column: x => x.EpicId,
                         principalTable: "Epic",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Tasks_Panels_PanelId",
                         column: x => x.PanelId,
@@ -259,6 +263,11 @@ namespace DataAccess.Migrations
                 name: "IX_Comments_TaskId",
                 table: "Comments",
                 column: "TaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Epic_FromPanelId",
+                table: "Epic",
+                column: "FromPanelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notifications_FromUserId",

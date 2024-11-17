@@ -77,14 +77,19 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Priority")
+                    b.Property<int>("FromPanelId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("FromPanelId");
 
                     b.ToTable("Epic");
                 });
@@ -277,7 +282,7 @@ namespace DataAccess.Migrations
                     b.Property<bool>("Ended")
                         .HasColumnType("bit");
 
-                    b.Property<int>("EpicId")
+                    b.Property<int?>("EpicId")
                         .HasColumnType("int");
 
                     b.Property<int>("ExpectedEffort")
@@ -286,13 +291,11 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
-<<<<<<< HEAD
-                    b.Property<bool>("IsInEpic")
-                        .HasColumnType("bit");
-=======
                     b.Property<int>("InvertedEffort")
                         .HasColumnType("int");
->>>>>>> 33129727ad1d6bdf042b644ed2c96376f0d7033f
+
+                    b.Property<bool>("IsInEpic")
+                        .HasColumnType("bit");
 
                     b.Property<int>("PanelId")
                         .HasColumnType("int");
@@ -328,6 +331,17 @@ namespace DataAccess.Migrations
                     b.Navigation("ResolvedBy");
 
                     b.Navigation("Task");
+                });
+
+            modelBuilder.Entity("Dominio.Epic", b =>
+                {
+                    b.HasOne("Dominio.Panel", "FromPanel")
+                        .WithMany()
+                        .HasForeignKey("FromPanelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FromPanel");
                 });
 
             modelBuilder.Entity("Dominio.IDeleteable", b =>
@@ -399,19 +413,15 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Dominio.Task", b =>
                 {
-                    b.HasOne("Dominio.Epic", "Epic")
+                    b.HasOne("Dominio.Epic", null)
                         .WithMany("Tasks")
-                        .HasForeignKey("EpicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EpicId");
 
                     b.HasOne("Dominio.Panel", "Panel")
                         .WithMany("Tasks")
                         .HasForeignKey("PanelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Epic");
 
                     b.Navigation("Panel");
                 });

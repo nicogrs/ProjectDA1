@@ -34,7 +34,6 @@
         <th>Titulo</th>
         <th>Descripcion</th>
         <th>Fecha de vencimiento</th>
-        <th>Épica</th>
     </tr>
     </thead>
     <tbody>
@@ -47,14 +46,6 @@
         <td>@task.Name</td>
         <td>@task.Description</td>
         <td>@expDateToString(task.ExpirationDate)</td>
-        @if (task.Epic != null)
-         {
-             <td>@task.Epic.Id </td>
-         }
-         else
-         {
-             <td>Sin datos de epica</td>
-         }
     </tr>
     }
     </tbody>
@@ -94,7 +85,7 @@
     
     protected override void OnInitialized()
     {
-        if (Session.CurrentUser == null || Session.IsAdmin)
+        if (Session.CurrentUser == null || !Session.IsAdmin)
         {
             Navigation.NavigateTo("/error");
         }

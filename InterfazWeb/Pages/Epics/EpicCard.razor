@@ -37,6 +37,8 @@
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <span class="badge bg-secondary">Prioridad: @selectedEpic.Priority.ToString()</span>
                     <span class="badge bg-info">Vence: @selectedEpic.ExpirationDate.ToShortDateString()</span>
+                    <span class="badge bg-info">Horas Estimadas: @EpicService.EffortExpected(selectedEpic.Id) </span>
+                    <span class="badge bg-info">Horas Invertidas: @EpicService.EffortInverted(selectedEpic.Id) </span>
                 </div>
             </div>
             
@@ -47,10 +49,10 @@
                             type="submit" @onclick="GoToEpic" >Visualizar Tareas</button>
                     <button class="col-lg-3 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2"
                             type="submit" @onclick="GoToAdd">Agregar o Eliminar Tareas</button>
+                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2" type="submit"
+                            @onclick="ComparativeGraphic">Grafico de esfuerzo</button>
                     <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-warning me-2"
                             type="submit" @onclick="ChangeEpic">Modificar</button>
-                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2" 
-                            type="submit" @onclick="ComparativeGraphic">Grafico de esfuerzo</button>
                     <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-danger me-2"
                             type="submit" @onclick="ShowModal">Eliminar</button>
                 </div>
@@ -143,7 +145,7 @@
     
     private void ComparativeGraphic()
     {
-        Navigation.NavigateTo($"/{EpicTeamName}/{EpicPanelId}/{EpicId}/epicGraphic");
+        Navigation.NavigateTo($"/{EpicTeamName}/{EpicPanelId}/{EpicId}/graphic");
     }
     
     private void GoToEpic()

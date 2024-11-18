@@ -154,6 +154,7 @@
     {
         selectedTask = TkService.GetTaskById(TaskId);
         Comments = TkService.GetCommentsFromTask(TaskId);
+        StateHasChanged();
     }
 
     private void AddComment()
@@ -169,11 +170,13 @@
     private void ShowModal()
     {
         isModalVisible = true;
+        StateHasChanged();
     }
 
     private void CloseModal()
     {
         isModalVisible = false;
+        StateHasChanged();
     }
 
     private void ConfirmDelete()
@@ -182,6 +185,7 @@
         selectedTask.IsInEpic = false;
         CloseModal();
         OnTaskDeleted.InvokeAsync();
+        StateHasChanged();
     }
 
     private void CompleteComment(Comment comment)
@@ -196,5 +200,6 @@
             ToUser =  comment.CreatedBy
         });
         Notifications.NotifyNewNotifications();
+        StateHasChanged();
     }
 }

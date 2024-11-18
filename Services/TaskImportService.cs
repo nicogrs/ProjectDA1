@@ -1,13 +1,21 @@
-namespace Dominio.Services;
+using Dominio;
+using Interfaces;
+using Task = Dominio.Task;
+
+namespace Services;
 
 public class TaskImportService
 {
     private StreamReader reader;
     private StreamWriter writer;
-    private List<Task> tasks;
+    private List<ImportedTask> tasks;
     public List<string> errors;
-    
 
+    public class ImportedTask : Task
+    {
+        public int epicId { get; set; }
+    }
+    
     public void MakeErrorFile(string errorFileName)
     {
         string directory = Directory.GetCurrentDirectory();
@@ -23,9 +31,9 @@ public class TaskImportService
         writer.Close();
     }
 
-    public List<Task> ReadTasksFromContent(string content, User user)
+    public List<ImportedTask> ReadTasksFromContent(string content, User user)
     {
-        tasks = new List<Task>();
+        tasks = new List<ImportedTask>();
         errors = new List<string>();
 
         List<string> linesOfContent = MakeLineListFromContent(content);
@@ -48,8 +56,9 @@ public class TaskImportService
             if (IsLineValid(line))
             {
                 List<string> splitLine = SplitLine(line);
-                Task newTask = TaskFromStringList(splitLine);
+                ImportedTask newTask = TaskFromStringList(splitLine);
                 tasks.Add(newTask);
+                
             }
             else
             {
@@ -97,10 +106,10 @@ public class TaskImportService
         
         return toReturn;
     }
-    public Task TaskFromStringList(List<string> strList)
+    public ImportedTask TaskFromStringList(List<string> strList)
     {
         //Título,Descripción,Fecha de vencimiento,ID de panel,Esfuerzo Estimado,ID de epica
-        Task task = new Task();
+        ImportedTask task = new ImportedTask();
         task.Name = strList[0];
         task.Description = strList[1];
         
@@ -109,6 +118,7 @@ public class TaskImportService
         task.ExpirationDate = StringToDate(strDate);
 
         task.ExpectedEffort = int.Parse(strList[4]);
+        task.epicId = int.Parse(strList[5]);
         
         return task;
     }
@@ -124,25 +134,22 @@ public class TaskImportService
     public bool IsLineValid(string line)
     {
         List<string> elements = SplitLine(line);
-
         if (!HasCorrectElementCount(elements))
             return false;
         
         bool isDateValid = IsStringValidDate(elements[2]);
         bool isPanelIdValid = IsStringPanelIdValid(elements[3]);
+        bool isEspectedEffortValid = IsStringExpectedEffortValid(elements[4]);
+        bool isEpicIdValid = IsStringEpicIdValid(elements[5]);
         
-        return isDateValid && isPanelIdValid;
+        return isDateValid && isPanelIdValid && isEspectedEffortValid && isEpicIdValid;
     }
 
     public bool HasCorrectElementCount(List<string> elements)
     {
-        return (elements.Count <= 5 && elements.Count >= 4);
+        return (elements.Count <= 6 && elements.Count >= 5);
     }
     
-    public bool IsStringPanelIdValid(string panelId)
-    {
-        return int.TryParse(panelId, out int _);
-    }
     public bool IsStringValidDate(string str)
     {
         if (!str.Contains('/'))
@@ -166,6 +173,22 @@ public class TaskImportService
         
         return areNumbersValid;
     }
+    
+    public bool IsStringPanelIdValid(string panelId)
+    {
+        return int.TryParse(panelId, out int _);
+    }
+
+    public bool IsStringExpectedEffortValid(string expectedEffort)
+    {
+        return int.TryParse(expectedEffort, out int _);
+    }
+    
+    public bool IsStringEpicIdValid(string epicId)
+    {
+        return int.TryParse(epicId, out int _);
+    }
+    
     public bool AreNumbersValid(int day, int month, int year)
     {
         bool isDayValid = day >= 1 && day <= 31;

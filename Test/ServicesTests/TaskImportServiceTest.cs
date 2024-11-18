@@ -1,6 +1,6 @@
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Dominio;
-using Dominio.Services;
+using Services;
 
 namespace Test.ServicesTests;
 
@@ -84,7 +84,7 @@ public class TaskImportServiceTest
                          $"{referenceTasks[1].Name},{referenceTasks[1].Description},{referenceTasks[1].ExpirationDate.ToShortDateString()},1\n" +
                          $"{referenceTasks[2].Name},{referenceTasks[2].Description},{referenceTasks[2].ExpirationDate.ToShortDateString()},1";
         
-        List<Task> tasks = _taskImportService.ReadTasksFromContent(content,new User(){Name = "User 1"});
+        List<TaskImportService.ImportedTask> tasks = _taskImportService.ReadTasksFromContent(content,new User(){Name = "User 1"});
 
         int taskListElementCount = tasks.Count;
         for (int i = 0; i < taskListElementCount; i++)

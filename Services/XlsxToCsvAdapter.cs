@@ -1,6 +1,6 @@
-namespace Dominio.Services;
-using System;
 using ClosedXML.Excel;
+
+namespace Services;
 
 public class XlsxToCsvAdapter : TaskImportService
 {

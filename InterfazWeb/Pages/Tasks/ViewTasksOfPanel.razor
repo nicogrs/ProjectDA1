@@ -27,18 +27,18 @@
 <div class="row">
     @if (Epics.Count != 0)
     {
-    foreach (var epic in Epics)
-    {
-    <EpicCard EpicId="@epic.Id.ToString()"
-              EpicTeamName="@teamName"
-              EpicPanelId="@panelId"
-              EpicOnTaskDeleted="RefreshTasks"
-    />
-    }
+        foreach (var epic in Epics)
+        {
+            <EpicCard EpicId="@epic.Id.ToString()"
+                      EpicTeamName="@teamName"
+                      EpicPanelId="@panelId"
+                      EpicOnTaskDeleted="RefreshTasks"
+            />
+        }
     }
 </div>
 <div class="row">
-    @if (Tasks.Count != 0)
+    @if (Tasks.Count >= 0)
     {
         foreach (var task in Tasks)
         {
@@ -89,6 +89,7 @@
         Tasks = TkService.GetNonExpiredTasks(int.Parse(panelId))
             .Where(t => t.IsInEpic == false).ToList();
         Epics = EpicService.GetEpicsByPanelId(int.Parse(panelId));
+        StateHasChanged();
     }
 
     private void CreateTask()

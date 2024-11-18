@@ -1,0 +1,97 @@
+@page "/{teamName}/{panelId}/view/{taskId}/graphic"
+@using Dominio
+@using Services
+@using Task = Dominio.Task
+@using Syncfusion.Blazor.Charts
+@inject TaskService TskService
+@inject NavigationManager Navigation
+@inject Session Session
+
+<div class="container">
+    
+
+<h3>Gráfico Comparativo: Esfuerzo Esperado vs Esfuerzo Invertido</h3>
+
+@if (effortData != null && effortData.Any())
+{
+    <p>Datos: </p>
+    <ul>
+        @foreach (var data in effortData)
+        {
+            <li>@data.Effort: Esperado= @data.SpectedEffort, Invertido= @data.InvertedEffort, Faltante= @data.MissingEffort</li>
+        }
+    </ul>
+
+    <SfChart>
+        <ChartPrimaryXAxis Title="Tareas" ValueType="Syncfusion.Blazor.Charts.ValueType.Category"/>
+        <ChartPrimaryYAxis Title="Horas" ValueType="Syncfusion.Blazor.Charts.ValueType.Double"/>
+        <ChartSeriesCollection>
+            <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Effort" YName="InvertedEffort" Name="Horas Invertidas" Fill="#007bff"/>
+            <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Effort" YName="MissingEffort" Name="Esfuerzo Faltante" Fill="#dc3545" />
+            <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Effort" YName="SpectedEffort" Name="Horas Estimadas" Fill="#28a745"/>
+        </ChartSeriesCollection>
+    </SfChart>
+}else {
+<p>No hay datos disponibles para mostrar en el gráfico.</p>
+}
+
+@if (task.Ended)
+{
+    <div class="alert alert-secondary" role="alert">
+        <p>La tarea fue: @status</p>
+    </div>
+}
+
+
+<div class="mt-2">
+    <div class="col-4 mt-4">
+        <button class="btn btn-secondary" type="button" @onclick="GoBack">Volver</button>
+    </div>
+</div>
+
+</div>
+@code {
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public string panelId { get; set; }
+    [Parameter]
+    public string taskId { get; set; }
+
+    private Task task;
+    private List<EffortData> effortData = new List<EffortData>();
+    private string status;
+    
+    protected override void OnInitialized()
+    {
+        status = TskService.EffortStatus(int.Parse(taskId));
+        task = TskService.GetTaskById(int.Parse(taskId));
+        if (task != null)
+        {
+            var expectedEffort = task.ExpectedEffort;
+            var invertedEffort = task.InvertedEffort;
+            var missingEffort = TskService.EffortComparated(int.Parse(taskId));
+            
+            effortData.Add(new EffortData
+            {
+                Effort = "Esfuerzo",
+                SpectedEffort = expectedEffort,
+                InvertedEffort = invertedEffort,
+                MissingEffort = missingEffort
+            });
+        }
+    }
+
+    public class EffortData
+    {
+        public string Effort { get; set; }
+        public int SpectedEffort { get; set; } 
+        public int InvertedEffort { get; set; }
+        public int MissingEffort { get; set; }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
+    }
+}

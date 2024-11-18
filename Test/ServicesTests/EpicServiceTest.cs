@@ -265,6 +265,12 @@ public class EpicServiceTest
         Assert.AreEqual(1, result); 
     }
     
+    [TestCleanup]
+    public void CleanUp()
+    {
+        _context.Database.EnsureDeleted();
+    }
+    
     [TestMethod]
     public void CalculateEpicValues_NotCompleted()
     {

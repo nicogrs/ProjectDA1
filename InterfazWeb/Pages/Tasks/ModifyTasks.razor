@@ -31,7 +31,20 @@
                 <InputText class="form-control" @bind-Value="@modelChangeTask.Description" id="description"></InputText>
                 <ValidationMessage For="@(() => modelChangeTask.Description)"/>
             </div>
-        @if(Session.IsAdmin){
+
+            <div class="form-group mt-4">
+                <label for="lastName">Esfuerzo Estimado</label>
+                <InputNumber Min="0" class="form-control" @bind-Value="@modelChangeTask.ExpectedEffort" id="expectedeffort"></InputNumber>
+                <ValidationMessage For="@(() => modelChangeTask.ExpectedEffort)"/>
+            </div>
+
+            <div class="form-group mt-4">
+                <label for="lastName">Esfuerzo Invertido</label>
+                <InputNumber Min="0" class="form-control" @bind-Value="@modelChangeTask.InvertedEffort" id="invertedeffort"></InputNumber>
+                <ValidationMessage For="@(() => modelChangeTask.InvertedEffort)"/>
+            </div>
+            
+            @if(Session.IsAdmin){
             <div class="form-group mt-4">
                 <label for="birthDate">Fecha de expiración</label>
                 <InputDate class="form-control" id="birthDate" @bind-Value="@modelChangeTask.ExpirationDate" min=@DateTime.Today.ToString()></InputDate>
@@ -85,6 +98,8 @@
         modelChangeTask.Name = toModify.Name;
         modelChangeTask.Precedence = toModify.Precedence;
         modelChangeTask.ExpirationDate = toModify.ExpirationDate;
+        modelChangeTask.ExpectedEffort = toModify.ExpectedEffort;
+        modelChangeTask.InvertedEffort = toModify.InvertedEffort;
     }
 
     private void HandleModify()
@@ -101,6 +116,15 @@
         if (modelChangeTask.ExpirationDate != null)
         {
             toModify.ExpirationDate = modelChangeTask.ExpirationDate;
+        }
+        if (modelChangeTask.ExpectedEffort != null)
+        {
+            toModify.ExpectedEffort = modelChangeTask.ExpectedEffort;
+        }
+        
+        if (modelChangeTask.InvertedEffort != null)
+        {
+            toModify.InvertedEffort = modelChangeTask.InvertedEffort;
         }
         toModify.Precedence = modelChangeTask.Precedence;
         TkService.UpdateTask(toModify);

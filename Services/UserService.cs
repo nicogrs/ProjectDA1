@@ -124,12 +124,7 @@ public class UserService : IUserService
         user.PaperBin.DeleteElementFromPaperbin(element);
         _userDatabase.Update(user);
     }
-
-    public void RestoreElement(int elementId, string email)
-    {
-        throw new NotImplementedException();
-    }
-
+    
     public List<IDeleteable> GetDeletedElements(string userEmail)
     {
         var user = GetUserByEmail(userEmail);

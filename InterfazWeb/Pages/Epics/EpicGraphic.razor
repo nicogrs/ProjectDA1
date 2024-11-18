@@ -1,0 +1,119 @@
+@page "/{teamName}/{panelId}/{epicId}/graphic"
+@using Dominio
+@using Interfaces
+@using Services
+@using Syncfusion.Blazor.Charts
+@inject IEpicService EService
+@inject NavigationManager Navigation
+<div class="container">
+    
+
+<h3>Gráficos de la Épica</h3>
+@if (effortData != null && effortData.Any()){
+    <h4>Esfuerzo Estimado, Invertido y Restante</h4>
+    <p>Datos: </p>
+    <ul>
+        @foreach (var data in effortData)
+        {
+            <li>@data.Effort: Esperado= @data.SpectedEffort, Invertido= @data.InvertedEffort, Faltante= @data.MissingEffort</li>
+        }
+    </ul>
+<SfChart>
+    <ChartPrimaryXAxis Title="Esfuerzo" ValueType="Syncfusion.Blazor.Charts.ValueType.Category" />
+    <ChartPrimaryYAxis Title="Tiempo (horas)" ValueType="Syncfusion.Blazor.Charts.ValueType.Double" />
+
+    <ChartSeriesCollection>
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Effort" YName="InvertedEffort" Name="Esfuerzo Invertido" Fill="#28a745" />
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Effort" YName="MissingEffort" Name="Esfuerzo Restante" Fill="#dc3545" />
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Effort" YName="SpectedEffort" Name="Esfuerzo Estimado" Fill="#007bff" />
+    </ChartSeriesCollection>
+</SfChart>
+}
+@if (endedData != null && endedData.Any()){
+<h4>Estado de las Tareas de la Épica</h4>
+<SfChart>
+    <ChartPrimaryXAxis Title="Estado de Tareas" ValueType="Syncfusion.Blazor.Charts.ValueType.Category" />
+    <ChartPrimaryYAxis Title="Cantidad" ValueType="Syncfusion.Blazor.Charts.ValueType.Double" />
+
+    <ChartSeriesCollection>
+        <ChartSeries DataSource="@endedData" Type="ChartSeriesType.Column" XName="Ended" YName="Completed" Name="Tareas Finalizadas"
+                     Fill="#28a745" />
+        <ChartSeries DataSource="@endedData" Type="ChartSeriesType.Column" XName="Ended" YName="NotCompleted" Name="Tareas No Finalizadas"
+                     Fill="#dc3545" />
+    </ChartSeriesCollection>
+</SfChart>
+}
+<div class="mt-2 mb-3">
+    <div class="col-4 mt-4">
+        <button class="btn btn-secondary" type="button" @onclick="GoBack">Volver</button>
+    </div>
+</div>
+
+</div>
+
+@code {
+    [Parameter]
+    public string epicId { get; set; }
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public string panelId { get; set; }
+
+    private List<EffortData> effortData = new List<EffortData>();
+    private List<EndedData> endedData = new List<EndedData>();
+
+    protected override void OnInitialized()
+    {
+        int epic = int.Parse(epicId);
+
+        var totalExpectedEffort = EService.EffortExpected(epic);
+        var totalInvertedEffort = EService.EffortInverted(epic);
+        var totalRemainingEffort = (totalExpectedEffort - totalInvertedEffort);
+
+        if (totalExpectedEffort > 0 || totalInvertedEffort > 0)
+        {
+            effortData.Add(new EffortData
+            {
+                Effort = "Esfuerzo",
+                SpectedEffort = totalExpectedEffort,
+                InvertedEffort = totalInvertedEffort,
+                MissingEffort = totalRemainingEffort
+            });
+        }
+
+        var totalEndedTasks = EService.CompletedTasks(epic);
+        var totalNonEndedTasks = EService.NotCompletedTasks(epic);
+
+        if (totalEndedTasks > 0 || totalNonEndedTasks > 0)
+        {
+            endedData.Add(new EndedData
+            {
+                Ended = "Tareas terminadas",
+                Completed = totalEndedTasks,
+                NotCompleted = totalNonEndedTasks
+            });
+        }
+    }
+    
+    public class EffortData
+    {
+        public string Effort { get; set; }
+        public int SpectedEffort { get; set; }
+        public int InvertedEffort { get; set; }
+        public int MissingEffort { get; set; }
+    }
+    
+    
+
+    public class EndedData
+    {
+        public string Ended { get; set; }
+        public int Completed { get; set; }
+        public int NotCompleted { get; set; }
+    }
+    
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
+    }
+}

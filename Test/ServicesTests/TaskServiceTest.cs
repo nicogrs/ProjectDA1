@@ -133,6 +133,48 @@ public class TaskServiceTest
     }
 
     [TestMethod]
+    public void AddCommentToTaskTest()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(+1),
+            PanelId = 1
+        };
+        _taskRepository.Add(task1);
+        Comment comment = new Comment
+        {
+            CreatedBy = new User { Name = "Nicolas", Email = "nicolas@gmail.com",
+                Password = "Prueba123$", Surname = "Test"},
+            Content = "Comment content",
+            Resolved = false,
+            Task = task1,
+        };
+
+    _taskService.AddCommentToTask(task1.Id, comment);
+     var result = _taskService.GetCommentsFromTask(task1.Id);
+     CollectionAssert.Contains(result, comment);
+    }
+
+    [TestMethod]
+    public void UpdateTaskTest()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(+1),
+            PanelId = 1
+        };
+        _taskRepository.Add(task1);
+        task1.Description = "Updated description";
+        _taskService.UpdateTask(task1);
+        var result = _taskService.GetTaskById(task1.Id);
+        Assert.AreEqual(task1, result);
+    }
+
+    [TestMethod]
     public void AddEffort_PositiveTime()
     {
         var task1 = new Task

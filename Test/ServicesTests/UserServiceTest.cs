@@ -44,7 +44,6 @@ public class UserServiceTest
             BirthDate = new DateTime(1980, 1, 1),
             Password = "TestPass$1"
         };
-        _userRepository.Add(_user2);
 
     }
 
@@ -57,6 +56,7 @@ public class UserServiceTest
     [TestMethod]
     public void UserExists()
     {
+        _service.CreateUser(_user2);
         var isUserAdded = _service.UserExists(_user2.Email);
         Assert.IsTrue(isUserAdded);
     }
@@ -248,5 +248,14 @@ public class UserServiceTest
         _service.RestoreElement(task,_user1.Email);
         Assert.AreEqual(task.IsDeleted,false);
     }
-    
+
+    [TestMethod]
+    public void GetAllUsersTest()
+    {
+        _service.CreateUser(_user1);
+        _service.CreateUser(_user2);
+        var result = _service.GetAllUsers();
+        CollectionAssert.AreEquivalent(result,new List<User>{_user2, _user1});
+        
+    }
 }

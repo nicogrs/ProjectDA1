@@ -13,7 +13,7 @@
     <div class="col d-flex">
         <button class="btn btn-primary me-2" type="submit" @onclick="CreateTask">Crear Tarea</button>
         <button class="btn btn-primary me-2" type="submit" @onclick="ExpiredTasks">Tareas Vencidas</button>
-        @if (Session.IsAdmin)
+        @if (!Session.IsAdmin)
         {
             <button class="btn btn-primary" type="submit" @onclick="GoToImport">Importar tareas desde archivo</button>
         }

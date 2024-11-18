@@ -10,16 +10,10 @@ public class TaskImportService
 
     public void MakeErrorFile(string errorFileName)
     {
-        //directorio interfaz 
         string directory = Directory.GetCurrentDirectory();
         directory = Directory.GetParent(directory).FullName;
         
         string filePath = Path.Combine(directory, errorFileName);
-        
-        /*if (!Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }*/
         
         writer = new StreamWriter(filePath);
         foreach (string line in errors)
@@ -67,7 +61,7 @@ public class TaskImportService
     public void ProcessError(string line)
     {
         List<string> separatedLine = SplitLine(line);
-        bool correctColumnAmount = separatedLine.Count is 4 or 5;
+        bool correctColumnAmount = separatedLine.Count is 5 or 6;
         
         if (!correctColumnAmount)
         {
@@ -105,6 +99,7 @@ public class TaskImportService
     }
     public Task TaskFromStringList(List<string> strList)
     {
+        //Título,Descripción,Fecha de vencimiento,ID de panel,Esfuerzo Estimado,ID de epica
         Task task = new Task();
         task.Name = strList[0];
         task.Description = strList[1];
@@ -113,6 +108,8 @@ public class TaskImportService
         
         task.ExpirationDate = StringToDate(strDate);
 
+        task.ExpectedEffort = int.Parse(strList[4]);
+        
         return task;
     }
     public DateTime StringToDate(string strDate)

@@ -3,6 +3,7 @@ using Interfaces;
 using Services;
 using Test.Context;
 using Dominio;
+using Task = Dominio.Task;
 
 namespace Test;
 
@@ -51,10 +52,17 @@ public class PanelServiceTest
     public void RemovePanelTest()
     {
         Panel panelTest = new Panel{Name = "Panel Test"};
-        team.Panels.Add(panelTest);
-        panelService.RemovePanel(panelTest.Id);
+        panelService.AddPanel(panelTest);
+        var panelRemoved = panelService.RemovePanel(panelTest.Id);
         var panel = panelService.GetPanelById(panelTest.Id);
+        Assert.AreEqual(panelRemoved,panelTest);
         Assert.IsNull(panel);
+    }
+    [TestMethod]
+    public void RemovePanelNullTest()
+    {
+        var result = panelService.RemovePanel(3);
+        Assert.IsNull(result);
     }
     
     [TestMethod]
@@ -76,6 +84,37 @@ public class PanelServiceTest
         panelService.AddPanel(panel2);
         var teamPanels = panelService.GetAllPanelsFromTeam(team.Name);
         CollectionAssert.AreEquivalent(teamPanels, new List<Panel>{panel1, panel2});
+    }
+
+    [TestMethod]
+    public void AddTaskToPanel()
+    {
+        Panel panelTest = new Panel{Name = "Panel Test"};
+        panelService.AddPanel(panelTest);
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(+1),
+        };
+        panelService.AddTaskToPanel(panelTest.Id, task1);
+        CollectionAssert.Contains(panelTest.Tasks, task1);
+    }
+    
+    [TestMethod]
+    public void RemoveTaskFromPanel()
+    {
+        Panel panelTest = new Panel{Name = "Panel Test"};
+        panelService.AddPanel(panelTest);
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(+1),
+        };
+        panelService.AddTaskToPanel(panelTest.Id, task1);
+        panelService.RemoveTaskFromPanel(panelTest.Id, task1);
+        CollectionAssert.DoesNotContain(panelTest.Tasks, task1);
     }
     
     

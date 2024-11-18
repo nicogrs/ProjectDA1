@@ -262,5 +262,45 @@ public class TeamServiceTest
         
     }
 
+    [TestMethod]
+    public void AddPanelToTeam()
+    {
+        Team team1 = new Team {             
+            Name = "Team Example",
+            CreatedOn = new DateTime(2020, 05, 05),
+            TasksDescription = "Tareas sobre desarrollo",
+            MaxUsers = 5,
+            MembersCount = 1
+        };
+        _teamService.CreateTeam(team1);
+        Panel p = new Panel
+        {
+            Name = "Panel Example",
+            Description = "Tareas sobre desarrollo",
+            CreatedBy = user
+        };
+        _teamService.AddPanelToTeam(p, team1.Name);
+        CollectionAssert.Contains(team1.Panels, p);
+    }
+    [TestMethod]
+    public void RemovePanelFromTeam()
+    {
+        Team team1 = new Team {             
+            Name = "Team Example",
+            CreatedOn = new DateTime(2020, 05, 05),
+            TasksDescription = "Tareas sobre desarrollo",
+            MaxUsers = 5,
+            MembersCount = 1
+        };
+        _teamService.CreateTeam(team1);
+        Panel p = new Panel
+        {
+            Name = "Panel Example",
+            Description = "Tareas sobre desarrollo",
+            CreatedBy = user
+        };
+        _teamService.RemovePanelFromTeam(p, team1.Name);
+        CollectionAssert.DoesNotContain(team1.Panels, p);
+    }
     
 }

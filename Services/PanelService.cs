@@ -44,12 +44,14 @@ public class PanelService : IPanelService
         return panels.Where(x => x.Team == teamName && x.IsDeleted == false).ToList();
     }
     
-    public void RemovePanel(int panelId)
+    public Panel RemovePanel(int panelId)
     {
         var panel = _panelDatabase.Find(x => x.Id == panelId);
         if (panel != null)
         {
             _panelDatabase.Delete(panel.Id);
         }
+
+        return panel;
     }
 }

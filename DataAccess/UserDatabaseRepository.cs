@@ -44,5 +44,7 @@ public class UserDatabaseRepository : IRepository<User>
     public void Delete(int id)
     {
         var userToBeDeleted = Find(x => x.Id == id);
+        _context.Users.RemoveRange(userToBeDeleted);
+        _context.SaveChanges();
     }
 }

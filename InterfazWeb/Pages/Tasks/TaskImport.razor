@@ -189,10 +189,18 @@
     private void GetSelectedTasks()
     {
         panel = PlService.GetPanelById(int.Parse(panelId));
-
-        foreach (TaskImportService.ImportedTask task in SelectedTasks)
+        if (panel == null)
         {
-            panel.AddTask(task);
+            message = "Panel no encontrado.";
+            return;
+        }
+        
+        
+        foreach (var task in SelectedTasks)
+        {
+            if (task == null) continue;
+            //var task = (TaskImportService.ImportedTask)task1;
+            PlService.AddTaskToPanel(int.Parse(panelId),task);
         }
         
         message=$"{SelectedTasks.Count} Tareas agregadas exitosamente a {panel.Name}.";

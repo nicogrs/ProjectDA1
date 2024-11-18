@@ -83,6 +83,11 @@
 
         RefreshTasks();
     }
+    
+    protected override void OnParametersSet()
+    {
+        StateHasChanged();
+    }
 
     private void RefreshTasks()
     {

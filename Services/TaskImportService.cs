@@ -58,7 +58,6 @@ public class TaskImportService
                 List<string> splitLine = SplitLine(line);
                 ImportedTask newTask = TaskFromStringList(splitLine);
                 tasks.Add(newTask);
-                
             }
             else
             {
@@ -87,6 +86,18 @@ public class TaskImportService
         if (!IsStringPanelIdValid(separatedLine[3]))
         {
             LogError(line,"Id de panel incorrecto.");
+            return;
+        }
+        
+        if (!IsStringExpectedEffortValid(separatedLine[4]))
+        {
+            LogError(line,"Error en formato de esfuerzo esperado.");
+            return;
+        }
+        
+        if (!IsStringEpicIdValid(separatedLine[5]))
+        {
+            LogError(line,"Error en formato de Id de Epica.");
             return;
         }
     }
@@ -119,6 +130,10 @@ public class TaskImportService
 
         task.ExpectedEffort = int.Parse(strList[4]);
         task.epicId = int.Parse(strList[5]);
+        if (task.epicId != null)
+        {
+            task.IsInEpic = true;
+        }
         
         return task;
     }

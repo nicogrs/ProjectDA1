@@ -46,9 +46,11 @@
         string epicToDisplay = task.epicId.ToString();
         Epic targetEpic = EpService.GetEpicById(task.epicId);
         bool epicExists = targetEpic != null;
-        if (!epicExists)
+        bool epicBelongsToPanel = EpService.GetEpicsByPanelId(int.Parse(panelId)).Contains(targetEpic);
+        
+        if (!epicExists || !epicBelongsToPanel)
         {
-            epicToDisplay = "<Ninguna epica coincide con ese id.>";
+            epicToDisplay = "<Ninguna epica del panel coincide con ese id.>";
         }
         else
         {
@@ -95,7 +97,7 @@
     private IBrowserFile? selectedFile;
     private string? fileContent;
     private List<TaskImportService.ImportedTask> tasks = new List<TaskImportService.ImportedTask>();
-    private HashSet<Task> SelectedTasks = new HashSet<Task>();
+    private HashSet<TaskImportService.ImportedTask> SelectedTasks = new HashSet<TaskImportService.ImportedTask>();
     private Panel panel;
     private string message;
     
@@ -173,7 +175,7 @@
         return $"{dt.Year}/{dt.Month}/{dt.Day}";
     }
 
-    private void ToggleSelection(Task task, object isSelected)
+    private void ToggleSelection(TaskImportService.ImportedTask task, object isSelected)
     {
         bool selected = (bool)isSelected;
         if (selected)
@@ -194,16 +196,32 @@
             message = "Panel no encontrado.";
             return;
         }
-        
+
+        message = "";
         
         foreach (var task in SelectedTasks)
         {
             if (task == null) continue;
-            //var task = (TaskImportService.ImportedTask)task1;
             PlService.AddTaskToPanel(int.Parse(panelId),task);
+            if (task.IsInEpic)
+            {
+                List<Epic> epicsInPanel = EpService.GetEpicsByPanelId(int.Parse(panelId));
+                Epic taskEpic = EpService.GetEpicById(task.epicId);
+                bool epicAndPanelCoincide = epicsInPanel.Contains(taskEpic);
+                if (epicAndPanelCoincide)
+                {
+                    taskEpic.AddTask(task);
+                    message += $"{task.Name} incorporada en epica {taskEpic.Name}. \n\r";
+                }
+                else
+                {
+                    task.IsInEpic = false;
+                    message += $"Tarea {task.Name}: La epica con ese id no forma parte del panel, se agrega sin epica.\n\r";
+                }
+            }
         }
         
-        message=$"{SelectedTasks.Count} Tareas agregadas exitosamente a {panel.Name}.";
+        message += $"--- {SelectedTasks.Count} Tareas agregadas a {panel.Name}.";
         fileContent = "";
         tasks = new List<TaskImportService.ImportedTask>();
     }

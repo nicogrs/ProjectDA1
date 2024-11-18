@@ -8,6 +8,10 @@
 
 <h3>Tareas vencidas del equipo @teamName</h3>
 
+<div class="col-auto">
+    <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver a Tareas</button>
+</div>
+
 <div class="row">
     @if (Tasks.Count != 0)
     {
@@ -50,4 +54,8 @@
         Tasks = TkService.GetAllExpiredTasks(int.Parse(panelId));
     }
     
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
+    }
 }

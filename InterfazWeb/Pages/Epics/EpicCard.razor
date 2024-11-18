@@ -49,6 +49,8 @@
                             type="submit" @onclick="GoToEpic" >Visualizar Tareas</button>
                     <button class="col-lg-3 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2"
                             type="submit" @onclick="GoToAdd">Agregar o Eliminar Tareas</button>
+                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2" type="submit"
+                            @onclick="ComparativeGraphic">Grafico de esfuerzo</button>
                     <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-warning me-2"
                             type="submit" @onclick="ChangeEpic">Modificar</button>
                     <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-danger me-2"
@@ -141,7 +143,10 @@
         Navigation.NavigateTo($"/{EpicTeamName}/{EpicPanelId}/add/{EpicId}");
     }
     
-    
+    private void ComparativeGraphic()
+    {
+        Navigation.NavigateTo($"/{EpicTeamName}/{EpicPanelId}/{EpicId}/graphic");
+    }
     
     private void GoToEpic()
     {

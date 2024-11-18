@@ -1,47 +1,54 @@
 @page "/{teamName}/{panelId}/{epicId}/graphic"
 @using Dominio
+@using Interfaces
 @using Services
-@using Syncfusion.Blazor
-@inject EpicService EService
+@using Syncfusion.Blazor.Charts
+@inject IEpicService EService
 @inject NavigationManager Navigation
+<div class="container">
+    
 
 <h3>Gráficos de la Épica</h3>
-
-<h4>Esfuerzo Estimado, Invertido y Restante</h4>
+@if (effortData != null && effortData.Any()){
+    <h4>Esfuerzo Estimado, Invertido y Restante</h4>
+    <p>Datos: </p>
+    <ul>
+        @foreach (var data in effortData)
+        {
+            <li>@data.Effort: Esperado= @data.SpectedEffort, Invertido= @data.InvertedEffort, Faltante= @data.MissingEffort</li>
+        }
+    </ul>
 <SfChart>
     <ChartPrimaryXAxis Title="Esfuerzo" ValueType="Syncfusion.Blazor.Charts.ValueType.Category" />
     <ChartPrimaryYAxis Title="Tiempo (horas)" ValueType="Syncfusion.Blazor.Charts.ValueType.Double" />
 
     <ChartSeriesCollection>
-        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Epic" YName="EsfuerzoEsperado" Name="Esfuerzo Estimado"
-                     Palette="@(new string[] { "#007bff" })" />
-
-        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Epic" YName="EsfuerzoInvertido" Name="Esfuerzo Invertido"
-                     Palette="@(new string[] { "#28a745" })" />
-
-        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Epic" YName="EsfuerzoRestante" Name="Esfuerzo Restante"
-                     Palette="@(new string[] { "#dc3545" })" />
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Effort" YName="InvertedEffort" Name="Esfuerzo Invertido" Fill="#28a745" />
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Effort" YName="MissingEffort" Name="Esfuerzo Restante" Fill="#dc3545" />
+        <ChartSeries DataSource="@effortData" Type="ChartSeriesType.Column" XName="Effort" YName="SpectedEffort" Name="Esfuerzo Estimado" Fill="#007bff" />
     </ChartSeriesCollection>
 </SfChart>
-
+}
+@if (endedData != null && endedData.Any()){
 <h4>Estado de las Tareas de la Épica</h4>
 <SfChart>
     <ChartPrimaryXAxis Title="Estado de Tareas" ValueType="Syncfusion.Blazor.Charts.ValueType.Category" />
     <ChartPrimaryYAxis Title="Cantidad" ValueType="Syncfusion.Blazor.Charts.ValueType.Double" />
 
     <ChartSeriesCollection>
-        <ChartSeries DataSource="@endedData" Type="ChartSeriesType.Column" XName="Status" YName="Completed" Name="Tareas Finalizadas"
-                     Palette="@(new string[] { "#28a745" })" />
-
-        <ChartSeries DataSource="@endedData" Type="ChartSeriesType.Column" XName="Status" YName="NotCompleted" Name="Tareas No Finalizadas"
-                     Palette="@(new string[] { "#dc3545" })" />
+        <ChartSeries DataSource="@endedData" Type="ChartSeriesType.Column" XName="Ended" YName="Completed" Name="Tareas Finalizadas"
+                     Fill="#28a745" />
+        <ChartSeries DataSource="@endedData" Type="ChartSeriesType.Column" XName="Ended" YName="NotCompleted" Name="Tareas No Finalizadas"
+                     Fill="#dc3545" />
     </ChartSeriesCollection>
 </SfChart>
-
-<div class="mt-2">
+}
+<div class="mt-2 mb-3">
     <div class="col-4 mt-4">
         <button class="btn btn-secondary" type="button" @onclick="GoBack">Volver</button>
     </div>
+</div>
+
 </div>
 
 @code {
@@ -58,27 +65,34 @@
     protected override void OnInitialized()
     {
         int epic = int.Parse(epicId);
+
         var totalExpectedEffort = EService.EffortExpected(epic);
         var totalInvertedEffort = EService.EffortInverted(epic);
-        var totalRemainingEffort = Math.Max(0, totalExpectedEffort - totalInvertedEffort);
-        
+        var totalRemainingEffort = (totalExpectedEffort - totalInvertedEffort);
+
+        if (totalExpectedEffort > 0 || totalInvertedEffort > 0)
+        {
+            effortData.Add(new EffortData
+            {
+                Effort = "Esfuerzo",
+                SpectedEffort = totalExpectedEffort,
+                InvertedEffort = totalInvertedEffort,
+                MissingEffort = totalRemainingEffort
+            });
+        }
+
         var totalEndedTasks = EService.CompletedTasks(epic);
         var totalNonEndedTasks = EService.NotCompletedTasks(epic);
-        
-        effortData.Add(new EffortData
+
+        if (totalEndedTasks > 0 || totalNonEndedTasks > 0)
         {
-            Effort = "Esfuerzo",
-            SpectedEffort = totalExpectedEffort,
-            InvertedEffort = totalInvertedEffort,
-            MissingEfort = totalRemainingEffort
-        });
-        
-        endedData.Add(new EndedData
-        {
-            Ended = "Tareas terminadas",
-            Completed = totalEndedTasks,
-            NotCompleted = totalNonEndedTasks
-        });
+            endedData.Add(new EndedData
+            {
+                Ended = "Tareas terminadas",
+                Completed = totalEndedTasks,
+                NotCompleted = totalNonEndedTasks
+            });
+        }
     }
     
     public class EffortData
@@ -86,7 +100,7 @@
         public string Effort { get; set; }
         public int SpectedEffort { get; set; }
         public int InvertedEffort { get; set; }
-        public int MissingEfort { get; set; }
+        public int MissingEffort { get; set; }
     }
     
     

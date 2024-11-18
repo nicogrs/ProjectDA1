@@ -9,82 +9,85 @@
 @inject INotificationService NtfService
 @inject NavigationManager Navigation
 @inject Session Session
-
-<div class="card mb-2 mt-4">
-    @if (Precedence == Task.Priority.Urgent)
-    {
-        <div class="bg-danger card-header ">
-            <p class="card-title text-white w-100">@Title</p>
-        </div>
-    }
-    else if (Precedence == Task.Priority.Medium)
-    { 
-        <div class="card-header bg-info">
-            <h5 class="text-white mb-0">[TAREA] - @Title</h5>
-        </div>
-    }
-    else
-    {
-        <div class="card-header bg-black">
-            <h5 class="text-white mb-0">[TAREA] - @Title</h5>
-        </div>
-    }
-                
-    <div class="card-body">
-        <p class="card-text text-muted">Descripción:</p>
-        <p class="card-text">@Description</p>
-
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <span class="badge bg-secondary">Prioridad: @Precedence.ToString()</span>
-            <span class="badge bg-info">Vence: @EndDate.ToShortDateString()</span>
-            <span class="badge bg-info">Horas Estimadas: @selectedTask.ExpectedEffort </span>
-            <span class="badge bg-info">Horas Invertidas: @selectedTask.InvertedEffort </span> 
-        </div>
-        @if (Comments != null && Comments.Count > 0)
+<div class="d-flex card-group justify-content-center align-items-center">
+<div class="w-75">
+    <div class="card mb-2 mt-4">
+        @if (Precedence == Task.Priority.Urgent)
         {
-            <div>
-                <p class="card-text border-top-2 mt-2 mb-2">Comentarios:</p>
+            <div class="bg-danger card-header ">
+                <p class="card-title text-white w-100">@Title</p>
             </div>
-            foreach (var comment in Comments)
-            {
-
-                <div class="card-text border-bottom mb-2 pb-2">
-         
-                    @if (comment.Resolved)
-                    {
-                        <s>@comment.Content - Resuelto por @comment.ResolvedBy.Email el @comment.ResolvedTime.ToString()</s>
-                    }
-                    else
-                    {
-                        <p>@comment.CreatedBy.Name @comment.CreatedBy.Surname Respondio: <br/> @comment.Content</p>
-                    }
-                    @if (!comment.Resolved)
-                    {
-                        <div class="form-group">
-                            <button class="btn btn-primary" type="submit" 
-                                    @onclick="() => CompleteComment(comment)">Terminar</button>
-                        </div>
-                    }
-                </div>
-            }
         }
-    </div>
-    <div class="card-footer">
-        <div class="row text-end">
-            @if (!Ended)
+        else if (Precedence == Task.Priority.Medium)
+        { 
+            <div class="card-header bg-info">
+                <h5 class="text-white mb-0">[TAREA] - @Title</h5>
+            </div>
+        }
+        else
+        {
+            <div class="card-header bg-black">
+                <h5 class="text-white mb-0">[TAREA] - @Title</h5>
+            </div>
+        }
+                
+        <div class="card-body">
+            <p class="card-text text-muted">Descripción:</p>
+            <p class="card-text">@Description</p>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <span class="badge bg-secondary">Prioridad: @Precedence.ToString()</span>
+                <span class="badge bg-info">Vence: @EndDate.ToShortDateString()</span>
+                <span class="badge bg-info">Horas Estimadas: @selectedTask.ExpectedEffort </span>
+                <span class="badge bg-info">Horas Invertidas: @selectedTask.InvertedEffort </span> 
+            </div>
+            @if (Comments != null && Comments.Count > 0)
             {
-                <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2"  type="submit" @onclick="AddComment">Agregar Comentario</button>
-                <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-warning me-2"  type="submit" @onclick="ChangeTask">Modificar</button>
-                <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-warning me-2"  type="submit" @onclick="EndTask">Terminar Tarea</button>
-            }
-            
-            <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2" type="submit">Grafico de esfuerzo</button>
-            
-            @if(CanBeDeleted){
-                <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-danger me-2"
-                        type="submit" @onclick="ShowModal">Eliminar</button>
+                <div>
+                    <p class="card-text border-top-2 mt-2 mb-2">Comentarios:</p>
+                </div>
+                foreach (var comment in Comments)
+                {
+
+                    <div class="card-text border-bottom mb-2 pb-2">
+         
+                        @if (comment.Resolved)
+                        {
+                            <s>@comment.Content - Resuelto por @comment.ResolvedBy.Email el @comment.ResolvedTime.ToString()</s>
+                        }
+                        else
+                        {
+                            <p>@comment.CreatedBy.Name @comment.CreatedBy.Surname Respondio: <br/> @comment.Content</p>
+                        }
+                        @if (!comment.Resolved)
+                        {
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="submit" 
+                                        @onclick="() => CompleteComment(comment)">Terminar</button>
+                            </div>
+                        }
+                    </div>
+                }
             }
         </div>
+        <div class="card-footer">
+            <div class="row text-end">
+                @if (!Ended)
+                {
+                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2"  type="submit" @onclick="AddComment">Agregar Comentario</button>
+                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-warning me-2"  type="submit" @onclick="ChangeTask">Modificar</button>
+                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-success me-2"  type="submit" @onclick="EndTask">Terminar Tarea</button>
+                }
+            
+                <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2" type="submit" @onclick="ComparativeGraphic">Grafico de esfuerzo</button>
+            
+                @if(CanBeDeleted){
+                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-danger me-2"
+                            type="submit" @onclick="ShowModal">Eliminar</button>
+                }
+            </div>
+        </div>
+    </div>
     </div>
 </div>
 
@@ -171,7 +174,10 @@
         StateHasChanged();
     }
 
-
+    private void ComparativeGraphic()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/view/{TaskId}/graphic");
+    }
 
 
     private void ShowModal()

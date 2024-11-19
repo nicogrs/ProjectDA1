@@ -1,0 +1,6 @@
+Título,Descripción,Fecha de vencimiento,ID de panel,Esfuerzo Estimado,ID de epica --- Formato de fecha incorrecto. --- 2024-56-19 02:56:07
+Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/9/2025 12:00:00 AM,1,1,1 --- Formato de fecha incorrecto. --- 2024-56-19 02:56:07
+Pagar proveedores,Revisar planilla de proveedores y pagar.,19/9/2025 12:00:00 AM,1,2,1 --- Formato de fecha incorrecto. --- 2024-56-19 02:56:07
+Terminar obligatorio,Terminar el obligatorio 2 de DA.,20/11/2025 12:00:00 AM,1,3,2 --- Formato de fecha incorrecto. --- 2024-56-19 02:56:07
+Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2025 12:00:00 AM,2,2, --- Formato de fecha incorrecto. --- 2024-56-19 02:56:07
+ --- Cantidad incorrecta de columnas. --- 2024-56-19 02:56:07

@@ -1,10 +1,9 @@
 @page "/{teamName}/{panelId}/{epicId}/graphic"
-@using Dominio
 @using Interfaces
-@using Services
 @using Syncfusion.Blazor.Charts
 @inject IEpicService EService
 @inject NavigationManager Navigation
+@inject Session Session
 <div class="container">
     
 
@@ -64,6 +63,11 @@
 
     protected override void OnInitialized()
     {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+        
         int epic = int.Parse(epicId);
 
         var totalExpectedEffort = EService.EffortExpected(epic);

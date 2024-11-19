@@ -3,6 +3,7 @@
 @using Interfaces
 @inject IPanelService PlService
 @inject NavigationManager Navigation
+@inject Session Session
 
 <PageTitle>Modificar Panel</PageTitle>
 <h3>Modificar Panel</h3>
@@ -52,6 +53,11 @@
 
     protected override void OnInitialized()
     {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+        
         toModify = PlService.GetPanelById(int.Parse(panelId));
         modelChangePanel.Description = toModify.Description;
         modelChangePanel.Name= toModify.Name;

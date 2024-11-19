@@ -1,9 +1,9 @@
 @page "/{teamName}/{panelId}/view/{taskId}/graphic"
 @using Dominio
-@using Services
+@using Interfaces
 @using Task = Dominio.Task
 @using Syncfusion.Blazor.Charts
-@inject TaskService TskService
+@inject ITaskService TskService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -64,6 +64,10 @@
     
     protected override void OnInitialized()
     {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
         status = TskService.EffortStatus(int.Parse(taskId));
         task = TskService.GetTaskById(int.Parse(taskId));
         if (task != null)

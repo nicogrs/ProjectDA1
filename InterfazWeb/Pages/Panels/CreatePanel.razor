@@ -1,0 +1,82 @@
+@page "/{teamName}/panels/create"
+@using Dominio
+@using Interfaces
+@inject Session Session
+@inject ITeamService TmService
+@inject NavigationManager Navigation
+
+<PageTitle>Create Panel</PageTitle>
+<h3>Crear Panel</h3>
+<EditForm Model="modelCreatePanel" OnValidSubmit="HandleCreate">
+    <DataAnnotationsValidator/>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class=" w-50">
+            <div class="form-group">
+                <label id="name">Nombre</label>
+                <InputText class="form-control" @bind-Value="@modelCreatePanel.Name" id="name" required></InputText>
+                <ValidationMessage For="@(() => modelCreatePanel.Name)"/>
+            </div>
+            <div class="form-group">
+                <label id="userAmount">Descripcion</label>
+                <InputText class="form-control" required @bind-Value="@modelCreatePanel.Description" id="userAmount"></InputText>
+                <ValidationMessage For="@(() => modelCreatePanel.Description)"/>
+            </div>
+
+            <div class="form-group mt-3">
+                <button class="btn btn-primary" type="submit">Confirmar Panel</button>
+            </div>
+
+            @if (!string.IsNullOrEmpty(message))
+            {
+                <div class="alert alert-success mt-4" role="alert">
+                    @message
+                </div>
+            }
+        </div>
+    </div>
+</EditForm>
+<div class="col-4 mt-3">
+    <button class="btn btn-secondary" type="submit" @onclick="GoBack">Volver</button>
+</div>
+
+@code{
+    [Parameter]
+    public string teamName { get; set; }
+    
+    Panel modelCreatePanel = new Panel();
+    private List<User> users;
+    private string message;
+    
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser==null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+    }
+    
+    private void HandleCreate()
+    {
+        Panel p = new Panel
+        {
+            Name = modelCreatePanel.Name,
+            Team = TmService.GetTeamByName(teamName).Name,
+            Description = modelCreatePanel.Description,
+            CreatedBy = Session.CurrentUser
+        };
+        TmService.AddPanelToTeam(p,teamName);
+        message="Panel agregado con éxito";
+        ClearContents();
+    }
+    
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/panel");
+    }
+
+    private void ClearContents()
+    {
+        modelCreatePanel.Name = "";
+        modelCreatePanel.Description = "";
+    }
+}

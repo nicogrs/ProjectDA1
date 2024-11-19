@@ -1,4 +1,4 @@
-﻿namespace Test;
+﻿namespace Test.ModelsTests;
 using Dominio;
 
 [TestClass]
@@ -16,6 +16,11 @@ public class TeamCreateTest
             TasksDescription = "Tareas sobre desarrollo",
             MaxUsers = 5,
             Panels = new List<Panel>(),
+            TeamMembers  = new List<User>()
+            {
+                new User()
+            },
+            MembersCount = 1
         };
     }
     
@@ -68,6 +73,14 @@ public class TeamCreateTest
         var panelsNotNull = team.Panels != null;
         Assert.IsTrue(panelsNotNull);
     }
-    
-    
+
+    [TestMethod]
+    public void TeamValidationFalse()
+    {
+        Assert.IsTrue(team.TeamValidation());
+        
+        team.Name = "";
+        
+        Assert.IsFalse(team.TeamValidation());
+    }
 }

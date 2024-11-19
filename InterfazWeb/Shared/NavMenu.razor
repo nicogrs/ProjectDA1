@@ -1,6 +1,12 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject Session Session
+@inject NavigationManager Nav
+
+<div class="top-row ps-3 navbar navbar-dark">
+    @if (Session.CurrentUser != null){
+
+    }
     <div class="container-fluid">
-        <a class="navbar-brand" href="">InterfazWeb</a>
+        <a class="navbar-brand" href="">TASK PANEL</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -9,21 +15,54 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </div>
+        
+        @if (Session.CurrentUser != null)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> Inicio
+                </NavLink>
+            </div>
+        
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/account/teams">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Ver Equipos
+                </NavLink>
+            </div>
+        }
+        @if (Session.IsAdmin)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/users">
+                    <span class="oi oi-pencil" aria-hidden="true"></span> ABM Usuarios
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/teams/create">
+                    <span class="oi oi-people" aria-hidden="true"></span> Agregar Equipos
+                </NavLink>
+            </div>
+        }
+        @if (Session.CurrentUser != null)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/account/paperbin">
+                    <span class="oi oi-trash" aria-hidden="true"></span> Papelera
+                </NavLink>
+            </div>  
+            
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="@($"/users/modify/{Session.CurrentUser.Email}")">
+                    <span class="oi oi-wrench" aria-hidden="true"></span> Configuracion
+                </NavLink>
+            </div>  
+            
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/account/logout">
+                    <span class="oi oi-account-logout" aria-hidden="true"></span> Cerrar Sesion
+                </NavLink>
+            </div>  
+        }
     </nav>
 </div>
 
@@ -36,5 +75,16 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+    
+    protected override void OnInitialized()
+    {
 
+        Session.OnChange += RefreshNavMenu;
+    }
+
+    private void RefreshNavMenu()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+    
 }

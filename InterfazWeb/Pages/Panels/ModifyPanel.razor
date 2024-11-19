@@ -1,0 +1,84 @@
+@page "/{teamName}/{panelId}/modify"
+@using Dominio
+@using Interfaces
+@inject IPanelService PlService
+@inject NavigationManager Navigation
+@inject Session Session
+
+<PageTitle>Modificar Panel</PageTitle>
+<h3>Modificar Panel</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+<div class="alert alert-success" role="alert">
+    @message
+</div>
+}
+
+<EditForm Model="modelChangePanel" OnValidSubmit="HandleModify">
+    <DataAnnotationsValidator/>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="w-50">
+            <div class="form-group mt-4">
+                <label id="name">Nombre</label>
+                <InputText class="form-control" @bind-Value="@modelChangePanel.Name" id="name"></InputText>
+                <ValidationMessage For="@(() => modelChangePanel.Name)"/>
+            </div>
+
+            <div class="form-group mt-4">
+                <label for="lastName">Descripcion</label>
+                <InputText class="form-control" @bind-Value="@modelChangePanel.Description" id="description"></InputText>
+                <ValidationMessage For="@(() => modelChangePanel.Description)"/>
+            </div>
+            
+            <div class="mt-2">
+                <div class="form-group mt-4">
+                    <button class="btn btn-primary" type="submit">Modificar Panel</button>
+                </div>
+                <div class="col-4 mt-4">
+                    <button class="btn btn-secondary" type="button" @onclick="GoBack">Volver</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public string teamName { get; set; }
+    [Parameter]
+    public string panelId { get; set; }
+    Panel modelChangePanel = new Panel();
+    Panel toModify;
+    private string message;
+
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+        
+        toModify = PlService.GetPanelById(int.Parse(panelId));
+        modelChangePanel.Description = toModify.Description;
+        modelChangePanel.Name= toModify.Name;
+    }
+
+    private void HandleModify()
+    {
+        if (!String.IsNullOrEmpty(modelChangePanel.Name))
+        {
+            toModify.Name = modelChangePanel.Name;
+        }
+        if (!String.IsNullOrEmpty(modelChangePanel.Description))
+        {
+            toModify.Description = modelChangePanel.Description;
+        }
+
+        message = "Panel modificado";
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/panel");
+    }
+}

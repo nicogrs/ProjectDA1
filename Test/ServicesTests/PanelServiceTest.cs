@@ -1,6 +1,12 @@
-namespace Test;
+using DataAccess;
+using Interfaces;
+using Services;
+using Test.Context;
 using Dominio;
-using Moq;
+using Task = Dominio.Task;
+
+namespace Test.ServicesTests;
+
 
 [TestClass]
 public class PanelServiceTest
@@ -8,13 +14,16 @@ public class PanelServiceTest
     
     private Team team;
     private PanelService panelService;
-    Mock<ITeamService> _mockTeamService;
+    private SqlContext _context;
+    private IRepository<Panel> _panelDatabase;
     
     [TestInitialize]
     public void Setup()
     {
-        _mockTeamService = new Mock<ITeamService>();
-        panelService = new PanelService(_mockTeamService.Object);
+        SqlContextFactory sqlContextFactory = new SqlContextFactory();
+        _context = sqlContextFactory.CreateMemoryContext();
+        _panelDatabase = new PanelDatabaseRepository(_context);
+        panelService = new PanelService(_panelDatabase);
         team = new Team
         {
             Name = "Team Example",
@@ -25,55 +34,95 @@ public class PanelServiceTest
         };
     }
     
+    [TestCleanup]
+    public void CleanUp()
+    {
+        _context.Database.EnsureDeleted();
+    }
+    
     [TestMethod]
     public void AddNewPanel()
     {
-        _mockTeamService.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         Panel panelTest = new Panel{Name = "New panel"};
-        var isPanelAdded = panelService.AddPanel(team.Name, panelTest);
+        var isPanelAdded = panelService.AddPanel(panelTest);
         Assert.IsTrue(isPanelAdded);
     }
     
     [TestMethod]
     public void RemovePanelTest()
     {
-        _mockTeamService.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         Panel panelTest = new Panel{Name = "Panel Test"};
-        team.Panels.Add(panelTest);
-        panelService.RemovePanel(team.Name, panelTest.PanelId);
-        CollectionAssert.DoesNotContain(team.Panels, panelTest);
+        panelService.AddPanel(panelTest);
+        var panelRemoved = panelService.RemovePanel(panelTest.Id);
+        var panel = panelService.GetPanelById(panelTest.Id);
+        Assert.AreEqual(panelRemoved,panelTest);
+        Assert.IsNull(panel);
+    }
+    [TestMethod]
+    public void RemovePanelNullTest()
+    {
+        var result = panelService.RemovePanel(3);
+        Assert.IsNull(result);
     }
     
     [TestMethod]
     
     public void GetPanelById()
     {
-        _mockTeamService.Setup(x => x.GetTeamByName(team.Name) ).Returns(team);
         Panel panelTest = new Panel{Name = "New panel"};
-        team.Panels.Add(panelTest);
-        var panelFromTeam = panelService.GetPanelById(team.Name, panelTest.PanelId);
+        panelService.AddPanel(panelTest);
+        var panelFromTeam = panelService.GetPanelById(panelTest.Id);
         Assert.AreEqual(panelFromTeam, panelTest);
     }
 
     [TestMethod]
     public void GetAllPanelsFromTeamTest()
     {
-        var panel1 = new Panel{Name = "Panel 1"};
-        var panel2 = new Panel{Name = "Panel 2"};
-        team.Panels.Add(panel1);
-        team.Panels.Add(panel2);
-        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
+        var panel1 = new Panel { Name = "Panel 1", Team = team.Name };
+        var panel2 = new Panel { Name = "Panel 2", Team = team.Name };
+        panelService.AddPanel(panel1);
+        panelService.AddPanel(panel2);
         var teamPanels = panelService.GetAllPanelsFromTeam(team.Name);
         CollectionAssert.AreEquivalent(teamPanels, new List<Panel>{panel1, panel2});
+    }
+
+    [TestMethod]
+    public void AddTaskToPanel()
+    {
+        Panel panelTest = new Panel{Name = "Panel Test"};
+        panelService.AddPanel(panelTest);
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(+1),
+        };
+        panelService.AddTaskToPanel(panelTest.Id, task1);
+        CollectionAssert.Contains(panelTest.Tasks, task1);
+    }
+    
+    [TestMethod]
+    public void RemoveTaskFromPanel()
+    {
+        Panel panelTest = new Panel{Name = "Panel Test"};
+        panelService.AddPanel(panelTest);
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(+1),
+        };
+        panelService.AddTaskToPanel(panelTest.Id, task1);
+        panelService.RemoveTaskFromPanel(panelTest.Id, task1);
+        CollectionAssert.DoesNotContain(panelTest.Tasks, task1);
     }
     
     
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
-    public void GetAllPanelsFromTeamTestException()
+    public void GetAllPanelsFromTeamTest_NoPanels()
     {
-        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
         var teamPanels = panelService.GetAllPanelsFromTeam(team.Name);
+        Assert.AreEqual(0, teamPanels.Count);
     }
 
 }

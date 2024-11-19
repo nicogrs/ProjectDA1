@@ -1,0 +1,122 @@
+@page "/{teamName}/{panelId}/add/{EpicId}"
+@using Dominio
+@using Interfaces
+@using Task = Dominio.Task
+@inject IEpicService EcService
+@inject ITaskService TkService
+@inject NavigationManager Navigation
+@inject Session Session
+<PageTitle>Add Tasks To Epic</PageTitle>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-end mb-4">
+            <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver a Tareas</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Tareas Disponibles</h5>
+            <ul class="list-group">
+                @foreach (var task in AllTasks.Where(x => x.IsInEpic == false))
+                {
+                    <li class="list-group-item">
+                        <input type="checkbox" @onchange="e => ToggleSelectionAdd(task, e.Value)"/> @task.Name
+                    </li>
+                }
+            </ul>
+            <button class="btn btn-primary mt-3" @onclick="AddTasksToEpic">Agregar a la Épica</button>
+        </div>
+
+        <div class="col-md-6">
+            <h5>Tareas en la Épica: @CurrentEpic.Name</h5>
+            <ul class="list-group">
+                @foreach (var task in CurrentEpic.Tasks)
+                {
+                    <li class="list-group-item">
+                        <input type="checkbox" @onchange="e => ToggleSelectionDelete(task, e.Value)"/> @task.Name
+                    </li>
+                }
+            </ul>
+            <button class="btn btn-danger mt-3" @onclick="RemoveTasksFromEpic">Eliminar de la Épica</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] 
+    public string EpicId { get; set; }
+    [Parameter] 
+    public string panelId { get; set; }
+    [Parameter] 
+    public string teamName { get; set; }
+    
+    private List<Task> AllTasks = new(); 
+    private List<Task> SelectedTasksToAdd = new(); 
+    private List<Task> SelectedTasksToRemove = new();
+    private Epic CurrentEpic;
+
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+        CurrentEpic = EcService.GetEpicById(int.Parse(EpicId));
+        AllTasks = TkService.GetNonExpiredTasks(int.Parse(panelId));
+    }
+    
+    private void ToggleSelectionAdd(Task task, object isSelected)
+    {
+        bool selected = (bool)isSelected;
+        if (selected)
+        {
+            SelectedTasksToAdd.Add(task);
+        }
+        else
+        {
+            SelectedTasksToAdd.Remove(task);
+        }
+    }
+    
+    private void ToggleSelectionDelete(Task task, object isSelected)
+    {
+        bool selected = (bool)isSelected;
+        if (selected)
+        {
+            SelectedTasksToRemove.Add(task);
+        }
+        else
+        {
+            SelectedTasksToRemove.Remove(task);
+        }
+    }
+    
+
+    private void AddTasksToEpic()
+    {
+        foreach (var task in SelectedTasksToAdd)
+        {
+            EcService.AddTaskToEpic(int.Parse(EpicId), task);
+            TkService.UpdateTask(task);
+        }
+        SelectedTasksToAdd.Clear(); 
+    }
+
+    private void RemoveTasksFromEpic()
+    {
+        foreach (var task in SelectedTasksToRemove)
+        {
+            EcService.RemoveTaskFromEpic(int.Parse(EpicId), task);
+            TkService.UpdateTask(task);
+        }
+        SelectedTasksToRemove.Clear();
+    }
+    
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/tasks");
+    }
+
+}
+        

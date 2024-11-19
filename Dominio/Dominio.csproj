@@ -4,18 +4,26 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>Dominio</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="obj\**" />
+        <Compile Remove="obj\**"/>
+        <Compile Remove="Interfaces\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Remove="obj\**" />
+        <EmbeddedResource Remove="obj\**"/>
+        <EmbeddedResource Remove="Interfaces\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="obj\**" />
+        <None Remove="obj\**"/>
+        <None Remove="Interfaces\**" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="ClosedXML" Version="0.104.1" />
     </ItemGroup>
 
 </Project>

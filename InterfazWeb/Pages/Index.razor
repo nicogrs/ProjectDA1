@@ -1,9 +1,22 @@
 ﻿@page "/"
 
+@inject NavigationManager Navigation
+@inject Session Session
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>TaskPanel</h1>
 
-Welcome to your new app.
+<p>¡Hola @Session.CurrentUser.Name, bienvenido a TaskPanel!</p>
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+
+
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (Session.CurrentUser==null)
+        {
+            Navigation.NavigateTo("/account/login");
+        }
+    }
+}

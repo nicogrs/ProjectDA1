@@ -1,0 +1,215 @@
+@using Dominio
+@using Interfaces
+@using Services
+@using Task = Dominio.Task
+@inject IPanelService PlService
+@inject ITaskService TkService
+@inject IUserService UService
+@inject Notifications Notifications
+@inject INotificationService NtfService
+@inject NavigationManager Navigation
+@inject Session Session
+<div class="d-flex card-group justify-content-center align-items-center">
+<div class="w-75">
+    <div class="card mb-2 mt-4">
+        @if (Precedence == Task.Priority.Urgent)
+        {
+            <div class="bg-danger card-header ">
+                <p class="card-title text-white w-100">@Title</p>
+            </div>
+        }
+        else if (Precedence == Task.Priority.Medium)
+        { 
+            <div class="card-header bg-info">
+                <h5 class="text-white mb-0">[TAREA] - @Title</h5>
+            </div>
+        }
+        else
+        {
+            <div class="card-header bg-black">
+                <h5 class="text-white mb-0">[TAREA] - @Title</h5>
+            </div>
+        }
+                
+        <div class="card-body">
+            <p class="card-text text-muted">Descripción:</p>
+            <p class="card-text">@Description</p>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <span class="badge bg-secondary">Prioridad: @Precedence.ToString()</span>
+                <span class="badge bg-info">Vence: @EndDate.ToShortDateString()</span>
+                <span class="badge bg-info">Horas Estimadas: @selectedTask.ExpectedEffort </span>
+                <span class="badge bg-info">Horas Invertidas: @selectedTask.InvertedEffort </span> 
+            </div>
+            @if (Comments != null && Comments.Count > 0)
+            {
+                <div>
+                    <p class="card-text border-top-2 mt-2 mb-2">Comentarios:</p>
+                </div>
+                foreach (var comment in Comments)
+                {
+
+                    <div class="card-text border-bottom mb-2 pb-2">
+         
+                        @if (comment.Resolved)
+                        {
+                            <s>@comment.Content - Resuelto por @comment.ResolvedBy.Email el @comment.ResolvedTime.ToString()</s>
+                        }
+                        else
+                        {
+                            <p>@comment.CreatedBy.Name @comment.CreatedBy.Surname Respondio: <br/> @comment.Content</p>
+                        }
+                        @if (!comment.Resolved)
+                        {
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="submit" 
+                                        @onclick="() => CompleteComment(comment)">Terminar</button>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </div>
+        <div class="card-footer">
+            <div class="row text-end">
+                @if (!Ended)
+                {
+                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2"  type="submit" @onclick="AddComment">Agregar Comentario</button>
+                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-warning me-2"  type="submit" @onclick="ChangeTask">Modificar</button>
+                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-success me-2"  type="submit" @onclick="EndTask">Terminar Tarea</button>
+                }
+            
+                <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2" type="submit" @onclick="ComparativeGraphic">Grafico de esfuerzo</button>
+            
+                @if(CanBeDeleted){
+                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-danger me-2"
+                            type="submit" @onclick="ShowModal">Eliminar</button>
+                }
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+@if (isModalVisible)
+{
+    <div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Eliminación</h5>
+                    <button type="button" class="close" @onclick="CloseModal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                @if (UService.GetUserByEmail(Session.CurrentUser.Email).PaperBin.ElementsCount < 10)
+                {
+                    <div class="modal-body">
+                        <p>¿Estás seguro de que deseas enviar la tarea <strong>@selectedTask.Name
+                        </strong> a la papelera?</p>
+                    </div>     
+                }
+                else
+                {
+                    <div class="modal-body">
+                        <p>¡Tu papelera esta llena! ¿Estas seguro que quieres eliminar <strong>@selectedTask.Name
+                            por completo?</strong></p>
+                    </div>    
+                }
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string Title { get; set; }
+    [Parameter] public Task.Priority Precedence { get; set; }
+    [Parameter] public DateTime EndDate { get; set; }
+    [Parameter] public string Description { get; set; }
+    [Parameter] public string InvertedEffort { get; set; }
+    [Parameter] public int TaskId { get; set; }
+    [Parameter] public bool Ended { get; set; }
+
+    [Parameter] public string teamName { get; set; }
+    [Parameter] public string panelId { get; set; }
+    [Parameter] public bool CanBeDeleted { get; set; }
+    [Parameter] public EventCallback OnTaskDeleted { get; set; }
+    [Parameter] public List<Comment> Comments { get; set; }
+
+    private Task selectedTask;
+    private bool isModalVisible;
+    private string messageNotSuccess;
+
+
+    protected override void OnInitialized()
+    {
+        selectedTask = TkService.GetTaskById(TaskId);
+        Comments = TkService.GetCommentsFromTask(TaskId);
+        Ended = selectedTask.Ended;
+    }
+
+    private void AddComment()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/{TaskId}/createComment");
+    }
+
+
+
+    private void ChangeTask()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/{TaskId}");
+    }
+
+    private void EndTask()
+    {
+        TkService.ChangeStatus(TaskId);
+        selectedTask = TkService.GetTaskById(TaskId);
+        Ended = selectedTask.Ended;
+        StateHasChanged();
+    }
+
+    private void ComparativeGraphic()
+    {
+        Navigation.NavigateTo($"/{teamName}/{panelId}/view/{TaskId}/graphic");
+    }
+
+
+    private void ShowModal()
+    {
+        isModalVisible = true;
+    }
+
+    private void CloseModal()
+    {
+        isModalVisible = false;
+    }
+
+    private void ConfirmDelete()
+    {
+        var taskToDelete = TkService.GetTaskById(TaskId);
+        UService.AddElementToPaperBin(Session.CurrentUser.Email, taskToDelete as IDeleteable);
+        taskToDelete.IsInEpic = false;
+        CloseModal();
+        OnTaskDeleted.InvokeAsync();
+    }
+
+    private void CompleteComment(Comment comment)
+    {
+        var task = TkService.GetTaskById(TaskId);
+        task.MarkCommentAsResolved(Session.CurrentUser, comment);
+        TkService.UpdateTask(task);
+        NtfService.AddNotification(new Notification
+        {
+            FromUser = Session.CurrentUser,
+            Text = $"El Usuario {Session.CurrentUser.Name} resolvio tu comentario",
+            ToUser = comment.CreatedBy
+        });
+        Notifications.NotifyNewNotifications();
+    }
+}

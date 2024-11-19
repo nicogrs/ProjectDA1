@@ -1,7 +1,7 @@
 ﻿using Dominio;
 using Task = Dominio.Task;
 
-namespace Test;
+namespace Test.ModelsTests;
 
 [TestClass]
 public class TaskTest
@@ -19,28 +19,28 @@ public class TaskTest
     {
         u1 = new User();
         u2 = new User();
-        c1 = new Comment(u1, "Primer comentario de u1");
-        c2 = new Comment(u1, "Segundo comentario de u1");
-        c3 = new Comment(u2, "Primer comentario de u2");
+        c1 = new Comment();
+        c2 = new Comment();
+        c3 = new Comment();
         comments = new List<Comment>(){c1, c2, c3};
         t1 = new Task()
         {
-            Title = "Titulo 1",
-            priority = Task.Priority.Low,
+            Name = "Titulo 1",
+            Precedence = Task.Priority.Low,
             Description = "Descripcion tarea 1",
-            expDate = new DateTime(2025, 10, 01),
-            comments = comments
+            ExpirationDate = new DateTime(2025, 10, 01),
+            Comments = comments
         };
     }
     
     [TestMethod]
     public void TaskCreateTest()
     {
-        Assert.AreEqual(t1.priority, Task.Priority.Low);
-        Assert.AreEqual(t1.Title, "Titulo 1");
+        Assert.AreEqual(t1.Precedence, Task.Priority.Low);
+        Assert.AreEqual(t1.Name, "Titulo 1");
         Assert.AreEqual(t1.Description, "Descripcion tarea 1");
-        Assert.AreEqual(t1.expDate, new DateTime(2025, 10, 01));
-        Assert.AreEqual(t1.comments, comments);
+        Assert.AreEqual(t1.ExpirationDate, new DateTime(2025, 10, 01));
+        Assert.AreEqual(t1.Comments, comments);
     }
 
     [TestMethod]
@@ -51,7 +51,7 @@ public class TaskTest
         succesfulChange = t1.ChangePriority(Task.Priority.Medium);
         
         Assert.IsTrue(succesfulChange);
-        Assert.AreEqual(Task.Priority.Medium, t1.priority);
+        Assert.AreEqual(Task.Priority.Medium, t1.Precedence);
     }
     
     [TestMethod]
@@ -65,7 +65,7 @@ public class TaskTest
         
         Assert.IsTrue(firstSuccesfulChange);
         Assert.IsTrue(secondSuccesfulChange);
-        Assert.AreEqual(Task.Priority.Urgent, t1.priority);
+        Assert.AreEqual(Task.Priority.Urgent, t1.Precedence);
     }
     
     
@@ -87,22 +87,20 @@ public class TaskTest
     [TestMethod]
     public void AddCommentTest()
     {
-        int initialCommentCount = t1.comments.Count;
+        int initialCommentCount = t1.Comments.Count;
         string content = "Comentario de AddComentTest";
-        Comment lastAddedComment;
-        
-        t1.AddComment(u1,content);
-        
-        lastAddedComment = t1.comments.Last();
-        Assert.AreEqual(t1.comments.Count, initialCommentCount + 1);
-        Assert.AreEqual(t1.comments.Last().Content, content);
+        Comment newComment = new Comment { Content = content };
+
+        t1.Comments.Add(newComment);
+    
+        Assert.AreEqual(t1.Comments.Count, initialCommentCount + 1);
+        Assert.AreEqual(t1.Comments.Last().Content, content);
     }
 
     [TestMethod]
-
-    public void DeleteItemTest()
+    public void ToStringTest()
     {
-        
+        var result = $"Tipo: Task - ID: {t1.Id} - Nombre: Titulo 1 - Prioridad: Low";
+        Assert.AreEqual(t1.ToString(), result);
     }
-    
 }

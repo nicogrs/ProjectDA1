@@ -1,0 +1,2 @@
+Título,Descripción,Fecha de vencimiento,ID de panel,ID de epica,Esfuerzo Estimado --- Formato de fecha incorrecto. --- 2024-57-19 15:57:15
+ --- Cantidad incorrecta de columnas (1). --- 2024-57-19 15:57:15

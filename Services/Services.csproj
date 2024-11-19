@@ -11,4 +11,8 @@
       <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="EPPlus" Version="7.5.0" />
+    </ItemGroup>
+
 </Project>

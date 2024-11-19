@@ -1,4 +1,4 @@
-using ClosedXML.Excel;
+using OfficeOpenXml;
 
 namespace Services;
 
@@ -9,7 +9,6 @@ public class XlsxToCsvAdapter : TaskImportService
         string tempFilePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
         try
         {
-            // Write the stream to the temporary file
             using (var fileStreamOut = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write))
             {
                 await fileStream.CopyToAsync(fileStreamOut);
@@ -25,36 +24,39 @@ public class XlsxToCsvAdapter : TaskImportService
             }
         }
     }
+
     public string TranslateXlsxToCsv(string filePath)
     {
         string content = "";
-        
+
         if (!File.Exists(filePath))
         {
             Console.WriteLine("File not found.");
             return content;
         }
-        
-        using (var workbook = new XLWorkbook(filePath))
+
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+        using (var package = new ExcelPackage(new FileInfo(filePath)))
         {
-            var worksheet = workbook.Worksheet(1);
-            var rows = worksheet.RangeUsed().RowsUsed();
-            int columnCount = worksheet.Columns().Count();
-            
-            foreach (var row in rows)
+            var worksheet = package.Workbook.Worksheets[0]; 
+            int rowCount = worksheet.Dimension.Rows;
+            int columnCount = worksheet.Dimension.Columns;
+
+            for (int row = 1; row <= rowCount; row++)
             {
-                string line = row.Cell(1).Value.ToString();
-                
-                for (int i = 2; i <= columnCount; i++)
+                string line = worksheet.Cells[row, 1].Text; 
+
+                for (int col = 2; col <= columnCount; col++)
                 {
-                  line += "," + row.Cell(i).Value.ToString();
+                    line += "," + worksheet.Cells[row, col].Text; 
                 }
-                
+
                 line += Environment.NewLine;
                 content += line;
             }
         }
-        
+
         return content;
     }
 
@@ -62,5 +64,4 @@ public class XlsxToCsvAdapter : TaskImportService
     {
         return lines.Replace(" 0:00:00", "");
     }
-    
 }

@@ -69,11 +69,11 @@ public class TaskImportService
     public void ProcessError(string line)
     {
         List<string> separatedLine = SplitLine(line);
-        bool correctColumnAmount = separatedLine.Count is 5 or 6;
+        bool correctColumnAmount = HasCorrectElementCount(separatedLine);
         
         if (!correctColumnAmount)
         {
-            LogError(line,"Cantidad incorrecta de columnas.");
+            LogError(line,$"Cantidad incorrecta de columnas ({separatedLine.Count}).");
             return;
         }
         
@@ -89,15 +89,15 @@ public class TaskImportService
             return;
         }
         
-        if (!IsStringExpectedEffortValid(separatedLine[4]))
+        if (!IsStringEpicIdValid(separatedLine[4]))
         {
-            LogError(line,"Error en formato de esfuerzo esperado.");
+            LogError(line,"Error en formato de Id de Epica, la linea es -"+separatedLine[4]+"-");
             return;
         }
         
-        if (!IsStringEpicIdValid(separatedLine[5]))
+        if (!IsStringExpectedEffortValid(separatedLine[5]))
         {
-            LogError(line,"Error en formato de Id de Epica.");
+            LogError(line,"Error en formato de esfuerzo esperado.");
             return;
         }
     }
@@ -125,15 +125,16 @@ public class TaskImportService
         task.Description = strList[1];
         
         string strDate = strList[2];
-        
         task.ExpirationDate = StringToDate(strDate);
-
-        task.ExpectedEffort = int.Parse(strList[4]);
-        task.epicId = int.Parse(strList[5]);
-        if (task.epicId != null)
+        
+        string strEpicId = strList[4];
+        if (!string.IsNullOrEmpty(strEpicId))
         {
+            task.epicId = int.Parse(strList[4]);
             task.IsInEpic = true;
         }
+        
+        task.ExpectedEffort = int.Parse(strList[5]);
         
         return task;
     }
@@ -154,15 +155,15 @@ public class TaskImportService
         
         bool isDateValid = IsStringValidDate(elements[2]);
         bool isPanelIdValid = IsStringPanelIdValid(elements[3]);
-        bool isEspectedEffortValid = IsStringExpectedEffortValid(elements[4]);
-        bool isEpicIdValid = IsStringEpicIdValid(elements[5]);
+        bool isEpicIdValid = IsStringEpicIdValid(elements[4]);
+        bool isEspectedEffortValid = IsStringExpectedEffortValid(elements[5]);
         
         return isDateValid && isPanelIdValid && isEspectedEffortValid && isEpicIdValid;
     }
 
     public bool HasCorrectElementCount(List<string> elements)
     {
-        return (elements.Count <= 6 && elements.Count >= 5);
+        return (elements.Count is 5 or 6);
     }
     
     public bool IsStringValidDate(string str)
@@ -201,7 +202,7 @@ public class TaskImportService
     
     public bool IsStringEpicIdValid(string epicId)
     {
-        return int.TryParse(epicId, out int _);
+        return string.IsNullOrEmpty(epicId) || int.TryParse(epicId, out int _);
     }
     
     public bool AreNumbersValid(int day, int month, int year)

@@ -21,12 +21,12 @@ public class TaskImportServiceTest
     {
         errorLinesToProcess = new List<string>()
         {
-            //"titulo,descripcion,Fecha de vencimiento,ID de panel,ID de epica"
-            "correcta,descripcion,31/12/2025,1,1",
+            //"titulo,descripcion,Fecha de vencimiento,ID de panel,ID de epica,Esfuerzo Estimado"
+            "correcta,descripcion,31/12/2025,1,1,1",
             "incorrecta,menos columnas,31/12/2025",
-            "incorrecta,columnas de mas,31/12/2025,1,1,1",
-            "incorrecta,Fecha incorrecta,31/1/2/2025,1,1",
-            "incorrecta,Id columna incorrecto,31/12/2025,one,1",
+            "incorrecta,columnas de mas,31/12/2025,1,1,1,2",
+            "incorrecta,Fecha incorrecta,31/1/2/2025,1,1,5",
+            "incorrecta,Id columna incorrecto,31/12/2025,one,1,3",
         };
         
         string directory = Directory.GetCurrentDirectory();
@@ -56,19 +56,22 @@ public class TaskImportServiceTest
             {
                 Name = "Tarea Valida 1",
                 Description = "Datos validos.",
-                ExpirationDate = new DateTime(2000, 01, 01)
+                ExpirationDate = new DateTime(2000, 01, 01),
+                PanelId = 1
             },
             new Task()
             {
                 Name = "Tarea Valida 2",
                 Description = "Datos validos.",
-                ExpirationDate = new DateTime(2024, 12, 12)
+                ExpirationDate = new DateTime(2024, 12, 12),
+                PanelId = 1
             },
             new Task()
             {
                 Name = "Tarea Valida 3",
                 Description = "Datos validos - final.",
-                ExpirationDate = new DateTime(2020, 06, 06)
+                ExpirationDate = new DateTime(2020, 06, 06),
+                PanelId = 1
             }
         };
         _taskImportService = new TaskImportService();
@@ -80,9 +83,13 @@ public class TaskImportServiceTest
     [TestMethod]
     public void ReadTasksFromContentTest()
     {
-        string content = $"{referenceTasks[0].Name},{referenceTasks[0].Description},{referenceTasks[0].ExpirationDate.ToShortDateString()},1\n" +
-                         $"{referenceTasks[1].Name},{referenceTasks[1].Description},{referenceTasks[1].ExpirationDate.ToShortDateString()},1\n" +
-                         $"{referenceTasks[2].Name},{referenceTasks[2].Description},{referenceTasks[2].ExpirationDate.ToShortDateString()},1";
+        string content =
+            $"{referenceTasks[0].Name},{referenceTasks[0].Description},{referenceTasks[0].ExpirationDate.ToShortDateString()}," +
+            $"{referenceTasks[0].PanelId},,{referenceTasks[0].ExpectedEffort}\n" +
+            $"{referenceTasks[1].Name},{referenceTasks[1].Description},{referenceTasks[1].ExpirationDate.ToShortDateString()}," +
+            $"{referenceTasks[1].PanelId},,{referenceTasks[1].ExpectedEffort}\n" +
+            $"{referenceTasks[2].Name},{referenceTasks[2].Description},{referenceTasks[2].ExpirationDate.ToShortDateString()}," +
+            $"{referenceTasks[2].PanelId},,{referenceTasks[2].ExpectedEffort}\n";
         
         List<TaskImportService.ImportedTask> tasks = _taskImportService.ReadTasksFromContent(content,new User(){Name = "User 1"});
 
@@ -92,6 +99,7 @@ public class TaskImportServiceTest
             Assert.AreEqual(tasks[i].Name, referenceTasks[i].Name);
             Assert.AreEqual(tasks[i].Description, referenceTasks[i].Description);
             Assert.AreEqual(tasks[i].ExpirationDate, referenceTasks[i].ExpirationDate);
+            Assert.AreEqual(tasks[i].ExpectedEffort, referenceTasks[i].ExpectedEffort);
         }
     }
 
@@ -100,11 +108,11 @@ public class TaskImportServiceTest
     {
         XlsxToCsvAdapter xslxAdapter = new XlsxToCsvAdapter();
         string expectedResult =
-            "Título,Descripción,Fecha de vencimiento,ID de panel,Esfuerzo Estimado,ID de epica\r\n" +
+            "Título,Descripción,Fecha de vencimiento,ID de panel,ID de epica,Esfuerzo Estimado\r\n" +
             "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2025 0:00:00,1,1,1\r\n" +
-            "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2025 0:00:00,1,2,1\r\n" +
-            "Terminar obligatorio,Terminar el obligatorio 2 de DA.,20/11/2025 0:00:00,1,3,2\r\n" +
-            "Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2025 0:00:00,2,2,\r\n";
+            "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2025 0:00:00,1,1,2\r\n" +
+            "Terminar obligatorio,Terminar el obligatorio 2 de DA.,20/11/2025 0:00:00,1,2,3\r\n" +
+            "Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2025 0:00:00,2,,2\r\n";
         List<string> expectedList = expectedResult.Split("\r\n").ToList();
         
         string result = xslxAdapter.TranslateXlsxToCsv(xlsxFilesToTest[0]);
@@ -218,7 +226,7 @@ public class TaskImportServiceTest
     public void ProcessErrorTest2()
     {
         _taskImportService.errors = new List<string>();
-        string expectedErrorMessage = "Cantidad incorrecta de columnas.";
+        string expectedErrorMessage = "Cantidad incorrecta de columnas (3).";
         
         _taskImportService.ProcessError(errorLinesToProcess[1]);
         
@@ -231,7 +239,7 @@ public class TaskImportServiceTest
     public void ProcessErrorTest3()
     {
         _taskImportService.errors = new List<string>();
-        string expectedErrorMessage = "Cantidad incorrecta de columnas.";
+        string expectedErrorMessage = "Cantidad incorrecta de columnas (7).";
         
         _taskImportService.ProcessError(errorLinesToProcess[2]);
         

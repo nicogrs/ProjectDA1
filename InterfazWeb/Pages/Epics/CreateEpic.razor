@@ -15,6 +15,14 @@
         @message
     </div>
 }
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @errorMessage
+    </div>
+}
+
+
 <EditForm Model="modelCreateEpic" OnValidSubmit="HandleCreate">
     <DataAnnotationsValidator/>
     <div class="d-flex justify-content-center align-items-center">
@@ -64,6 +72,7 @@
     
     Epic modelCreateEpic = new Epic();
     private string message;
+    private string errorMessage;
     
     protected override void OnInitialized()
     {
@@ -83,7 +92,8 @@
         if(!string.IsNullOrEmpty(modelCreateEpic.Name) && modelCreateEpic.ExpirationDate != null){
             if (modelCreateEpic.ExpirationDate.Date <= DateTime.Today.Date)
             {
-                message = "La epica debe expirar en al menos un dia.";
+                errorMessage = "La epica debe expirar en al menos un dia.";
+                message = "";
                 return;
             }
             Epic epic = new Epic()
@@ -97,6 +107,7 @@
             EpicService.CreateEpic(epic);
            // PlService.GetPanelById(int.Parse(panelId)).AddTask(t);
             message="Epica creada con éxito";
+            errorMessage = "";
             ClearContents();
         }
 

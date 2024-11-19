@@ -16,7 +16,7 @@
 @if (!string.IsNullOrEmpty(errorMessage))
 {
 <div class="alert alert-danger" role="alert">
-    @message
+    @errorMessage
 </div>
 }
 <EditForm Model="modelCreateTask" OnValidSubmit="HandleCreate">
@@ -94,6 +94,7 @@
         if(!string.IsNullOrEmpty(modelCreateTask.Name) && modelCreateTask.ExpirationDate != null){
             if (modelCreateTask.ExpirationDate.Date <= DateTime.Today.Date)
             {
+                message = "";
                 errorMessage = "La tarea debe expirar en al menos un dia.";
                 return;
             }
@@ -109,6 +110,7 @@
             };
             PlService.AddTaskToPanel(int.Parse(panelId), t);
             message="Tarea creada con éxito";
+            errorMessage = "";
             ClearContents();
         }
 
@@ -125,5 +127,6 @@
         modelCreateTask.Precedence = Task.Priority.Low;
         modelCreateTask.Description = "";
         modelCreateTask.ExpirationDate = DateTime.Now;
+        modelCreateTask.ExpectedEffort = 0;
     }
 }

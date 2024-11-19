@@ -5,7 +5,7 @@ using Interfaces;
 using Services;
 using Test.Context;
 
-namespace Test;
+namespace Test.ServicesTests;
 using Dominio;
 
 

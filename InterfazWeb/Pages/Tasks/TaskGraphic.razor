@@ -1,9 +1,8 @@
 @page "/{teamName}/{panelId}/view/{taskId}/graphic"
-@using Dominio
 @using Interfaces
 @using Task = Dominio.Task
 @using Syncfusion.Blazor.Charts
-@inject ITaskService TskService
+@inject ITaskService TkService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -68,13 +67,13 @@
         {
             Navigation.NavigateTo("/error");
         }
-        status = TskService.EffortStatus(int.Parse(taskId));
-        task = TskService.GetTaskById(int.Parse(taskId));
+        status = TkService.EffortStatus(int.Parse(taskId));
+        task = TkService.GetTaskById(int.Parse(taskId));
         if (task != null)
         {
             var expectedEffort = task.ExpectedEffort;
             var invertedEffort = task.InvertedEffort;
-            var missingEffort = TskService.EffortComparated(int.Parse(taskId));
+            var missingEffort = TkService.EffortComparated(int.Parse(taskId));
             
             effortData.Add(new EffortData
             {

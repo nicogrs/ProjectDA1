@@ -3,7 +3,7 @@
 @inject IPanelService PlService
 @inject ITaskService TkService
 @inject IUserService UService
-@inject IEpicService EpicService
+@inject IEpicService EcService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -36,8 +36,8 @@
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <span class="badge bg-secondary">Prioridad: @selectedEpic.Priority.ToString()</span>
                     <span class="badge bg-info">Vence: @selectedEpic.ExpirationDate.ToShortDateString()</span>
-                    <span class="badge bg-info">Horas Estimadas: @EpicService.EffortExpected(selectedEpic.Id) </span>
-                    <span class="badge bg-info">Horas Invertidas: @EpicService.EffortInverted(selectedEpic.Id) </span>
+                    <span class="badge bg-info">Horas Estimadas: @EcService.EffortExpected(selectedEpic.Id) </span>
+                    <span class="badge bg-info">Horas Invertidas: @EcService.EffortInverted(selectedEpic.Id) </span>
                 </div>
             </div>
             
@@ -111,7 +111,7 @@
 
     protected override void OnInitialized()
     {
-        selectedEpic = EpicService.GetEpicById(int.Parse(EpicId));
+        selectedEpic = EcService.GetEpicById(int.Parse(EpicId));
     }
     
     private void ChangeEpic()
@@ -132,8 +132,8 @@
 
     private void ConfirmDelete()
     {
-      var epicToDelete = EpicService.GetEpicById(int.Parse(EpicId));
-      EpicService.DeleteEpicById(epicToDelete.Id); 
+      var epicToDelete = EcService.GetEpicById(int.Parse(EpicId));
+      EcService.DeleteEpicById(epicToDelete.Id); 
       CloseModal();
       EpicOnTaskDeleted.InvokeAsync(); 
     }

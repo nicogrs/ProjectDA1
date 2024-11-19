@@ -3,7 +3,7 @@
 @using Interfaces
 @using InterfazWeb.Pages.Epics
 @inject ITaskService TkService
-@inject IEpicService EpicService
+@inject IEpicService EcService
 @inject Session Session
 @inject NavigationManager Navigation
 <PageTitle>Task</PageTitle>
@@ -93,7 +93,7 @@
     {
         Tasks = TkService.GetNonExpiredTasks(int.Parse(panelId))
             .Where(t => t.IsInEpic == false).ToList();
-        Epics = EpicService.GetEpicsByPanelId(int.Parse(panelId));
+        Epics = EcService.GetEpicsByPanelId(int.Parse(panelId));
         StateHasChanged();
     }
 

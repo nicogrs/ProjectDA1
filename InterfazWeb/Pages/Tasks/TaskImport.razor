@@ -6,7 +6,7 @@
 @inject NavigationManager Navigation;
 @inject Session Session;
 @inject IPanelService PlService;
-@inject IEpicService EpService;
+@inject IEpicService EcService;
 
 <PageTitle>Importar Tasks</PageTitle>
 
@@ -22,9 +22,9 @@
 
 @if (!string.IsNullOrEmpty(message))
 {
-<div class="alert" role="alert">
-    @message
-</div>
+    <div class="alert" role="alert">
+        @message
+    </div>
 }
 
 @if (tasks != null && tasks.Any())
@@ -44,9 +44,9 @@
     @foreach (TaskImportService.ImportedTask task in tasks)
     {
         string epicToDisplay = task.epicId.ToString();
-        Epic targetEpic = EpService.GetEpicById(task.epicId);
+        Epic targetEpic = EcService.GetEpicById(task.epicId);
         bool epicExists = targetEpic != null;
-        bool epicBelongsToPanel = EpService.GetEpicsByPanelId(int.Parse(panelId)).Contains(targetEpic);
+        bool epicBelongsToPanel = EcService.GetEpicsByPanelId(int.Parse(panelId)).Contains(targetEpic);
         
         if (!epicExists || !epicBelongsToPanel)
         {
@@ -205,8 +205,8 @@
             PlService.AddTaskToPanel(int.Parse(panelId),task);
             if (task.IsInEpic)
             {
-                List<Epic> epicsInPanel = EpService.GetEpicsByPanelId(int.Parse(panelId));
-                Epic taskEpic = EpService.GetEpicById(task.epicId);
+                List<Epic> epicsInPanel = EcService.GetEpicsByPanelId(int.Parse(panelId));
+                Epic taskEpic = EcService.GetEpicById(task.epicId);
                 bool epicAndPanelCoincide = epicsInPanel.Contains(taskEpic);
                 if (epicAndPanelCoincide)
                 {

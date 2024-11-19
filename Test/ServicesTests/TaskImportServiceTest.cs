@@ -21,7 +21,7 @@ public class TaskImportServiceTest
     {
         errorLinesToProcess = new List<string>()
         {
-            //"titulo,descripcion,Fecha de vencimiento,ID de panel,ID de epica,Esfuerzo Estimado"
+            
             "correcta,descripcion,31/12/2025,1,1,1",
             "incorrecta,menos columnas,31/12/2025",
             "incorrecta,columnas de mas,31/12/2025,1,1,1,2",

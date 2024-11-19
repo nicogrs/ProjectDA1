@@ -1,6 +1,6 @@
 ﻿using Services;
 
-namespace Test;
+namespace Test.ServicesTests;
 
 using Moq;
 

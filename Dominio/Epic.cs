@@ -1,5 +1,3 @@
-using System.Data;
-
 namespace Dominio;
 
 public class Epic
@@ -34,6 +32,6 @@ public class Epic
 
     public void RemoveTask(Task task)
     {
-            Tasks.Remove(task);
+       Tasks.Remove(task);
     }
 }

@@ -5,7 +5,7 @@ using Services;
 using Test.Context;
 using Task = Dominio.Task;
 
-namespace Test;
+namespace Test.ServicesTests;
 
 [TestClass]
 public class EpicServiceTest

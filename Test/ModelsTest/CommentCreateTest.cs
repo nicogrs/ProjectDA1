@@ -1,5 +1,5 @@
 ﻿using Dominio;
-namespace Test;
+namespace Test.ModelsTests;
 
 
 [TestClass]

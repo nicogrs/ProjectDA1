@@ -5,7 +5,7 @@ using Test.Context;
 using Dominio;
 using Task = Dominio.Task;
 
-namespace Test;
+namespace Test.ServicesTests;
 
 
 [TestClass]

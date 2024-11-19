@@ -2,7 +2,7 @@
 @using Dominio
 @using Interfaces
 @using Task = Dominio.Task
-@inject IEpicService EpicService
+@inject IEpicService EcService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -79,7 +79,7 @@
             Navigation.NavigateTo($"/error");
         }
 
-        toModify = EpicService.GetEpicById(int.Parse(EpicId));
+        toModify = EcService.GetEpicById(int.Parse(EpicId));
         modelChangeEpic.Description = toModify.Description;
         modelChangeEpic.Name = toModify.Name;
         modelChangeEpic.Priority = toModify.Priority;
@@ -103,7 +103,7 @@
         }
         
         toModify.Priority = modelChangeEpic.Priority;
-        EpicService.UpdateEpic(toModify);
+        EcService.UpdateEpic(toModify);
         message = "Epica modificada";
     }
 

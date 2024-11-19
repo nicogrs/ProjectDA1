@@ -4,7 +4,7 @@
 @using Interfaces
 @inject ITeamService TmService
 @inject ITaskService TkService
-@inject IPanelService PnService
+@inject IPanelService PlService
 @inject IUserService UService
 @inject Session Session
 @inject NavigationManager Navigation
@@ -51,13 +51,13 @@ else
         UService.DeleteElementFromPaperbin(Session.CurrentUser.Email, item);
         if (item is Panel)
         {
-            var panel = PnService.GetPanelById(item.Id);
+            var panel = PlService.GetPanelById(item.Id);
             TmService.RemovePanelFromTeam(panel, panel.Team);
-            PnService.RemovePanel(item.Id); // Lo tengo que remover independientemente sino no se elimina de la BD
+            PlService.RemovePanel(item.Id);
         }else if (item is Task)
         {
             var task = TkService.GetTaskById(item.Id);
-            PnService.RemoveTaskFromPanel(task.PanelId, task);
+            PlService.RemoveTaskFromPanel(task.PanelId, task);
         }
     }
 

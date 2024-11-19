@@ -3,7 +3,7 @@
 @using Interfaces
 @using Task = Dominio.Task
 @inject IPanelService PlService
-@inject IEpicService EpicService
+@inject IEpicService EcService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -104,8 +104,7 @@
                 ExpirationDate = modelCreateEpic.ExpirationDate,
                 FromPanel = PlService.GetPanelById(int.Parse(panelId))
             };
-            EpicService.CreateEpic(epic);
-           // PlService.GetPanelById(int.Parse(panelId)).AddTask(t);
+            EcService.CreateEpic(epic);
             message="Epica creada con éxito";
             errorMessage = "";
             ClearContents();

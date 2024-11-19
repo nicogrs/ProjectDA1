@@ -2,11 +2,7 @@
 @using Dominio
 @using Interfaces
 @using InterfazWeb.Pages.Tasks
-@inject IEpicService EpicService
-@inject ITaskService TkService
-@inject IUserService UService
-@inject Notifications Notifications
-@inject INotificationService NtfService
+@inject IEpicService EcService
 @inject NavigationManager Navigation
 @inject Session Session
 <PageTitle>Tareas de Epica</PageTitle>
@@ -57,7 +53,7 @@
 
     private void RefreshTasks()
     {
-        selectedEpic = EpicService.GetEpicById(int.Parse(EpicId));
+        selectedEpic = EcService.GetEpicById(int.Parse(EpicId));
     }
 
     private void GoBack()

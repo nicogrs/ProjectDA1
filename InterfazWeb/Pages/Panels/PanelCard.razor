@@ -2,7 +2,7 @@
 @using Interfaces
 @inject NavigationManager Navigation
 @inject Session Session
-@inject IPanelService PnService
+@inject IPanelService PlService
 @inject IUserService UService
 @inject ITeamService TmService
 
@@ -82,7 +82,7 @@
     
     protected override void OnInitialized()
     {
-        selectedPanel = PnService.GetPanelById(int.Parse(panelId));
+        selectedPanel = PlService.GetPanelById(int.Parse(panelId));
     }
     
     private void GoToPanel()

@@ -1,4 +1,4 @@
-﻿namespace Test;
+﻿namespace Test.DTOsTest;
 using DTOs;
 
 [TestClass]

@@ -4,7 +4,7 @@ using Interfaces;
 using Services;
 using Test.Context;
 
-namespace Test;
+namespace Test.ServicesTests;
 
 [TestClass]
 public class NotificationServiceTest

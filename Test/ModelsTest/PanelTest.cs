@@ -1,4 +1,4 @@
-﻿namespace Test;
+﻿namespace Test.ModelsTests;
 using Dominio;
 using Task = Dominio.Task;
 
@@ -15,13 +15,7 @@ public class PanelTest
     public void Setup()
     {
         u = new User();
-       // Comment c1 = new Comment("Primer comentario");
-        //Comment c2 = new Comment("Segundo comentario");
-       // Comment c3 = new Comment("Primer comentario T2");
-       // Comment c4 = new Comment("Segundo comentario T2");
-      //  comments1 = new List<Comment>() { c1, c2 };
-       // List<Comment> comments2 = new List<Comment>() { c3, c4 };
-
+       
         panel = new Panel()
         {
             Name = "Panel numero 1",
@@ -44,8 +38,7 @@ public class PanelTest
             Name = "Tarea 2",
             Precedence = Task.Priority.Medium,
             Description = "Descripcion tarea 2",
-            ExpirationDate = new DateTime(2025, 03, 01),
-           // Comments = comments2
+            ExpirationDate = new DateTime(2025, 03, 01)
         };
     }
 

@@ -2,7 +2,7 @@ using Interfaces;
 using Services;
 using DataAccess;
 using Test.Context;
-namespace Test;
+namespace Test.ServicesTests;
 using Dominio;
 
 

@@ -119,7 +119,7 @@ public class TaskImportService
     }
     public ImportedTask TaskFromStringList(List<string> strList)
     {
-        //Título,Descripción,Fecha de vencimiento,ID de panel,Esfuerzo Estimado,ID de epica
+       
         ImportedTask task = new ImportedTask();
         task.Name = strList[0];
         task.Description = strList[1];

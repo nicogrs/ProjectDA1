@@ -2,7 +2,7 @@ using DataAccess;
 using Interfaces;
 using Test.Context;
 
-namespace Test;
+namespace Test.ModelsTests;
 using Dominio;
 using Moq;
 

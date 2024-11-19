@@ -1,14 +1,9 @@
 @page "/{teamName}/{panelId}/add/{EpicId}"
 @using Dominio
 @using Interfaces
-@using Microsoft.EntityFrameworkCore
 @using Task = Dominio.Task
-@inject IEpicService EpicService
+@inject IEpicService EcService
 @inject ITaskService TkService
-@inject IPanelService PnService
-@inject IUserService UService
-@inject Notifications Notifications
-@inject INotificationService NtfService
 @inject NavigationManager Navigation
 @inject Session Session
 <PageTitle>Add Tasks To Epic</PageTitle>
@@ -67,7 +62,7 @@
         {
             Navigation.NavigateTo("/error");
         }
-        CurrentEpic = EpicService.GetEpicById(int.Parse(EpicId));
+        CurrentEpic = EcService.GetEpicById(int.Parse(EpicId));
         AllTasks = TkService.GetNonExpiredTasks(int.Parse(panelId));
     }
     
@@ -102,7 +97,7 @@
     {
         foreach (var task in SelectedTasksToAdd)
         {
-            EpicService.AddTaskToEpic(int.Parse(EpicId), task);
+            EcService.AddTaskToEpic(int.Parse(EpicId), task);
             TkService.UpdateTask(task);
         }
         SelectedTasksToAdd.Clear(); 
@@ -112,7 +107,7 @@
     {
         foreach (var task in SelectedTasksToRemove)
         {
-            EpicService.RemoveTaskFromEpic(int.Parse(EpicId), task);
+            EcService.RemoveTaskFromEpic(int.Parse(EpicId), task);
             TkService.UpdateTask(task);
         }
         SelectedTasksToRemove.Clear();

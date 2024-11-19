@@ -1,7 +1,7 @@
 ﻿using Dominio;
 using Task = Dominio.Task;
 
-namespace Test;
+namespace Test.ModelsTests;
 
 [TestClass]
 public class TaskTest

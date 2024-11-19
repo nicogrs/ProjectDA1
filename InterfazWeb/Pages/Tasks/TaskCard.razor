@@ -192,8 +192,9 @@
 
     private void ConfirmDelete()
     {
-        UService.AddElementToPaperBin(Session.CurrentUser.Email, selectedTask as IDeleteable);
-        selectedTask.IsInEpic = false;
+        var taskToDelete = TkService.GetTaskById(TaskId);
+        UService.AddElementToPaperBin(Session.CurrentUser.Email, taskToDelete as IDeleteable);
+        taskToDelete.IsInEpic = false;
         CloseModal();
         OnTaskDeleted.InvokeAsync();
     }

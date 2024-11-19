@@ -132,9 +132,10 @@
 
     private void ConfirmDelete()
     {
-        EpicService.DeleteEpicById(selectedEpic.Id);
-        CloseModal();
-        EpicOnTaskDeleted.InvokeAsync(); 
+      var epicToDelete = EpicService.GetEpicById(int.Parse(EpicId));
+      EpicService.DeleteEpicById(epicToDelete.Id); 
+      CloseModal();
+      EpicOnTaskDeleted.InvokeAsync(); 
     }
 
     private void GoToAdd()

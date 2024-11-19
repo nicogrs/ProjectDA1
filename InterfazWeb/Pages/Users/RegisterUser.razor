@@ -1,5 +1,4 @@
 @page "/users/register"
-@using Dominio
 @using Interfaces
 @using DTOs
 @inject IUserService UService
@@ -90,26 +89,32 @@
     
     private void HandleRegister()
     {
-        UserRegisterDTO u = new UserRegisterDTO
+        if (UService.GetUserByEmail(modelRegister.Email) != null)
         {
-            Name = modelRegister.Name,
-            Surname = modelRegister.Surname,
-            BirthDate = modelRegister.BirthDate,
-            Email = modelRegister.Email,
-            Password = modelRegister.Password,
-            Admin = modelRegister.Admin
-        };
-        add = UService.CreateUser(u.ToEntity());
-        if (add)
-        {
-            messageSuccess = "Usuario Registrado con exito";
-            ClearContents();
+            messageNotSuccess= "Mail ya registrado.";
         }
         else
         {
-            messageNotSuccess= "No se pudo crear el usuario";
+            UserRegisterDTO u = new UserRegisterDTO
+            {
+                Name = modelRegister.Name,
+                Surname = modelRegister.Surname,
+                BirthDate = modelRegister.BirthDate,
+                Email = modelRegister.Email,
+                Password = modelRegister.Password,
+                Admin = modelRegister.Admin
+            };
+            add = UService.CreateUser(u.ToEntity());
+            if (add)
+            {
+                messageSuccess = "Usuario Registrado con exito.";
+                ClearContents();
+            }
+            else
+            {
+                messageNotSuccess = "No se pudo crear el usuario.";
+            }
         }
-        
     }
 
     private void ClearContents()

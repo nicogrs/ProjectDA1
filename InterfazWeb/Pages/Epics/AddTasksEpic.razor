@@ -2,7 +2,6 @@
 @using Dominio
 @using Interfaces
 @using Microsoft.EntityFrameworkCore
-@using Services
 @using Task = Dominio.Task
 @inject IEpicService EpicService
 @inject ITaskService TkService
@@ -64,6 +63,10 @@
 
     protected override void OnInitialized()
     {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
         CurrentEpic = EpicService.GetEpicById(int.Parse(EpicId));
         AllTasks = TkService.GetNonExpiredTasks(int.Parse(panelId));
     }

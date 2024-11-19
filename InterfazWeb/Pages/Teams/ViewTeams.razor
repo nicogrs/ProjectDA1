@@ -32,6 +32,10 @@
     
     protected override void OnInitialized()
     {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
         LoadTeams();
     }
 

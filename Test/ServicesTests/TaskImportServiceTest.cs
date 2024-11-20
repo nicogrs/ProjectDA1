@@ -82,7 +82,7 @@ public class TaskImportServiceTest
     
 
     [TestMethod]
-    public void ReadTasksFromContentTest()
+    public void ReadTasksFromContentTest1()
     {
         string content =
             $"{referenceTasks[0].Name},{referenceTasks[0].Description},{referenceTasks[0].ExpirationDate.ToShortDateString()}," +
@@ -102,6 +102,19 @@ public class TaskImportServiceTest
             Assert.AreEqual(tasks[i].ExpirationDate, referenceTasks[i].ExpirationDate);
             Assert.AreEqual(tasks[i].ExpectedEffort, referenceTasks[i].ExpectedEffort);
         }
+    }
+    
+    [TestMethod]
+    public void ReadTasksFromContentTest2()
+    {
+        string content =
+            $"{referenceTasks[0].Name},{referenceTasks[0].Description},{referenceTasks[0].ExpirationDate.ToShortDateString()}," +
+            $"{referenceTasks[0].PanelId},1,{referenceTasks[0].ExpectedEffort}";
+        
+        List<TaskImportService.ImportedTask> tasks = _taskImportService.ReadTasksFromContent(content,new User(){Name = "User 1"});
+
+        Assert.AreEqual(tasks[0].epicId,1);
+        Assert.IsTrue(tasks[0].IsInEpic);
     }
 
     [TestMethod]

@@ -26,7 +26,8 @@ public class TaskImportServiceTest
             "incorrecta,columnas de mas,31/12/2025,1,1,1,2",
             "incorrecta,Fecha incorrecta,31/1/2/2025,1,1,5",
             "incorrecta,Id panel incorrecto,31/12/2025,one,1,3",
-            "incorrecta,Formato de esfuerzo inc.,31/12/2025,1,1,cinco."
+            "incorrecta,Formato de esfuerzo inc.,31/12/2025,1,1,cinco.",
+            "incorrecta,Formato de Id epica inc.,31/12/2025,1,siete,5",
         };
         
         string directory = Directory.GetCurrentDirectory();
@@ -281,6 +282,19 @@ public class TaskImportServiceTest
         string expectedErrorMessage = "Error en formato de esfuerzo esperado.";
         
         _taskImportService.ProcessError(errorLinesToProcess[5]);
+        
+        Assert.AreEqual(1, _taskImportService.errors.Count);
+        bool contieneError = _taskImportService.errors[0].Contains(expectedErrorMessage);
+        Assert.IsTrue(contieneError);
+    }
+    
+    [TestMethod]
+    public void ProcessErrorTest7()
+    {
+        _taskImportService.errors = new List<string>();
+        string expectedErrorMessage = "Error en formato de Id de Epica";
+        
+        _taskImportService.ProcessError(errorLinesToProcess[6]);
         
         Assert.AreEqual(1, _taskImportService.errors.Count);
         bool contieneError = _taskImportService.errors[0].Contains(expectedErrorMessage);

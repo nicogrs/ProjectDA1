@@ -15,10 +15,6 @@ public class TrashTest
     [TestInitialize]
     public void Setup()
     {
-
-
-        
-
         _user = new User
         {
             Name = "Carlos",
@@ -26,7 +22,10 @@ public class TrashTest
             Email = "carlos@gmail.com",
             BirthDate = new DateTime(1980, 1, 1),
             Password = "TestPass$1",
-            PaperBin = new Trash(),
+            PaperBin = new Trash()
+            {
+                Id = 1,
+            },
             Admin = false
         };
     }
@@ -57,4 +56,9 @@ public class TrashTest
         Assert.AreEqual(_user.PaperBin.ElementsCount, 0);
     }
     
+    [TestMethod]
+    public void CheckPaperBinId()
+    {
+        Assert.AreEqual(_user.PaperBin.Id, 1);
+    }
 }

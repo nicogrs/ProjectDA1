@@ -1,38 +1,51 @@
 ﻿using Dominio;
+using Task = Dominio.Task;
+
 namespace Test.ModelsTests;
 
 
 [TestClass]
-public class CommentCreateTest
+public class CommentTest
 {
     private User u1;
     private User u2;
     private Comment c;
+    private Task t;
     
     [TestInitialize]
     public void Setup()
     {
         u1 = new User { Id = 1, Name = "User1" };
         u2 = new User { Id = 2, Name = "User2" };
-        c = new Comment
-        {
-            CreatedBy = u1,
-            Content = "ComentarioPrueba",
-            Resolved = false,
-            ResolvedBy = null,
-            ResolvedTime = default(DateTime)
-        };
+        t = new Task { Id = 1, Name = "Task" };
     }
 
     [TestMethod]
-    public void CommentCreateCreatedBy()
+    public void CommentCreate()
     {
+        c = new Comment
+        {
+            Id = 1,
+            CreatedById = 1,
+            CreatedBy = u1,
+            Resolved = false,
+            ResolvedById = null,
+            ResolvedBy = null,
+            Task = t,
+            TaskId = 1,
+            ResolvedTime = default(DateTime),
+            Content = "ComentarioPrueba",
+        };
+        
+        Assert.AreEqual(c.Id, 1);
+        Assert.AreEqual(c.CreatedById, 1);
         Assert.AreSame(c.CreatedBy, u1);
-    }
-    
-    [TestMethod]
-    public void CommentCreateContent()
-    {
-        Assert.AreSame(c.Content, "ComentarioPrueba");
+        Assert.IsFalse(c.Resolved);
+        Assert.IsNull(c.ResolvedBy);
+        Assert.IsNull(c.ResolvedById);
+        Assert.AreSame(c.Task, t);
+        Assert.AreEqual(c.TaskId, 1);
+        Assert.AreEqual(c.ResolvedTime,default(DateTime));
+        Assert.AreEqual(c.Content, "ComentarioPrueba");
     }
 }

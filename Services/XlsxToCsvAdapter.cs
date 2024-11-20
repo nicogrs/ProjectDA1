@@ -29,12 +29,6 @@ public class XlsxToCsvAdapter : TaskImportService
     {
         string content = "";
 
-        if (!File.Exists(filePath))
-        {
-            Console.WriteLine("File not found.");
-            return content;
-        }
-
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
         using (var package = new ExcelPackage(new FileInfo(filePath)))

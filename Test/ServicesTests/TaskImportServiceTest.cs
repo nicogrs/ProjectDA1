@@ -11,8 +11,10 @@ public class TaskImportServiceTest
     private TaskImportService _taskImportService;
     private List<string> filesToTest;
     private List<string> xlsxFilesToTest;
-    private List<Task> referenceTasks;
+    private List<Task> referenceTasks1;
+    private List<Task> referenceTasks2;
     private List<string> errorLinesToProcess;
+    private string referenceContent;
     
     
     [TestInitialize]
@@ -51,7 +53,7 @@ public class TaskImportServiceTest
         }
 
         
-        referenceTasks = new List<Task>()
+        referenceTasks1 = new List<Task>()
         {
             new Task()
             {
@@ -75,32 +77,69 @@ public class TaskImportServiceTest
                 PanelId = 1
             }
         };
-        _taskImportService = new TaskImportService();
-    }
-    
 
+        referenceTasks2 = new List<Task>()
+        {
+            new Task()
+            {
+                Name = "Contactar al cliente",
+                Description = "Contactar al cliente para actualizar el estado del proyecto.",
+                ExpirationDate = new DateTime(2025, 09, 10),
+                ExpectedEffort = 1
+            },
+            new Task()
+            {
+                Name = "Pagar proveedores",
+                Description = "Revisar planilla de proveedores y pagar.",
+                ExpirationDate = new DateTime(2025, 09, 19),
+                ExpectedEffort = 2
+            },
+            new Task()
+            {
+                Name = "Terminar obligatorio",
+                Description = "Terminar el obligatorio 2 de DA.",
+                ExpirationDate = new DateTime(2025, 11, 20),
+                ExpectedEffort = 3
+            },
+            new Task()
+            {
+                Name = "Comprar mesa ping pong",
+                Description = "Comprar mesa para la sala de espera.",
+                ExpirationDate = new DateTime(2025, 12, 24),
+                ExpectedEffort = 2
+            }
+        };
+        _taskImportService = new TaskImportService();
+        
+        referenceContent =
+            "Título,Descripción,Fecha de vencimiento,ID de panel,ID de epica,Esfuerzo Estimado\r\n" +
+            "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2025,1,1,1\r\n" +
+            "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2025,1,1,2\r\n" +
+            "Terminar obligatorio,Terminar el obligatorio 2 de DA.,20/11/2025,1,2,3\r\n" +
+            "Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2025,2,,2\r\n";
+    }
     
 
     [TestMethod]
     public void ReadTasksFromContentTest1()
     {
         string content =
-            $"{referenceTasks[0].Name},{referenceTasks[0].Description},{referenceTasks[0].ExpirationDate.ToShortDateString()}," +
-            $"{referenceTasks[0].PanelId},,{referenceTasks[0].ExpectedEffort}\n" +
-            $"{referenceTasks[1].Name},{referenceTasks[1].Description},{referenceTasks[1].ExpirationDate.ToShortDateString()}," +
-            $"{referenceTasks[1].PanelId},,{referenceTasks[1].ExpectedEffort}\n" +
-            $"{referenceTasks[2].Name},{referenceTasks[2].Description},{referenceTasks[2].ExpirationDate.ToShortDateString()}," +
-            $"{referenceTasks[2].PanelId},,{referenceTasks[2].ExpectedEffort}\n";
+            $"{referenceTasks1[0].Name},{referenceTasks1[0].Description},{referenceTasks1[0].ExpirationDate.ToShortDateString()}," +
+            $"{referenceTasks1[0].PanelId},,{referenceTasks1[0].ExpectedEffort}\n" +
+            $"{referenceTasks1[1].Name},{referenceTasks1[1].Description},{referenceTasks1[1].ExpirationDate.ToShortDateString()}," +
+            $"{referenceTasks1[1].PanelId},,{referenceTasks1[1].ExpectedEffort}\n" +
+            $"{referenceTasks1[2].Name},{referenceTasks1[2].Description},{referenceTasks1[2].ExpirationDate.ToShortDateString()}," +
+            $"{referenceTasks1[2].PanelId},,{referenceTasks1[2].ExpectedEffort}\n";
         
         List<TaskImportService.ImportedTask> tasks = _taskImportService.ReadTasksFromContent(content,new User(){Name = "User 1"});
 
         int taskListElementCount = tasks.Count;
         for (int i = 0; i < taskListElementCount; i++)
         {
-            Assert.AreEqual(tasks[i].Name, referenceTasks[i].Name);
-            Assert.AreEqual(tasks[i].Description, referenceTasks[i].Description);
-            Assert.AreEqual(tasks[i].ExpirationDate, referenceTasks[i].ExpirationDate);
-            Assert.AreEqual(tasks[i].ExpectedEffort, referenceTasks[i].ExpectedEffort);
+            Assert.AreEqual(tasks[i].Name, referenceTasks1[i].Name);
+            Assert.AreEqual(tasks[i].Description, referenceTasks1[i].Description);
+            Assert.AreEqual(tasks[i].ExpirationDate, referenceTasks1[i].ExpirationDate);
+            Assert.AreEqual(tasks[i].ExpectedEffort, referenceTasks1[i].ExpectedEffort);
         }
     }
     
@@ -108,8 +147,8 @@ public class TaskImportServiceTest
     public void ReadTasksFromContentTest2()
     {
         string content =
-            $"{referenceTasks[0].Name},{referenceTasks[0].Description},{referenceTasks[0].ExpirationDate.ToShortDateString()}," +
-            $"{referenceTasks[0].PanelId},1,{referenceTasks[0].ExpectedEffort}";
+            $"{referenceTasks1[0].Name},{referenceTasks1[0].Description},{referenceTasks1[0].ExpirationDate.ToShortDateString()}," +
+            $"{referenceTasks1[0].PanelId},1,{referenceTasks1[0].ExpectedEffort}";
         
         List<TaskImportService.ImportedTask> tasks = _taskImportService.ReadTasksFromContent(content,new User(){Name = "User 1"});
 
@@ -121,13 +160,7 @@ public class TaskImportServiceTest
     public void ReadXlsxTest()
     {
         XlsxToCsvAdapter xslxAdapter = new XlsxToCsvAdapter();
-        string expectedResult =
-            "Título,Descripción,Fecha de vencimiento,ID de panel,ID de epica,Esfuerzo Estimado\r\n" +
-            "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2025,1,1,1\r\n" +
-            "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2025,1,1,2\r\n" +
-            "Terminar obligatorio,Terminar el obligatorio 2 de DA.,20/11/2025,1,2,3\r\n" +
-            "Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2025,2,,2\r\n";
-        List<string> expectedList = expectedResult.Split("\r\n").ToList();
+        List<string> expectedList = referenceContent.Split("\r\n").ToList();
         
         string result = xslxAdapter.TranslateXlsxToCsv(xlsxFilesToTest[0]);
         List<string> actualList = result.Split("\r\n").ToList();

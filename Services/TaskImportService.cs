@@ -98,7 +98,6 @@ public class TaskImportService
         if (!IsStringExpectedEffortValid(separatedLine[5]))
         {
             LogError(line,"Error en formato de esfuerzo esperado.");
-            return;
         }
     }
 

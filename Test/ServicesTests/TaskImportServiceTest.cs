@@ -1,4 +1,3 @@
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Dominio;
 using Services;
 
@@ -21,12 +20,13 @@ public class TaskImportServiceTest
     {
         errorLinesToProcess = new List<string>()
         {
-            
+            //Título,Descripción,Fecha de vencimiento,ID de panel,ID de epica,Esfuerzo Estimado
             "correcta,descripcion,31/12/2025,1,1,1",
             "incorrecta,menos columnas,31/12/2025",
             "incorrecta,columnas de mas,31/12/2025,1,1,1,2",
             "incorrecta,Fecha incorrecta,31/1/2/2025,1,1,5",
-            "incorrecta,Id columna incorrecto,31/12/2025,one,1,3",
+            "incorrecta,Id panel incorrecto,31/12/2025,one,1,3",
+            "incorrecta,Formato de esfuerzo inc.,31/12/2025,1,1,cinco."
         };
         
         string directory = Directory.GetCurrentDirectory();
@@ -273,6 +273,19 @@ public class TaskImportServiceTest
         bool contieneError = _taskImportService.errors[0].Contains(expectedErrorMessage);
         Assert.IsTrue(contieneError);
     }
+    
+    [TestMethod]
+    public void ProcessErrorTest6()
+    {
+        _taskImportService.errors = new List<string>();
+        string expectedErrorMessage = "Error en formato de esfuerzo esperado.";
+        
+        _taskImportService.ProcessError(errorLinesToProcess[5]);
+        
+        Assert.AreEqual(1, _taskImportService.errors.Count);
+        bool contieneError = _taskImportService.errors[0].Contains(expectedErrorMessage);
+        Assert.IsTrue(contieneError);
+    }
 
     [TestMethod]
     public void RemoveTimeFromDateTimeTest()
@@ -283,5 +296,16 @@ public class TaskImportServiceTest
         string expectedDate = adapter.RemoveTimeFromDateTime(originalDateTime);
         
         Assert.AreEqual(expectedDate, "01/01/2020");
+    }
+
+    [TestMethod]
+    public void ImportedTaskTest()
+    {
+        TaskImportService.ImportedTask t = new TaskImportService.ImportedTask()
+        {
+            epicId = 0
+        };
+        
+        Assert.AreEqual(t.epicId,0);
     }
 }

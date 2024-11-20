@@ -109,10 +109,10 @@ public class TaskImportServiceTest
         XlsxToCsvAdapter xslxAdapter = new XlsxToCsvAdapter();
         string expectedResult =
             "Título,Descripción,Fecha de vencimiento,ID de panel,ID de epica,Esfuerzo Estimado\r\n" +
-            "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2025 0:00:00,1,1,1\r\n" +
-            "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2025 0:00:00,1,1,2\r\n" +
-            "Terminar obligatorio,Terminar el obligatorio 2 de DA.,20/11/2025 0:00:00,1,2,3\r\n" +
-            "Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2025 0:00:00,2,,2\r\n";
+            "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2025,1,1,1\r\n" +
+            "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2025,1,1,2\r\n" +
+            "Terminar obligatorio,Terminar el obligatorio 2 de DA.,20/11/2025,1,2,3\r\n" +
+            "Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2025,2,,2\r\n";
         List<string> expectedList = expectedResult.Split("\r\n").ToList();
         
         string result = xslxAdapter.TranslateXlsxToCsv(xlsxFilesToTest[0]);

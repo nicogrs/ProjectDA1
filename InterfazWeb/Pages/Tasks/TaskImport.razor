@@ -203,7 +203,7 @@
         {
             if (task == null) continue;
             PlService.AddTaskToPanel(int.Parse(panelId),task);
-            if (task.IsInEpic)
+            if (task.IsInEpic && (task.ExpirationDate > DateTime.Now.AddDays(+1)))
             {
                 List<Epic> epicsInPanel = EcService.GetEpicsByPanelId(int.Parse(panelId));
                 Epic taskEpic = EcService.GetEpicById(task.epicId);

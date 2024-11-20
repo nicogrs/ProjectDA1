@@ -88,10 +88,11 @@
                  <p>No se puede eliminar la epica <strong>@selectedEpic.Name </strong> debido a que contiene
                  tareas agrupadas, eliminelas e intente nuevamente</p>
              </div>    
+             <div class="modal-footer">
+                 <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
+             </div>
          }
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
-            </div>
+            
         </div>
     </div>
 </div>

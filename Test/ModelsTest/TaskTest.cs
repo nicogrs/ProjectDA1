@@ -25,14 +25,21 @@ public class TaskTest
         c2 = new Comment();
         c3 = new Comment();
         comments = new List<Comment>(){c1, c2, c3};
+        p = new Panel()
+        {
+            Id = 1,
+        };
         t1 = new Task()
         {
             Name = "Titulo 1",
             Precedence = Task.Priority.Low,
             Description = "Descripcion tarea 1",
             ExpirationDate = new DateTime(2025, 10, 01),
-            Comments = comments
+            Comments = comments,
+            Panel = p,
+            PanelId = p.Id
         };
+        p.Tasks.Add(t1);
     }
     
     [TestMethod]
@@ -109,15 +116,16 @@ public class TaskTest
     [TestMethod]
     public void TaskPanelTest()
     {
-        p = new Panel()
-        {
-            Tasks = new List<Task>()
-            {
-                t1
-            }
-        };
-        t1.Panel = p;
-        
         Assert.AreSame(t1.Panel, p);
+    }
+    
+    [TestMethod]
+    public void IsInEpicTest()
+    {
+        e = new Epic();
+        e.Tasks.Add(t1);
+        t1.IsInEpic = true;
+        
+        Assert.IsTrue(t1.IsInEpic);
     }
 }

@@ -1,7 +1,8 @@
 ﻿@page "/users/modify/{unEmail}"
 @using Dominio
+@using Interfaces
 @using DTOs
-@inject IUserDatabase UDatabase
+@using Services
 @inject IUserService UService
 @inject PasswordService PService  
 @inject Session Session
@@ -75,9 +76,9 @@ else
     
     protected override void OnInitialized()
     {
-        if (Session.IsAdmin)
+        if (Session.CurrentUser != null)
         {
-            unUser = UDatabase.GetUserByEmail(unEmail);
+            unUser = UService.GetUserByEmail(unEmail);
             if (unUser != null)
             {
                 modelChangeInformation.Email = unUser.Email;

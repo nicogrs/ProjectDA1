@@ -1,5 +1,10 @@
 @page "/account/paperbin"
 @using Dominio
+@using Task = Dominio.Task
+@using Interfaces
+@inject ITeamService TmService
+@inject ITaskService TkService
+@inject IPanelService PlService
 @inject IUserService UService
 @inject Session Session
 @inject NavigationManager Navigation
@@ -12,9 +17,13 @@
         @foreach (var item in PaperBinItems)
         {
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                <strong>@item.ToString()</strong> 
-                <button class="btn btn-danger btn-sm"
-                        @onclick="() => DeleteElement(item)">Eliminar Permanentemente</button>
+                <strong>@item.ToString()</strong>
+                <div class="d-flex justify-content-end w-100">
+                    <button class="btn btn-danger btn-sm me-2"
+                            @onclick="() => DeleteElement(item)">Eliminar Permanentemente</button>
+                    <button class="btn btn-warning btn-sm"
+                            @onclick="() => RestoreElement(item)">Restaurar Elemento</button>
+                </div>
             </li>
         }
     </ul>
@@ -26,7 +35,7 @@ else
 
 @code {
     public User selectedUser { get; set; }
-    public List<IPaperBinItem> PaperBinItems { get; set; }
+    public List<IDeleteable> PaperBinItems { get; set; }
     protected override void OnInitialized()
     {
         if (Session.CurrentUser == null)
@@ -34,12 +43,26 @@ else
             Navigation.NavigateTo("/error");
         }
        selectedUser = UService.GetUserByEmail(Session.CurrentUser.Email);
-       PaperBinItems = selectedUser.PaperBin.Paperbin;
+       PaperBinItems = UService.GetDeletedElements(Session.CurrentUser.Email);
     }
 
-    public void DeleteElement(IPaperBinItem item)
+    public void DeleteElement(IDeleteable item)
     {
-        selectedUser.PaperBin.DeleteElementFromPaperbin(item);
-        PaperBinItems = selectedUser.PaperBin.Paperbin;
+        UService.DeleteElementFromPaperbin(Session.CurrentUser.Email, item);
+        if (item is Panel)
+        {
+            var panel = PlService.GetPanelById(item.Id);
+            TmService.RemovePanelFromTeam(panel, panel.Team);
+            PlService.RemovePanel(item.Id);
+        }else if (item is Task)
+        {
+            var task = TkService.GetTaskById(item.Id);
+            PlService.RemoveTaskFromPanel(task.PanelId, task);
+        }
+    }
+
+    public void RestoreElement(IDeleteable item)
+    {
+        UService.RestoreElement(item, Session.CurrentUser.Email);
     }
 }

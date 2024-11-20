@@ -1,7 +1,7 @@
-﻿@page "/{teamName}/{panelId}/{taskTitle}"
-@using Dominio
+﻿@page "/{teamName}/{panelId}/{TaskId}"
+@using Interfaces
 @using Task = Dominio.Task
-@inject PanelService PlService
+@inject ITaskService TkService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -20,8 +20,8 @@
         <div class="w-50">
             <div class="form-group mt-4">
                 <label id="name">Titulo</label>
-                <InputText class="form-control" @bind-Value="@modelChangeTask.Title" id="name"></InputText>
-                <ValidationMessage For="@(() => modelChangeTask.Title)"/>
+                <InputText class="form-control" @bind-Value="@modelChangeTask.Name" id="name"></InputText>
+                <ValidationMessage For="@(() => modelChangeTask.Name)"/>
             </div>
 
             <div class="form-group mt-4">
@@ -29,7 +29,20 @@
                 <InputText class="form-control" @bind-Value="@modelChangeTask.Description" id="description"></InputText>
                 <ValidationMessage For="@(() => modelChangeTask.Description)"/>
             </div>
-        @if(Session.IsAdmin){
+
+            <div class="form-group mt-4">
+                <label for="lastName">Esfuerzo Estimado</label>
+                <InputNumber Min="0" class="form-control" @bind-Value="@modelChangeTask.ExpectedEffort" id="expectedeffort"></InputNumber>
+                <ValidationMessage For="@(() => modelChangeTask.ExpectedEffort)"/>
+            </div>
+
+            <div class="form-group mt-4">
+                <label for="lastName">Esfuerzo Invertido</label>
+                <InputNumber Min="0" class="form-control" @bind-Value="@modelChangeTask.InvertedEffort" id="invertedeffort"></InputNumber>
+                <ValidationMessage For="@(() => modelChangeTask.InvertedEffort)"/>
+            </div>
+            
+            @if(Session.IsAdmin){
             <div class="form-group mt-4">
                 <label for="birthDate">Fecha de expiración</label>
                 <InputDate class="form-control" id="birthDate" @bind-Value="@modelChangeTask.ExpirationDate" min=@DateTime.Today.ToString()></InputDate>
@@ -65,10 +78,9 @@
     [Parameter]
     public string panelId { get; set; }
     [Parameter]
-    public string taskTitle { get; set; }
+    public string TaskId { get; set; }
     Task modelChangeTask = new Task();
     Task toModify = new Task();
-    Panel panel = new Panel();
     private string message;
     private Task.Priority selectedPriority;
 
@@ -78,19 +90,21 @@
         {
             Navigation.NavigateTo($"/error");
         }
-        panel = PlService.GetPanelById(teamName, int.Parse(panelId));
-        toModify = panel.Tasks.FirstOrDefault(t => t.Title == taskTitle);
+
+        toModify = TkService.GetTaskById(int.Parse(TaskId));
         modelChangeTask.Description = toModify.Description;
-        modelChangeTask.Title = toModify.Description;
+        modelChangeTask.Name = toModify.Name;
         modelChangeTask.Precedence = toModify.Precedence;
         modelChangeTask.ExpirationDate = toModify.ExpirationDate;
+        modelChangeTask.ExpectedEffort = toModify.ExpectedEffort;
+        modelChangeTask.InvertedEffort = toModify.InvertedEffort;
     }
 
     private void HandleModify()
     {
-        if (!String.IsNullOrEmpty(modelChangeTask.Title))
+        if (!String.IsNullOrEmpty(modelChangeTask.Name))
         {
-            toModify.Title = modelChangeTask.Title;
+            toModify.Name = modelChangeTask.Name;
         }
 
         if (!String.IsNullOrEmpty(modelChangeTask.Description))
@@ -101,8 +115,17 @@
         {
             toModify.ExpirationDate = modelChangeTask.ExpirationDate;
         }
+        if (modelChangeTask.ExpectedEffort != null)
+        {
+            toModify.ExpectedEffort = modelChangeTask.ExpectedEffort;
+        }
+        
+        if (modelChangeTask.InvertedEffort != null)
+        {
+            toModify.InvertedEffort = modelChangeTask.InvertedEffort;
+        }
         toModify.Precedence = modelChangeTask.Precedence;
-
+        TkService.UpdateTask(toModify);
         message = "Tarea modificada";
     }
 

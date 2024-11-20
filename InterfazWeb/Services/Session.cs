@@ -7,6 +7,7 @@ public class Session
 
     public bool IsAdmin => CurrentUser != null && CurrentUser.Admin;
 
+    public event Action OnChangeNotifications;
     public event Action OnChange;
 
 
@@ -23,6 +24,11 @@ public class Session
         NotifyStateChanged();
     }
 
+    public void NotifyNewNotifications()
+    {
+    OnChangeNotifications?.Invoke();
+    }
+    
     private void NotifyStateChanged()
     { 
         OnChange?.Invoke();

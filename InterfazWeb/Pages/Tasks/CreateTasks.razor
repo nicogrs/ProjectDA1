@@ -1,8 +1,7 @@
 @page "/{teamName}/{panelId}/create"
-@using Dominio
-@using Dominio.Data
+@using Interfaces
 @using Task = Dominio.Task
-@inject PanelService PlService
+@inject IPanelService PlService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -14,46 +13,57 @@
         @message
     </div>
 }
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+<div class="alert alert-danger" role="alert">
+    @errorMessage
+</div>
+}
 <EditForm Model="modelCreateTask" OnValidSubmit="HandleCreate">
     <DataAnnotationsValidator/>
     <div class="d-flex justify-content-center align-items-center">
         <div class="w-50">
-        <div class="form-group mt-4">
-            <label id="name">Nombre</label>
-            <InputText required class="form-control" @bind-Value="@modelCreateTask.Title" id="name"></InputText>
-            <ValidationMessage For="@(() => modelCreateTask.Title)"/>
-        </div>
-        <div class="form-group mt-4">
-            <label id="priority">Prioridad</label>
-            <select class="form-control" Value="@selectedPriority" id="priority">
-                @foreach (var priority in Enum.GetValues(typeof(Task.Priority)))
-                {
+            <div class="form-group mt-4">
+                <label id="name">Nombre</label>
+                <InputText required class="form-control" @bind-Value="@modelCreateTask.Name" id="name"></InputText>
+                <ValidationMessage For="@(() => modelCreateTask.Name)"/>
+            </div>
+            <div class="form-group mt-4">
+                <label id="priority">Prioridad</label>
+                <select class="form-control" @bind="@modelCreateTask.Precedence" id="priority">
+                    @foreach (var priority in Enum.GetValues(typeof(Task.Priority)))
+                    {
                     <option value="@priority">@priority.ToString()</option>
-                }
-            </select>
-            <ValidationMessage For="@(() => modelCreateTask.Precedence)"/>
-        </div>
-        <div class="form-group mt-4">
-            <label for="description">Descripcion</label>
-            <InputText class="form-control" @bind-Value="@modelCreateTask.Description" required id="description"></InputText>
-            <ValidationMessage For="@(() => modelCreateTask.Description)"/>
-        </div>
+                    }
+                </select>
+                <ValidationMessage For="@(() => modelCreateTask.Precedence)"/>
+            </div>
+            <div class="form-group mt-4">
+                <label for="description">Descripcion</label>
+                <InputText class="form-control" @bind-Value="@modelCreateTask.Description" required id="description"></InputText>
+                <ValidationMessage For="@(() => modelCreateTask.Description)"/>
+            </div>
 
-        <div class="form-group mt-4">
-            <label for="birthDate">Fecha de expiración</label>
-            <InputDate class="form-control" id="birthDate" @bind-Value="@modelCreateTask.ExpirationDate" required min="@DateTime.Today.AddDays(1)"></InputDate>
-            <ValidationMessage For="@(() => modelCreateTask.ExpirationDate)"/>
-        </div>
-        <div class="form-group mt-4">
-            <button class="btn btn-primary" type="submit">Crear Tarea</button>
-        </div>
-        <div class="col-4 mt-4">
-            <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
-        </div>
+            <div class="form-group mt-4">
+                <label for="birthDate">Fecha de expiración</label>
+                <InputDate class="form-control" id="birthDate" @bind-Value="@modelCreateTask.ExpirationDate" required min="@DateTime.Today.AddDays(1)"></InputDate>
+                <ValidationMessage For="@(() => modelCreateTask.ExpirationDate)"/>
+            </div>
+            
+            <div class="form-group mt-4">
+                <label for="birthDate">Esfuerzo estimado</label>
+                <InputNumber class="form-control" id="birthDate" @bind-Value="@modelCreateTask.ExpectedEffort" required min="1"></InputNumber>
+                <ValidationMessage For="@(() => modelCreateTask.ExpectedEffort)"/>
+            </div>
+            <div class="form-group mt-4">
+                <button class="btn btn-primary" type="submit">Crear Tarea</button>
+            </div>
         </div>
     </div>
 </EditForm>
-
+<div class="col-4 mt-4">
+    <button class="btn btn-primary" type="submit" @onclick="GoBack">Volver</button>
+</div>
 @code {
     [Parameter]
     public string teamName { get; set; }
@@ -64,6 +74,7 @@
     
     Task modelCreateTask = new Task();
     private string message;
+    private string errorMessage;
     
     protected override void OnInitialized()
     {
@@ -80,21 +91,26 @@
     
     private void HandleCreate()
     {
-        if(!string.IsNullOrEmpty(modelCreateTask.Title) && modelCreateTask.ExpirationDate != null){
+        if(!string.IsNullOrEmpty(modelCreateTask.Name) && modelCreateTask.ExpirationDate != null){
             if (modelCreateTask.ExpirationDate.Date <= DateTime.Today.Date)
             {
-                message = "La tarea debe expirar en al menos un dia.";
+                message = "";
+                errorMessage = "La tarea debe expirar en al menos un dia.";
                 return;
             }
             Task t = new Task
             {
-                Title = modelCreateTask.Title,
-                Precedence = selectedPriority,
+                Name = modelCreateTask.Name,
+                Precedence = modelCreateTask.Precedence,
                 Description = modelCreateTask.Description,
-                ExpirationDate = modelCreateTask.ExpirationDate
+                ExpirationDate = modelCreateTask.ExpirationDate,
+                ExpectedEffort = modelCreateTask.ExpectedEffort,
+                InvertedEffort = 0,
+                Ended = false
             };
-            PlService.GetPanelById(teamName, int.Parse(panelId)).AddTask(t);
+            PlService.AddTaskToPanel(int.Parse(panelId), t);
             message="Tarea creada con éxito";
+            errorMessage = "";
             ClearContents();
         }
 
@@ -107,9 +123,10 @@
 
     private void ClearContents()
     {
-        modelCreateTask.Title = "";
+        modelCreateTask.Name = "";
         modelCreateTask.Precedence = Task.Priority.Low;
         modelCreateTask.Description = "";
         modelCreateTask.ExpirationDate = DateTime.Now;
+        modelCreateTask.ExpectedEffort = 0;
     }
 }

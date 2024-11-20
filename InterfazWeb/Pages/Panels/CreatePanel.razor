@@ -1,7 +1,6 @@
 @page "/{teamName}/panels/create"
-@using System.Reflection.Metadata
 @using Dominio
-@using Microsoft.AspNetCore.Mvc.Localization
+@using Interfaces
 @inject Session Session
 @inject ITeamService TmService
 @inject NavigationManager Navigation
@@ -65,7 +64,7 @@
             Description = modelCreatePanel.Description,
             CreatedBy = Session.CurrentUser
         };
-        TmService.GetTeamByName(teamName).Panels.Add(p);
+        TmService.AddPanelToTeam(p,teamName);
         message="Panel agregado con éxito";
         ClearContents();
     }

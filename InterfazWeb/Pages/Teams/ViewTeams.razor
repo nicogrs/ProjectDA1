@@ -1,5 +1,6 @@
 @page "/account/teams"
 @using Dominio
+@using Interfaces
 @inject ITeamService TmService
 @inject Session Session
 @inject NavigationManager Navigation
@@ -31,6 +32,10 @@
     
     protected override void OnInitialized()
     {
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
         LoadTeams();
     }
 

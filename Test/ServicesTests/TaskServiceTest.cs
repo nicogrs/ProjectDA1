@@ -1,83 +1,350 @@
-namespace Test;
+using Interfaces;
+using Services;
+using DataAccess;
+using Test.Context;
+namespace Test.ServicesTests;
 using Dominio;
-using Moq;
+
 
 [TestClass]
 public class TaskServiceTest
 {
+    private TaskService _taskService;
+    private IRepository<Task> _taskRepository;
+    private SqlContext _context;
     
-    private Team team;
-    private TaskService taskService;
-    Mock<ITeamService> _mockTeamService;
-    Mock<IPanelService> _mockPanelService;
     
     [TestInitialize]
     public void Setup()
     {
-        _mockTeamService = new Mock<ITeamService>();
-        _mockPanelService = new Mock<IPanelService>();
-        taskService = new TaskService(_mockPanelService.Object, _mockTeamService.Object);
-        team = new Team
-        {
-            Name = "Team Example",
-            CreatedOn = new DateTime(2020, 05, 05),
-            TasksDescription = "Tareas sobre desarrollo",
-            MaxUsers = 5,
-            MembersCount = 1
-        };
+        SqlContextFactory sqlContextFactory = new SqlContextFactory();
+        _context = sqlContextFactory.CreateMemoryContext();
+
+        _taskRepository = new TaskDatabaseRepository(_context);
+        _taskService = new TaskService(_taskRepository);
+    }
+    
+    [TestCleanup]
+    public void CleanUp()
+    {
+        _context.Database.EnsureDeleted();
     }
     
     [TestMethod]
     public void GetExpiredTasksFromPanels()
     {
-        var panel1 = new Panel{Name = "Panel 1"};
-        var task1 = new Task{Title = "Task 1", ExpirationDate = DateTime.Now.AddHours(-1)};
-        panel1.Tasks.Add(task1);
-        team.Panels.Add(panel1);
-        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
-        var expiredTasks = taskService.GetAllExpiredTasks(team.Name);
-        CollectionAssert.AreEquivalent(expiredTasks, new List<Task>{task1});
+        var panelId = 1;
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "This is a test task description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            PanelId = panelId,
+            Ended = false
+        };
+        var task2 = new Task
+        {
+            Name = "Task 1",
+            Description = "This is a test task description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            PanelId = panelId,
+            Ended = true
+        };
+        _taskRepository.Add(task1);
+        _taskRepository.Add(task2);
+        var expiredTasks = _taskService.GetAllExpiredTasks(panelId);
+        CollectionAssert.AreEqual(new List<Task> { task1 }, expiredTasks);
     }
 
     [TestMethod]
-
     public void GetNonExpiredTasksFromPanel()
     {
-        var panel1 = new Panel{Name = "Panel 1",PanelId = 1};
-        var task1 = new Task{Title = "Task 1", ExpirationDate = DateTime.Now.AddHours(+1)};
-        panel1.Tasks.Add(task1);
-        team.Panels.Add(panel1);
-        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
-        _mockPanelService.Setup(x => x.GetPanelById(team.Name, panel1.PanelId)).Returns(panel1);
-        var nonExpiredTasks = taskService.GetNonExpiredTasks(team.Name, panel1.PanelId);
-        CollectionAssert.AreEquivalent(nonExpiredTasks, new List<Task>{task1});
+        var panelId = 1;
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(+1),
+            PanelId = panelId,
+            Ended = false
+        };
+        var task2 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(+1),
+            PanelId = panelId,
+            Ended = true
+        };
+        var task3 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            PanelId = panelId,
+            Ended = true
+        };
+        var task4 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            PanelId = panelId,
+            Ended = false
+        };
+        _taskRepository.Add(task1);
+        _taskRepository.Add(task2);
+        _taskRepository.Add(task3);
+        _taskRepository.Add(task4);
+        var nonExpiredTasks = _taskService.GetNonExpiredTasks(panelId);
+        CollectionAssert.AreEqual(new List<Task> { task1, task2, task3 }, nonExpiredTasks);
     }
-    
+
     [TestMethod]
     public void GetTaskByIdTest()
     {
-        var panel1 = new Panel{Name = "Panel 1",PanelId = 1};
-        var task1 = new Task{Title = "Task 1", ExpirationDate = DateTime.Now.AddHours(+1)};
-        panel1.Tasks.Add(task1);
-        team.Panels.Add(panel1);
-        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
-        _mockPanelService.Setup(x => x.GetPanelById(team.Name, panel1.PanelId)).Returns(panel1);
-        var task = taskService.GetTaskById(team.Name, panel1.PanelId, task1.TaskId);
-        Assert.AreSame(task1, task);
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(+1),
+        };
+        _taskRepository.Add(task1);
+        
+        var task = _taskService.GetTaskById(task1.Id);
+        Assert.AreEqual(task1, task);
     }
 
     [TestMethod]
-
     public void GetPanelIdByTaskTest()
     {
-        var panel1 = new Panel{Name = "Panel 1",PanelId = 1};
-        var task1 = new Task{Title = "Task 1", ExpirationDate = DateTime.Now.AddHours(+1)};
-        panel1.Tasks.Add(task1);
-        team.Panels.Add(panel1);
-        _mockTeamService.Setup(x=> x.GetTeamByName(team.Name)).Returns(team);
-        _mockPanelService.Setup(x => x.GetPanelById(team.Name, panel1.PanelId)).Returns(panel1);
-        _mockPanelService.Setup(x => x.GetAllPanelsFromTeam(team.Name)).Returns(team.Panels);
-        var id = taskService.GetPanelIdByTask(team.Name, task1.TaskId);
-        Assert.AreEqual(id, panel1.PanelId);
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            PanelId = 1
+        };
+        _taskRepository.Add(task1);
+
+        var panelId = _taskService.GetPanelIdByTask("Team Name", task1.Id);
+
+        Assert.AreEqual(1, panelId);
     }
+
+    [TestMethod]
+    public void AddCommentToTaskTest()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(+1),
+            PanelId = 1
+        };
+        _taskRepository.Add(task1);
+        Comment comment = new Comment
+        {
+            CreatedBy = new User { Name = "Nicolas", Email = "nicolas@gmail.com",
+                Password = "Prueba123$", Surname = "Test"},
+            Content = "Comment content",
+            Resolved = false,
+            Task = task1,
+        };
+
+    _taskService.AddCommentToTask(task1.Id, comment);
+     var result = _taskService.GetCommentsFromTask(task1.Id);
+     CollectionAssert.Contains(result, comment);
+    }
+
+    [TestMethod]
+    public void UpdateTaskTest()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(+1),
+            PanelId = 1
+        };
+        _taskRepository.Add(task1);
+        task1.Description = "Updated description";
+        _taskService.UpdateTask(task1);
+        var result = _taskService.GetTaskById(task1.Id);
+        Assert.AreEqual(task1, result);
+    }
+
+    [TestMethod]
+    public void AddEffort_PositiveTime()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            InvertedEffort = 0
+        };
+        _taskRepository.Add(task1);
+        _taskService.AddEffort(task1.Id, 5);
+        var updatedTask = _taskRepository.Find(x => x.Id == task1.Id);
+        Assert.AreEqual(5, updatedTask.InvertedEffort);
+    }
+
+    [TestMethod]
+    public void AddEffort_ZeroTime()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            InvertedEffort = 10
+        };
+        _taskRepository.Add(task1);
+        _taskService.AddEffort(task1.Id, 0);
+        var updatedTask = _taskRepository.Find(x => x.Id == task1.Id);
+        Assert.AreEqual(10, updatedTask.InvertedEffort);
+    }
+    
+    [TestMethod]
+    public void AddEffort_NegativeTime()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            InvertedEffort = 10
+        };
+        _taskRepository.Add(task1);
+        _taskService.AddEffort(task1.Id, -5);
+        var updatedTask = _taskRepository.Find(x => x.Id == task1.Id);
+        Assert.AreEqual(10, updatedTask.InvertedEffort);
+    }
+
+    [TestMethod]
+    public void AddEffort_AccumulateInvertedEffort()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpirationDate = DateTime.Now.AddHours(-1),
+            InvertedEffort = 0
+        };
+        _taskRepository.Add(task1);
+        _taskService.AddEffort(task1.Id, 2);
+        _taskService.AddEffort(task1.Id, 3);
+        var updatedTask = _taskRepository.Find(x => x.Id == task1.Id);
+        Assert.AreEqual(5, updatedTask.InvertedEffort);
+    }
+
+    [TestMethod]
+    public void EffortComparatedTest()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpectedEffort = 10,
+            InvertedEffort = 5
+        };
+        var task2 = new Task
+        {
+            Name = "Task 2",
+            Description = "description",
+            ExpectedEffort = 5,
+            InvertedEffort = 10
+        };
+        var task3 = new Task
+        {
+            Name = "Task 3",
+            Description = "description",
+            ExpectedEffort = 10,
+            InvertedEffort = 10
+        };
+        
+        _taskRepository.Add(task1);
+        _taskRepository.Add(task2);
+        _taskRepository.Add(task3);
+        
+        var result1 = _taskService.EffortComparated(task1.Id);
+        var result2 = _taskService.EffortComparated(task2.Id);
+        var result3 = _taskService.EffortComparated(task3.Id);
+
+        Assert.AreEqual(5, result1);
+
+        Assert.AreEqual(-5, result2);
+
+        Assert.AreEqual(0, result3);
+    }
+
+    [TestMethod]
+    public void EffortStatusTest()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpectedEffort = 5,
+            InvertedEffort = 10,
+            Ended = true
+        };
+        var task2 = new Task
+        {
+            Name = "Task 2",
+            Description = "description",
+            ExpectedEffort = 10,
+            InvertedEffort = 5,
+            Ended = true
+        };
+        var task3 = new Task
+        {
+            Name = "Task 3",
+            Description = "description",
+            ExpectedEffort = 10,
+            InvertedEffort = 10,
+            Ended = true
+        };
+        var task = new Task
+        {
+            Name = "Task",
+            Description = "description",
+            ExpectedEffort = 10,
+            InvertedEffort = 5,
+            Ended = false
+        };
+        
+        _taskRepository.Add(task1);
+        _taskRepository.Add(task2);
+        _taskRepository.Add(task3);
+        _taskRepository.Add(task);
+        
+        var status1 = _taskService.EffortStatus(task1.Id);
+        var status2 = _taskService.EffortStatus(task2.Id);
+        var status3 = _taskService.EffortStatus(task3.Id);
+        var status = _taskService.EffortStatus(task.Id);
+
+        Assert.AreEqual("Subestimada", status1);
+        Assert.AreEqual("Sobreestimada", status2);
+        Assert.AreEqual("OK", status3);
+        Assert.AreEqual(string.Empty, status);
+    }
+
+    [TestMethod]
+    public void ChangeStatusTest()
+    {
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            Description = "description",
+            ExpectedEffort = 5,
+            InvertedEffort = 10,
+            Ended = false
+        };
+        _taskRepository.Add(task1);
+        _taskService.ChangeStatus(task1.Id);
+        Assert.IsTrue(task1.Ended);
+    }
+    
 }

@@ -1,5 +1,7 @@
-﻿namespace Test;
-using Dominio;
+﻿using Services;
+
+namespace Test.ServicesTests;
+
 using Moq;
 
 [TestClass]

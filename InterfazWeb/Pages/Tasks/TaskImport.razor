@@ -1,26 +1,30 @@
-@page "/{teamName}/{panelId}/TaskImport"
+@page "/{teamName}/{panelId}/TaskImportService"
 @using Dominio;
+@using Interfaces
+@using Services
 @using Task = Dominio.Task
 @inject NavigationManager Navigation;
 @inject Session Session;
-@inject PanelService PlService;
+@inject IPanelService PlService;
+@inject IEpicService EcService;
 
 <PageTitle>Importar Tasks</PageTitle>
 
 <h4>Importar Tareas</h4>
+<h5>Archivos aceptados: .csv, .xlsx</h5> 
+<InputFile OnChange="HandleFileSelected" accept=".csv,.xlsx"/>
 
-<InputFile OnChange="HandleFileSelected" accept=".csv" />
 
-@if (fileContent != null)
+@if (fileContent != "")
 {
     <p>Archivo cargado.</p>
 }
 
 @if (!string.IsNullOrEmpty(message))
 {
-<div class="alert" role="alert">
-    @message
-</div>
+    <div class="alert" role="alert">
+        @message
+    </div>
 }
 
 @if (tasks != null && tasks.Any())
@@ -32,18 +36,35 @@
         <th>Titulo</th>
         <th>Descripcion</th>
         <th>Fecha de vencimiento</th>
+        <th>Esfuerzo estimado</th>
+        <th>Epica</th>
     </tr>
     </thead>
     <tbody>
-    @foreach (Task task in tasks)
+    @foreach (TaskImportService.ImportedTask task in tasks)
     {
+        string epicToDisplay = task.epicId.ToString();
+        Epic targetEpic = EcService.GetEpicById(task.epicId);
+        bool epicExists = targetEpic != null;
+        bool epicBelongsToPanel = EcService.GetEpicsByPanelId(int.Parse(panelId)).Contains(targetEpic);
+        
+        if (!epicExists || !epicBelongsToPanel)
+        {
+            epicToDisplay = "<Ninguna epica del panel coincide con ese id.>";
+        }
+        else
+        {
+            epicToDisplay = targetEpic.Name;
+        }
     <tr>
         <td>
             <input type="checkbox" @onchange="e => ToggleSelection(task, e.Value)"/>
         </td>
-        <td>@task.Title</td>
+        <td>@task.Name</td>
         <td>@task.Description</td>
         <td>@expDateToString(task.ExpirationDate)</td>
+        <td>@task.ExpectedEffort</td>
+        <td>@epicToDisplay</td>
     </tr>
     }
     </tbody>
@@ -55,7 +76,7 @@
     <ul>
         @foreach (Task task in SelectedTasks)
         {
-            <li>@task.Title (@task.Description)</li>
+            <li>@task.Name (@task.Description)</li>
         }
     </ul>
 }
@@ -75,8 +96,8 @@
     
     private IBrowserFile? selectedFile;
     private string? fileContent;
-    private List<Task> tasks;
-    private HashSet<Task> SelectedTasks = new HashSet<Task>();
+    private List<TaskImportService.ImportedTask> tasks = new List<TaskImportService.ImportedTask>();
+    private HashSet<TaskImportService.ImportedTask> SelectedTasks = new HashSet<TaskImportService.ImportedTask>();
     private Panel panel;
     private string message;
     
@@ -87,6 +108,8 @@
         {
             Navigation.NavigateTo("/error");
         }
+
+        fileContent = "";
     }
     
     
@@ -94,31 +117,65 @@
     {
         selectedFile = e.File;
 
-        if (selectedFile != null)
-        {
-            using var stream = selectedFile.OpenReadStream();
-            using var reader = new StreamReader(stream);
-            fileContent = await reader.ReadToEndAsync();
-            
-            ProcessCsvFile(fileContent);
-        }
+        await ProcessFile(selectedFile);
     }
-
-    private void ProcessCsvFile(string content)
+    
+    
+    private async System.Threading.Tasks.Task ProcessFile(IBrowserFile file)
     {
-        Dominio.TaskImport taskImport = new Dominio.TaskImport();
+        string format = Path.GetExtension(selectedFile.Name);
 
-        tasks = taskImport.ReadTasksFromContent(content,Session.CurrentUser);
-
+        if (format == ".csv")
+        {
+            await GetContentFromCsv(file);
+        }
+        else if (format == ".xlsx")
+        {
+            await GetContentFromXlsx(file);
+        }
+        else
+        {
+            Console.WriteLine("Format Error.");
+        }
+            
+        TaskImportService taskImportService = new TaskImportService();
+        tasks = taskImportService.ReadTasksFromContent(fileContent, Session.CurrentUser);
+        
         StateHasChanged();
     }
+    
+    
+    private async System.Threading.Tasks.Task GetContentFromXlsx(IBrowserFile file)
+    {
+        XlsxToCsvAdapter xlsxToCsvAdapter = new XlsxToCsvAdapter();
+    
+        using var stream = file.OpenReadStream();
+        fileContent = await xlsxToCsvAdapter.TranslateXlsxToCsvFromStreamAsync(stream);
+        
+        StateHasChanged();
+    }
+    
 
+    public async System.Threading.Tasks.Task GetContentFromCsv(IBrowserFile file)
+    {
+        if (selectedFile == null)
+        {
+            Console.WriteLine("Null file.");
+            return;
+        }
+        
+        using var stream = file.OpenReadStream();
+        using var reader = new StreamReader(stream);
+        fileContent = await reader.ReadToEndAsync();
+    }
+    
+    
     private string expDateToString(DateTime dt)
     {
         return $"{dt.Year}/{dt.Month}/{dt.Day}";
     }
 
-    private void ToggleSelection(Task task, object isSelected)
+    private void ToggleSelection(TaskImportService.ImportedTask task, object isSelected)
     {
         bool selected = (bool)isSelected;
         if (selected)
@@ -133,16 +190,40 @@
     
     private void GetSelectedTasks()
     {
-        panel = PlService.GetPanelById(teamName,int.Parse(panelId));
-
-        foreach (Task task in SelectedTasks)
+        panel = PlService.GetPanelById(int.Parse(panelId));
+        if (panel == null)
         {
-            panel.AddTask(task);
+            message = "Panel no encontrado.";
+            return;
+        }
+
+        message = "";
+        
+        foreach (var task in SelectedTasks)
+        {
+            if (task == null) continue;
+            PlService.AddTaskToPanel(int.Parse(panelId),task);
+            if (task.IsInEpic && (task.ExpirationDate > DateTime.Now.AddDays(+1)))
+            {
+                List<Epic> epicsInPanel = EcService.GetEpicsByPanelId(int.Parse(panelId));
+                Epic taskEpic = EcService.GetEpicById(task.epicId);
+                bool epicAndPanelCoincide = epicsInPanel.Contains(taskEpic);
+                if (epicAndPanelCoincide)
+                {
+                    taskEpic.AddTask(task);
+                    message += $"{task.Name} incorporada en epica {taskEpic.Name}. \n\r";
+                }
+                else
+                {
+                    task.IsInEpic = false;
+                    message += $"Tarea {task.Name}: La epica con ese id no forma parte del panel, se agrega sin epica.\n\r";
+                }
+            }
         }
         
-        message=$"{SelectedTasks.Count} Tareas agregadas exitosamente a {panel.Name}.";
+        message += $"--- {SelectedTasks.Count} Tareas agregadas a {panel.Name}.";
         fileContent = "";
-        tasks = null;
+        tasks = new List<TaskImportService.ImportedTask>();
     }
 
     private void GoToPanel()

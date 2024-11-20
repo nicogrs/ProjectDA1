@@ -1,0 +1,156 @@
+@using Dominio
+@using Interfaces
+@inject IPanelService PlService
+@inject ITaskService TkService
+@inject IUserService UService
+@inject IEpicService EcService
+@inject NavigationManager Navigation
+@inject Session Session
+
+<div class="d-flex card-group justify-content-center align-items-center">
+    <div class="w-75">
+        <div class="card epic-card my-3">
+            @if (selectedEpic.Priority == Epic.Precedence.Low)
+            {
+            <div class="card-header bg-danger">
+                <h5 class="text-white mb-0">[EPICA] - @selectedEpic.Name</h5>
+            </div>
+            }
+            else if (selectedEpic.Priority == Epic.Precedence.Medium)
+            {
+            <div class="card-header bg-info">
+                <h5 class="text-white mb-0">[EPICA] - @selectedEpic.Name</h5>
+            </div>
+            }
+            else
+            {
+            <div class="card-header bg-black">
+                <h5 class="text-white mb-0">[EPICA] - @selectedEpic.Name</h5>
+            </div>
+            }
+
+            <div class="card-body">
+                <p class="card-text text-muted">Descripción:</p>
+                <p class="card-text">@selectedEpic.Description</p>
+
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <span class="badge bg-secondary">Prioridad: @selectedEpic.Priority.ToString()</span>
+                    <span class="badge bg-info">Vence: @selectedEpic.ExpirationDate.ToShortDateString()</span>
+                    <span class="badge bg-info">Horas Estimadas: @EcService.EffortExpected(selectedEpic.Id) </span>
+                    <span class="badge bg-info">Horas Invertidas: @EcService.EffortInverted(selectedEpic.Id) </span>
+                </div>
+            </div>
+            
+            
+            <div class="card-footer">
+                <div class="row text-end">
+                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2" 
+                            type="submit" @onclick="GoToEpic" >Visualizar Tareas</button>
+                    <button class="col-lg-3 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2"
+                            type="submit" @onclick="GoToAdd">Agregar o Eliminar Tareas</button>
+                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-secondary me-2" type="submit"
+                            @onclick="ComparativeGraphic">Grafico de esfuerzo</button>
+                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-warning me-2"
+                            type="submit" @onclick="ChangeEpic">Modificar</button>
+                    <button class="col-lg-2 col-md-12 col-sm-12 mt-2 btn btn-danger me-2"
+                            type="submit" @onclick="ShowModal">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (isModalVisible)
+{
+<div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="close" @onclick="CloseModal">
+                    <span>&times;</span>
+                </button>
+            </div>
+         @if (selectedEpic.Tasks.Count == 0)
+            {
+                    <div class="modal-body">
+                        <p>¿Estás seguro que quieres eliminar <strong>@selectedEpic.Name
+                        </strong> por completo?</p>
+                    </div>   
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Confirmar</button>
+                    </div>
+            }
+         else
+         {
+             <div class="modal-body">
+                 <p>No se puede eliminar la epica <strong>@selectedEpic.Name </strong> debido a que contiene
+                 tareas agrupadas, eliminelas e intente nuevamente</p>
+             </div>    
+             <div class="modal-footer">
+                 <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
+             </div>
+         }
+            
+        </div>
+    </div>
+</div>
+}
+
+@code {
+    [Parameter] public string EpicId { get; set; }
+    [Parameter] public string EpicTeamName { get; set; }
+    [Parameter] public string EpicPanelId { get; set; }
+    [Parameter] public EventCallback EpicOnTaskDeleted { get; set; }
+
+    private Epic selectedEpic;
+    
+    private bool isModalVisible;
+    private string messageNotSuccess;
+    
+
+    protected override void OnInitialized()
+    {
+        selectedEpic = EcService.GetEpicById(int.Parse(EpicId));
+    }
+    
+    private void ChangeEpic()
+    {
+        Navigation.NavigateTo($"/{EpicTeamName}/{EpicPanelId}/EditEpic/{EpicId}");
+    }
+    
+    
+    private void ShowModal()
+    {
+        isModalVisible = true;
+    }
+
+    private void CloseModal()
+    {
+        isModalVisible = false;
+    }
+
+    private void ConfirmDelete()
+    {
+      var epicToDelete = EcService.GetEpicById(int.Parse(EpicId));
+      EcService.DeleteEpicById(epicToDelete.Id); 
+      CloseModal();
+      EpicOnTaskDeleted.InvokeAsync(); 
+    }
+
+    private void GoToAdd()
+    {
+        Navigation.NavigateTo($"/{EpicTeamName}/{EpicPanelId}/add/{EpicId}");
+    }
+    
+    private void ComparativeGraphic()
+    {
+        Navigation.NavigateTo($"/{EpicTeamName}/{EpicPanelId}/{EpicId}/graphic");
+    }
+    
+    private void GoToEpic()
+    {
+        Navigation.NavigateTo($"/{EpicTeamName}/{EpicPanelId}/view/{EpicId}");
+    }
+}

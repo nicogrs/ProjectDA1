@@ -1,7 +1,7 @@
 ﻿using Dominio;
 using Task = Dominio.Task;
 
-namespace Test;
+namespace Test.ModelsTests;
 
 [TestClass]
 public class TaskTest
@@ -13,31 +13,40 @@ public class TaskTest
     private Comment c3;
     private List<Comment> comments;
     private Task t1;
+    private Panel p;
+    private Epic e;
     
     [TestInitialize]
     public void Setup()
     {
         u1 = new User();
         u2 = new User();
-        c1 = new Comment(u1, "Primer comentario de u1");
-        c2 = new Comment(u1, "Segundo comentario de u1");
-        c3 = new Comment(u2, "Primer comentario de u2");
+        c1 = new Comment();
+        c2 = new Comment();
+        c3 = new Comment();
         comments = new List<Comment>(){c1, c2, c3};
+        p = new Panel()
+        {
+            Id = 1,
+        };
         t1 = new Task()
         {
-            Title = "Titulo 1",
+            Name = "Titulo 1",
             Precedence = Task.Priority.Low,
             Description = "Descripcion tarea 1",
             ExpirationDate = new DateTime(2025, 10, 01),
-            Comments = comments
+            Comments = comments,
+            Panel = p,
+            PanelId = p.Id
         };
+        p.Tasks.Add(t1);
     }
     
     [TestMethod]
     public void TaskCreateTest()
     {
         Assert.AreEqual(t1.Precedence, Task.Priority.Low);
-        Assert.AreEqual(t1.Title, "Titulo 1");
+        Assert.AreEqual(t1.Name, "Titulo 1");
         Assert.AreEqual(t1.Description, "Descripcion tarea 1");
         Assert.AreEqual(t1.ExpirationDate, new DateTime(2025, 10, 01));
         Assert.AreEqual(t1.Comments, comments);
@@ -89,11 +98,10 @@ public class TaskTest
     {
         int initialCommentCount = t1.Comments.Count;
         string content = "Comentario de AddComentTest";
-        Comment lastAddedComment;
-        
-        t1.AddComment(u1,content);
-        
-        lastAddedComment = t1.Comments.Last();
+        Comment newComment = new Comment { Content = content };
+
+        t1.Comments.Add(newComment);
+    
         Assert.AreEqual(t1.Comments.Count, initialCommentCount + 1);
         Assert.AreEqual(t1.Comments.Last().Content, content);
     }
@@ -101,13 +109,23 @@ public class TaskTest
     [TestMethod]
     public void ToStringTest()
     {
-        var result = $"Tipo: Task - ID: {t1.TaskId} - Nombre: Titulo 1 - Prioridad: Low" ;
+        var result = $"Tipo: Task - ID: {t1.Id} - Nombre: Titulo 1 - Prioridad: Low";
         Assert.AreEqual(t1.ToString(), result);
     }
 
     [TestMethod]
-    public void AddCommentExceptionTest()
+    public void TaskPanelTest()
     {
+        Assert.AreSame(t1.Panel, p);
+    }
+    
+    [TestMethod]
+    public void IsInEpicTest()
+    {
+        e = new Epic();
+        e.Tasks.Add(t1);
+        t1.IsInEpic = true;
         
+        Assert.IsTrue(t1.IsInEpic);
     }
 }

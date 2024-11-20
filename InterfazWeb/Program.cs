@@ -1,6 +1,10 @@
-using Dominio.Data;
+using DataAccess;
 using Dominio;
-using IUserDatabase = Dominio.IUserDatabase;
+using Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Services;
+using Task = Dominio.Task;
+using Syncfusion.Blazor;
 
 namespace InterfazWeb;
 
@@ -13,20 +17,38 @@ public class Program
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor();
         
-        builder.Services.AddSingleton<IUserDatabase, UserDataBase>();
-        builder.Services.AddSingleton<IUserService, UserService>();
-        builder.Services.AddScoped<PasswordService>();
-        builder.Services.AddSingleton<TeamDataBase>();
-        builder.Services.AddSingleton<ITeamDataBase, TeamDataBase>();
-        builder.Services.AddSingleton<TeamService>();
-        builder.Services.AddSingleton<ITeamService, TeamService>();
-        builder.Services.AddSingleton<PanelService>();
-        builder.Services.AddSingleton<IPanelService, PanelService>();
-        builder.Services.AddSingleton<TaskService>();
-        builder.Services.AddScoped<Session>();
         
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<PasswordService>();
+        builder.Services.AddScoped<IRepository<User>, UserDatabaseRepository>();
+        builder.Services.AddScoped<IRepository<Team>, TeamDatabaseRepository>();
+        builder.Services.AddScoped<IRepository<Task>, TaskDatabaseRepository>();
+        builder.Services.AddScoped<IRepository<Panel>, PanelDatabaseRepository>();
+        builder.Services.AddScoped<IRepository<Notification>, NotificationDatabaseRepository>();
+        builder.Services.AddScoped<IRepository<Epic>, EpicDatabaseRepository>();
+        builder.Services.AddScoped<Epic>();
+        builder.Services.AddScoped<IEpicService, EpicService>();
+        builder.Services.AddScoped<Notification>();
+        builder.Services.AddScoped<INotificationService, NotificationService>();
+        builder.Services.AddScoped<TeamService>();
+        builder.Services.AddScoped<ITeamService, TeamService>();
+        builder.Services.AddScoped<PanelService>();
+        builder.Services.AddScoped<IPanelService, PanelService>();
+        builder.Services.AddScoped<TaskService>();
+        builder.Services.AddScoped<ITaskService, TaskService>();
+        builder.Services.AddScoped<Session>();
+        builder.Services.AddSingleton<Notifications>();
+        
+        builder.Services.AddDbContextFactory<SqlContext>(
+            options => options.UseSqlServer(
+                builder.Configuration.GetConnectionString("DefaultConnection"),
+                providerOptions => providerOptions.EnableRetryOnFailure()), ServiceLifetime.Scoped
+        );
+        
+        builder.Services.AddSyncfusionBlazor();
         
         var app = builder.Build();
+        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("OBL_License");
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
@@ -36,6 +58,26 @@ public class Program
             app.UseHsts();
         }
 
+        using (var scope = app.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<SqlContext>();
+            
+            if (!context.Users.Any(u => u.Email == "admin@taskpanel.com"))
+            {
+                context.Users.Add(new User
+                {
+                    Name = "Super",
+                    Surname = "Admin",
+                    Email = "admin@taskpanel.com",
+                    BirthDate = new DateTime(2000, 8, 30),
+                    Password = "Admin123$",
+                    Admin = true,
+                });
+        
+                context.SaveChanges();
+            }
+        }
+        
         app.UseHttpsRedirection();
 
         app.UseStaticFiles();

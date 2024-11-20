@@ -1,9 +1,8 @@
-
 @using Dominio
-@using Dominio.Data
+@using Interfaces
 @using Task = Dominio.Task
-@inject PanelService PlService
-@inject TaskService TkService
+@inject IPanelService PlService
+@inject ITaskService TkService
 @inject NavigationManager Navigation
 @inject Session Session
 
@@ -70,7 +69,7 @@ public List<Comment> Comments { get; set; }
 protected override void OnInitialized()
 {
 Comments = Task.Comments;
-panelId = TkService.GetPanelIdByTask(teamName, Task.TaskId).ToString();
+panelId = TkService.GetPanelIdByTask(teamName, Task.Id).ToString();
 }
 
 private void CompleteComment(Comment comment)
@@ -80,7 +79,7 @@ Task.MarkCommentAsResolved(Session.CurrentUser, comment);
 
 private void ChangeTask()
 {
-    Navigation.NavigateTo($"/{teamName}/{panelId}/{Title}");
+    Navigation.NavigateTo($"/{teamName}/{panelId}/{Task.Id}");
 }
 
 

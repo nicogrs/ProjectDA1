@@ -1,7 +1,8 @@
 ﻿@page "/{teamName}/modifyUsers"
 @using Dominio
-@inject IUserDatabase UDatabase
+@using Interfaces
 @inject ITeamService TmService
+@inject IUserService UService
 @inject Session Session
 @inject NavigationManager Navigation
 <PageTitle>Modificar Usuarios del Equipo</PageTitle>
@@ -198,11 +199,9 @@
         }
 
         warningMessage = "";
-
         foreach (User user in SelectedUsersAdd)
         {
-            team.TeamMembers.Add(user);
-            team.MembersCount++;
+         TmService.AddUserToTeam(teamName, user.Email);
         }
         
         message=$"{SelectedUsersAdd.Count} Usuarios agregados exitosamente a {team.Name}.";
@@ -234,8 +233,8 @@
         usersNotInTeam = new List<User>();
         SelectedUsersAdd = new List<User>();
         SelectedUsersDelete = new List<User>();
-        
-        allUsers = UDatabase.GetUsers();
+
+        allUsers = UService.GetAllUsers();
         foreach (var user in allUsers)
         {
             if (TmService.UserExistsInTeam(user.Email, teamName))

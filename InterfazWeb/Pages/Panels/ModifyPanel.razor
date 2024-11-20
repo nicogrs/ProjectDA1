@@ -1,7 +1,9 @@
 @page "/{teamName}/{panelId}/modify"
 @using Dominio
-@inject PanelService PlService
+@using Interfaces
+@inject IPanelService PlService
 @inject NavigationManager Navigation
+@inject Session Session
 
 <PageTitle>Modificar Panel</PageTitle>
 <h3>Modificar Panel</h3>
@@ -17,7 +19,7 @@
     <div class="d-flex justify-content-center align-items-center">
         <div class="w-50">
             <div class="form-group mt-4">
-                <label id="name">Nombreo</label>
+                <label id="name">Nombre</label>
                 <InputText class="form-control" @bind-Value="@modelChangePanel.Name" id="name"></InputText>
                 <ValidationMessage For="@(() => modelChangePanel.Name)"/>
             </div>
@@ -51,7 +53,12 @@
 
     protected override void OnInitialized()
     {
-        toModify = PlService.GetPanelById(teamName, int.Parse(panelId));
+        if (Session.CurrentUser == null)
+        {
+            Navigation.NavigateTo("/error");
+        }
+        
+        toModify = PlService.GetPanelById(int.Parse(panelId));
         modelChangePanel.Description = toModify.Description;
         modelChangePanel.Name= toModify.Name;
     }

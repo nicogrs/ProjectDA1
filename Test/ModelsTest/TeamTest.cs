@@ -2,7 +2,7 @@
 using Dominio;
 
 [TestClass]
-public class TeamCreateTest
+public class TeamTest
 {
     private Team team;
 
@@ -20,7 +20,8 @@ public class TeamCreateTest
             {
                 new User()
             },
-            MembersCount = 1
+            MembersCount = 1,
+            Id = 1
         };
     }
     
@@ -33,7 +34,7 @@ public class TeamCreateTest
             CreatedOn = new DateTime(2020, 05, 05),
             TasksDescription = "Tareas sobre desarrollo",
             MaxUsers = 5,
-            Panels = new List<Panel>(),
+            Panels = new List<Panel>()
         };
         Assert.IsNotNull(teamTest);
     }
@@ -72,6 +73,12 @@ public class TeamCreateTest
     {
         var panelsNotNull = team.Panels != null;
         Assert.IsTrue(panelsNotNull);
+    }
+    
+    [TestMethod]
+    public void HasCorrectId()
+    {
+        Assert.AreEqual(team.Id, 1);
     }
 
     [TestMethod]

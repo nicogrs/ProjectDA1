@@ -27,9 +27,7 @@ public class Team
         var panelsNotNull = Panels != null;
         var membersCount = MembersCount > 0;
 
-        if (nameNotNull && createdOnNotNull && createdOnValid &&
-            maxUsersNotCero && panelsNotNull && membersCount)
-            return true;
-        return false;
+        return nameNotNull && createdOnNotNull && createdOnValid &&
+            maxUsersNotCero && panelsNotNull && membersCount;
     }
 }

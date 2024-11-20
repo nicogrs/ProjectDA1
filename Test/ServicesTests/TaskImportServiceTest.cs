@@ -22,7 +22,7 @@ public class TaskImportServiceTest
     {
         errorLinesToProcess = new List<string>()
         {
-            //Título,Descripción,Fecha de vencimiento,ID de panel,ID de epica,Esfuerzo Estimado
+            
             "correcta,descripcion,31/12/2025,1,1,1",
             "incorrecta,menos columnas,31/12/2025",
             "incorrecta,columnas de mas,31/12/2025,1,1,1,2",
@@ -113,8 +113,8 @@ public class TaskImportServiceTest
         
         referenceContent =
             "Título,Descripción,Fecha de vencimiento,ID de panel,ID de epica,Esfuerzo Estimado\r\n" +
-            "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/09/2025,1,1,1\r\n" +
-            "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/09/2025,1,1,2\r\n" +
+            "Contactar al cliente,Contactar al cliente para actualizar el estado del proyecto.,10/9/2025,1,1,1\r\n" +
+            "Pagar proveedores,Revisar planilla de proveedores y pagar.,19/9/2025,1,1,2\r\n" +
             "Terminar obligatorio,Terminar el obligatorio 2 de DA.,20/11/2025,1,2,3\r\n" +
             "Comprar mesa ping pong,Comprar mesa para la sala de espera.,24/12/2025,2,,2\r\n";
     }

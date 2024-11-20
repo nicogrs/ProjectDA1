@@ -36,12 +36,11 @@ public class TeamService : ITeamService
     
     public bool UserExistsInTeam(string userEmail, string teamName)
     {
-        if (TeamExists(teamName))
-        { 
-            var team = GetTeamByName(teamName);
-            return team.TeamMembers.Any(x => x.Email == userEmail);
-        }
-        return false;
+        if (!TeamExists(teamName))
+            return false;
+        
+        var team = GetTeamByName(teamName);
+        return team.TeamMembers.Any(x => x.Email == userEmail);
     }
     
     public bool AddUserToTeam(string teamName, string userEmail)

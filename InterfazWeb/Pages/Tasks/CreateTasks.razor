@@ -30,10 +30,10 @@
             </div>
             <div class="form-group mt-4">
                 <label id="priority">Prioridad</label>
-                <select class="form-control" Value="@selectedPriority" id="priority">
+                <select class="form-control" @bind="@modelCreateTask.Precedence" id="priority">
                     @foreach (var priority in Enum.GetValues(typeof(Task.Priority)))
                     {
-                        <option value="@priority">@priority.ToString()</option>
+                    <option value="@priority">@priority.ToString()</option>
                     }
                 </select>
                 <ValidationMessage For="@(() => modelCreateTask.Precedence)"/>
@@ -101,7 +101,7 @@
             Task t = new Task
             {
                 Name = modelCreateTask.Name,
-                Precedence = selectedPriority,
+                Precedence = modelCreateTask.Precedence,
                 Description = modelCreateTask.Description,
                 ExpirationDate = modelCreateTask.ExpirationDate,
                 ExpectedEffort = modelCreateTask.ExpectedEffort,

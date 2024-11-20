@@ -1,4 +1,5 @@
-﻿using DataAccess;
+﻿using System.Collections;
+using DataAccess;
 using Test.Context;
 namespace Test.DataAccessTests;
 using Dominio;
@@ -7,8 +8,8 @@ using Dominio;
 [TestClass]
 public class UserDatabaseRepositoryTests
 {
-    private User _user1;
-    private User _user2;
+    private User user1;
+    private User user2;
     private SqlContext _context;
     private UserDatabaseRepository _repository;
 
@@ -19,7 +20,7 @@ public class UserDatabaseRepositoryTests
         _context = sqlContextFactory.CreateMemoryContext();
         _repository = new UserDatabaseRepository(_context);
 
-        _user1 = new User        
+        user1 = new User        
         {
             Name = "Carlos",
             Surname = "Lopez",
@@ -27,8 +28,7 @@ public class UserDatabaseRepositoryTests
             BirthDate = new DateTime(1980, 1, 1),
             Password = "TestPass$1"
         };
-    
-        _user2 = new User        
+        user2 = new User        
         {
             Name = "Paco",
             Surname = "Lopez",
@@ -45,11 +45,10 @@ public class UserDatabaseRepositoryTests
         _context.SaveChanges();
     }
 
-
     [TestMethod]
     public void AddTest()
     {
-        var addedUser = _repository.Add(_user1);
+        var addedUser = _repository.Add(user1);
 
         Assert.IsNotNull(addedUser);
         Assert.AreEqual("Carlos", addedUser.Name);
@@ -59,11 +58,13 @@ public class UserDatabaseRepositoryTests
     [TestMethod]
     public void FindTest()
     {
-        _context.Users.Add(_user1);
+        _context.Users.Add(user1);
         _context.SaveChanges();
 
-        var foundUser = _repository.Find(u => u.Email == "carlos@gmail.com");
-
+        var foundUser = _repository.Find(u => u.Email == user1.Email);
+        var notFoundUser = _repository.Find(u => u.Email == "user@mail.com");
+        
+        Assert.IsNull(notFoundUser);
         Assert.IsNotNull(foundUser);
         Assert.AreEqual("Carlos", foundUser.Name);
     }
@@ -71,7 +72,7 @@ public class UserDatabaseRepositoryTests
     [TestMethod]
     public void UpdateTest()
     {
-        _context.Users.Add(_user1);
+        _context.Users.Add(user1);
         _context.SaveChanges();
 
         var updatedUser = new User { Name = "Carlos Pablo", Surname = "Lopez Diaz", Email = "carlos@gmail.com" };
@@ -85,10 +86,10 @@ public class UserDatabaseRepositoryTests
     [TestMethod]
     public void DeleteTest()
     {
-        _context.Users.Add(_user1);
+        _context.Users.Add(user1);
         _context.SaveChanges();
 
-        _repository.Delete(_user1.Id);
+        _repository.Delete(user1.Id);
 
         Assert.AreEqual(0, _context.Users.Count());
     }
@@ -96,12 +97,14 @@ public class UserDatabaseRepositoryTests
     [TestMethod]
     public void FindAllTest()
     {
-        _context.Users.Add(_user1);
-        _context.Users.Add(_user2);
+        _context.Users.Add(user1);
+        _context.Users.Add(user2);
         _context.SaveChanges();
 
         var allUsers = _repository.FindAll();
 
         Assert.AreEqual(2, allUsers.Count);
+        CollectionAssert.Contains((ICollection)allUsers, user1);
+        CollectionAssert.Contains((ICollection)allUsers, user2);
     }
 }

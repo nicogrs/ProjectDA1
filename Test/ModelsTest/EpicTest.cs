@@ -9,19 +9,27 @@ public class EpicTest
     private Epic e;
     private List<Task> tasks;
     private Task t, t2;
+    private Panel p;
     
     [TestInitialize]
     public void Setup()
     {
         tasks = new List<Task>(){};
-
+        
+        p = new Panel()
+        {
+            Id = 1
+        };
+        
         e = new Epic()
         {
             Name = "Titulo de epica",
             Priority = Epic.Precedence.Low,
             Description = "Descripcion de la epica",
             ExpirationDate = new DateTime(2030, 1, 1),
-            Tasks = new List<Task>()
+            Tasks = new List<Task>(),
+            FromPanel = p,
+            FromPanelId = p.Id
         };
         
         t = new Task()
@@ -59,7 +67,6 @@ public class EpicTest
 
         Assert.AreEqual(e.Tasks.Count, 1);
         Assert.AreSame(e.Tasks[0], t);
-        //Assert.AreSame(t.Epic,e);
     }
 
     [TestMethod]
@@ -69,7 +76,6 @@ public class EpicTest
         e.RemoveTask(t);
         
         Assert.AreEqual(e.Tasks.Count, 0);
-      //  Assert.AreNotSame(t.Epic,e);
     }
     
     [TestMethod]
@@ -79,8 +85,6 @@ public class EpicTest
         e.RemoveTask(t2);
         
         Assert.AreEqual(e.Tasks.Count, 1);
-       // Assert.AreSame(t.Epic,e);
-        //Assert.AreNotSame(t2.Epic,e);
     }
     
     [TestMethod]
@@ -89,6 +93,12 @@ public class EpicTest
         e.RemoveTask(t);
         
         Assert.AreEqual(e.Tasks.Count, 0);
-       // Assert.AreNotSame(t.Epic,e);
+    }
+    
+    [TestMethod]
+    public void FromPanelTest()
+    {
+        Assert.AreSame(e.FromPanel, p);
+        Assert.AreEqual(e.FromPanelId, p.Id);
     }
 }

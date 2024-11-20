@@ -21,9 +21,5 @@
         <None Remove="obj\**"/>
         <None Remove="Interfaces\**" />
     </ItemGroup>
-    
-    <ItemGroup>
-      <PackageReference Include="ClosedXML" Version="0.104.1" />
-    </ItemGroup>
 
 </Project>

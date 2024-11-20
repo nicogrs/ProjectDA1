@@ -13,6 +13,8 @@ public class TaskTest
     private Comment c3;
     private List<Comment> comments;
     private Task t1;
+    private Panel p;
+    private Epic e;
     
     [TestInitialize]
     public void Setup()
@@ -102,5 +104,20 @@ public class TaskTest
     {
         var result = $"Tipo: Task - ID: {t1.Id} - Nombre: Titulo 1 - Prioridad: Low";
         Assert.AreEqual(t1.ToString(), result);
+    }
+
+    [TestMethod]
+    public void TaskPanelTest()
+    {
+        p = new Panel()
+        {
+            Tasks = new List<Task>()
+            {
+                t1
+            }
+        };
+        t1.Panel = p;
+        
+        Assert.AreSame(t1.Panel, p);
     }
 }

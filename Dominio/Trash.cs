@@ -16,8 +16,8 @@ public class Trash
     {
         if (ElementsCount < 10)
             Paperbin.Add(item);
-            item.IsDeleted = true;
-            ElementsCount++;
+        item.IsDeleted = true;
+        ElementsCount++;
     }
 
     public void DeleteElementFromPaperbin(IDeleteable item)

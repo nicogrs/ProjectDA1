@@ -2,7 +2,7 @@ namespace Test.ModelsTests;
 using Dominio;
 
 [TestClass]
-public class UserCreateTest
+public class UserTest
 {
     private User u;
     
